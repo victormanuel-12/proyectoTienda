@@ -1,0 +1,80 @@
+@model proyectoTienda.ViewModel.ProductoCategoriaViewModel
+
+@{
+    ViewData["Title"] = "Agregar Producto";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <form asp-action="AgregaProducto" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <!-- Campo Nombre Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="Nombre" class="form-label">Nombre del Producto</label>
+                <input type="text" class="form-control" id="Nombre" name="Producto.Nombre" value="@Model.Producto.Nombre" required />
+            </div>
+
+            <!-- Campo Descripción Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="Descripcion" class="form-label">Descripción del Producto</label>
+                <input type="text" class="form-control" id="Descripcion" name="Producto.Descripcion" value="@Model.Producto.Descripcion" />
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Campo Precio Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="Precio" class="form-label">Precio</label>
+                <input type="number" step="0.01" class="form-control" id="Precio" name="Producto.Precio" value="@Model.Producto.Precio" required />
+            </div>
+
+            <!-- Campo Stock Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="Stock" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="Stock" name="Producto.Stock" value="@Model.Producto.Stock" required />
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Campo Talla Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="Talla" class="form-label">Talla</label>
+                <input type="text" class="form-control" id="Talla" name="Producto.Talla" value="@Model.Producto.Talla" />
+            </div>
+
+            <!-- Campo Detalle Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="Detalle" class="form-label">Detalle</label>
+                <input type="text" class="form-control" id="Detalle" name="Producto.Detalle" value="@Model.Producto.Detalle" required />
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Campo Imagen Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="ImagenURL" class="form-label">Imagen del Producto</label>
+                <input type="url" class="form-control" id="ImagenURL" name="Producto.ImagenURL" value="@Model.Producto.ImagenURL" />
+            </div>
+
+            <!-- Select Categoría -->
+           <div class="col-md-6 mb-3">
+    <label for="IDCategoria" class="form-label">Categoría</label>
+    <select class="form-control" id="IDCategoria" name="Producto.IDCategoria" required>
+        <option value="" disabled selected>Seleccione una categoría</option>
+        @foreach (var categoria in Model.Categorias) 
+        {
+            <option value="@categoria.IDCategoria" >@categoria.Nombre</option>
+        }
+    </select>
+</div>
+
+
+        </div>
+
+        <!-- Botón de Enviar -->
+        <button type="submit" class="btn btn-primary">Guardar Producto</button>
+    </form>
+</div>
+
+<!-- Scripts necesarios para la responsividad -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

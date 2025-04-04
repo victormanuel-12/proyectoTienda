@@ -1,0 +1,156 @@
+@model ProductoPaginado<proyectoTienda.Models.Producto>
+
+@{
+    ViewData["Title"] = "Productos";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+   <link rel="stylesheet" href="~/css/Adminproducto.css">
+</head>
+<body>
+ 
+
+<h1>Catálogo de Productos</h1>
+
+@if (ViewData["NombreCategoria"] != null)
+{
+    <h2>Categoría: @ViewData["NombreCategoria"]</h2>
+}
+
+<p>
+    <a asp-action="AgregarProducto" class="btn btn-primary">Agregar Nuevo Producto</a>
+</p>
+
+@if (ViewBag.TotalProductosEnBD != null)
+{
+    <div class="alert alert-info">
+        Total de productos  @ViewBag.TotalProductosEnBD
+    </div>
+}
+
+@if (ViewBag.TotalProductosCategoria != null)
+{
+    <div class="alert alert-info">
+        Total de productos en esta categoría: @ViewBag.TotalProductosCategoria
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center">Imagen</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Categoría</th>
+                <th class="text-center">Talla</th>
+                <th class="text-center">Stock</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="producto-table">
+            @foreach (var item in Model.Items)
+            {
+                <tr class="fade-in">
+                    <td class="text-center" style="width: 100px;" data-label="Imagen">
+                        @if (!string.IsNullOrEmpty(item.ImagenURL))
+                        {
+                            <img src="@item.ImagenURL" alt="@item.Nombre" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                <span class="text-muted small">Sin imagen</span>
+                            </div>
+                        }
+                    </td>
+                    <td class="text-center" data-label="Nombre">@item.Nombre</td>
+                    <td class="text-center" data-label="Precio">@item.Precio.ToString("C")</td>
+                    <td class="text-center" data-label="Categoría">@item.Categoria?.Nombre</td>
+                    <td class="text-center" data-label="Talla">@(string.IsNullOrEmpty(item.Talla) ? "-" : item.Talla)</td>
+                    <td class="text-center" data-label="Stock">@item.Stock</td>
+                    <td class="text-center" data-label="Acciones">
+                        <div class="btn-group d-flex justify-content-between w-100">
+                            <a asp-action="Edit" asp-route-id="@item.IDProducto" class="btn btn-sm btn-primary me-4">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.IDProducto" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="Paginación de productos">
+    <ul class="pagination justify-content-center">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a asp-action="Productos" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">&laquo; Anterior</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">&laquo; Anterior</span>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            @if (i == Model.CurrentPage)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@i <span class="sr-only"></span></span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a asp-action="Productos" asp-route-page="@i" class="page-link">@i</a>
+                </li>
+            }
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a asp-action="Productos" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Siguiente &raquo;</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Siguiente &raquo;</span>
+            </li>
+        }
+    </ul>
+</nav>
+
+<div class="text-center mt-3">
+    <p>
+        Mostrando página @Model.CurrentPage de @Model.TotalPages (Total: @Model.TotalItems productos)
+    </p>
+</div>
+
+<script>
+    // Cuando se cambia de página, agregar un efecto de desvanecimiento
+    $(".page-item a").click(function () {
+        $("#producto-table").addClass("fade-out");
+        setTimeout(function () {
+            $("#producto-table").removeClass("fade-out");
+        }, 1000);  // Duración de la animación en milisegundos
+    });
+</script>
+
+</body>
+</html>
+
