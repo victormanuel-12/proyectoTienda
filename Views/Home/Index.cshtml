@@ -92,27 +92,7 @@
           </div>
 
           <div class="d-none d-lg-flex align-items-center flex-grow-1">
-            <div class="dropdown category-dropdown">
-              <a
-                class="dropdown-toggle category-trigger"
-                href="#"
-                role="button"
-                id="categoriesDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                onclick="handleDropdownClick(event)"s
-              >
-                Categorías
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
-                <li>
-                  <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 1 })">Polos</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 2 })">Jeans</a>
-                </li>
-              </ul>
-            </div>
+            
 
             <div class="search-container-desktop">
               <svg
@@ -131,7 +111,7 @@
             </div>
 
             <div class="nav-icons-desktop">
-              <a href="#" class="cart-link" aria-label="Carrito de compras">
+              <a asp-controller="Carrito" asp-action="Carrito" class="cart-link" aria-label="Carrito de compras">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -230,7 +210,7 @@
                 <h1 class="hero-title">
                     ENCUENTRA ROPA <span class="text-primary">QUE COMBINE CON TU ESTILO</span>
                 </h1>
-                <button class="hero-btn">Compra ahora</button>
+                <a class=" btn hero-btn" asp-controller="Catalogo" asp-action="Index">Compra ahora</a>
             </div>
         </section>
 
@@ -252,7 +232,7 @@
                             </div>
                             <div class="product-info">
                                 <h3>@producto.Nombre</h3>
-                                <p class="price">$@producto.Precio</p>
+                                <p class="price">$@producto.PrecioActual</p>
                             </div>
                         </div>
                     </a>

@@ -1,0 +1,270 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Carrito de Compras";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Columna del carrito -->
+        <div class="col-12 col-lg-8 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h2 class="mb-0 fs-4">Carro (@Model.elementosCarrito.Count productos)</h2>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.elementosCarrito.Count > 0)
+                    {
+                        <div class="p-3 border-bottom">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="seleccionarTodos" checked>
+                                <label class="form-check-label" for="seleccionarTodos">
+                                    Seleccionar todos
+                                </label>
+                            </div>
+                        </div>
+
+                        @foreach (var item in Model.elementosCarrito)
+                        {
+                            <div class="p-3 border-bottom item-carrito">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <div class="form-check">
+                                            <input class="form-check-input item-check" type="checkbox" checked>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a asp-controller="Catalogo" asp-action="Detalles" asp-route-id="@item.Producto.IDProducto">
+                                            <img src="@(string.IsNullOrEmpty(item.Producto.ImagenURL) ? "/images/placeholder.jpg" : item.Producto.ImagenURL)"
+                                                 class="img-fluid" style="width: 80px; height: 80px; object-fit: contain;" alt="@item.Producto.Nombre">
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <h5 class="mb-1">
+                                            <a asp-controller="Catalogo" asp-action="Detalles" asp-route-id="@item.Producto.IDProducto" 
+                                               class="text-decoration-none text-dark">
+                                                @item.Producto.Nombre
+                                            </a>
+                                        </h5>
+                                        <p class="text-muted mb-0">@item.Producto.Detalle</p>
+                                        @if (!string.IsNullOrEmpty(item.Producto.Talla))
+                                        {
+                                            <small class="text-muted">Talla: @item.Producto.Talla</small>
+                                        }
+                                        <div class="mt-2">
+                                            <span class="text-success fw-bold">S/ @((item.Producto?.PrecioActual ?? 0).ToString("0.00"))</span>
+                                            @if (item.Producto.PrecioOriginal > item.Producto.PrecioActual)
+                                            {
+                                                <span class="text-muted text-decoration-line-through ms-2">S/ @item.Producto.PrecioOriginal.ToString("0.00")</span>
+                                                <span class="badge bg-danger ms-2">
+                                                    -@(Math.Round((1 - ((decimal)item.Producto.PrecioActual / item.Producto.PrecioOriginal)) * 100))%
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-auto d-sm-block d-none">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="mx-2 text-center fw-bold rounded-pill bg-light py-2 px-3 shadow-sm border" 
+                                                  style="min-width: 60px; display: inline-block; color: #333; font-size: 1.1rem;">
+                                                @item.Cantidad
+                                            </span>
+                                        </div>
+                                        <div class="text-center mt-2">
+                                            <small class="text-muted">Máx 10 unidades</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                         <a href="#" class="delete-icon eliminar-item" title="Eliminar"
+   data-id="@item.IDItem"
+   data-nombre="@item.Producto.Nombre"
+   data-bs-toggle="modal"
+   data-bs-target="#modalConfirmarEliminacion">
+    <i class="fas fa-trash text-danger"></i>
+</a>
+
+
+                                    </div>
+                                </div>
+                                
+                                <!-- Contador de cantidad para pantallas pequeñas (menos de 576px) -->
+                                <div class="row mt-3 d-sm-none">
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center justify-content-start">
+                                            <span class="mx-2 text-center fw-bold rounded-pill bg-light py-2 px-3 shadow-sm border" 
+                                                  style="min-width: 60px; display: inline-block; color: #333; font-size: 1.1rem;">
+                                                @item.Cantidad
+                                            </span>
+                                            <div class="ms-2">
+                                                <small class="text-muted">Máx 10 unidades</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="p-5 text-center">
+                            <i class="bi bi-cart-x" style="font-size: 3rem;"></i>
+                            <h4 class="mt-3">Tu carrito está vacío</h4>
+                            <p class="text-muted">Agrega productos para continuar con tu compra</p>
+                            <a asp-controller="Catalogo" asp-action="Index" class="btn btn-primary mt-2">
+                                Ir al catálogo
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna del resumen - ahora usamos lg para que cambie en 991px -->
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm mb-4 sticky-top" style="top: 20px; z-index: 100;">
+                <div class="card-header bg-white py-3">
+                    <h3 class="mb-0 fs-4">Resumen de la orden</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Productos (@Model.elementosCarrito.Count)</span>
+                        <span>S/ @Model.montoOriginal.ToString("0.00")</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Descuentos</span>
+                        <span class="text-success">-S/ @((Model.montoOriginal - Model.montoActual).ToString("0.00"))</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold">Total:</span>
+                        <span class="fw-bold">S/ @Model.montoActual.ToString("0.00")</span>
+                    </div>
+
+                    <button id="btnContinuar" class="btn btn-dark w-100 py-3">
+                        Continuar compra
+                    </button>
+
+                    <div class="mt-4 p-3 bg-light rounded text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <img src="~/img/logo-yape.webp" alt="Yape" style="height: 30px;">
+                            <span class="ms-2">¡Ahora puedes pagar tus compras con Yape!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal personalizado para confirmar eliminación -->
+<div class="modal fade" id="modalConfirmarEliminacion" tabindex="-1" aria-labelledby="modalConfirmarEliminacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg rounded-4">
+            <div class="modal-header bg-danger text-white rounded-top">
+                <h5 class="modal-title" id="modalConfirmarEliminacionLabel">¿Eliminar producto?</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                <p>¿Estás seguro de que deseas eliminar <strong id="nombreProductoEliminar"></strong> del carrito?</p>
+                
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-controller="Carrito" asp-action="Eliminar" method="post" >
+                  <input type="hidden" id="idProductoEliminar" name="idProductoEliminar"  />
+                  <button type="submit" class="btn btn-danger px-4" id="btnConfirmarEliminar">Eliminar</button>
+
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#seleccionarTodos").change(function () {
+                let isChecked = $(this).prop('checked');
+                $(".item-check").prop('checked', isChecked);
+                actualizarEstadoBotones();
+            });
+
+            $(".item-check").change(function () {
+                actualizarEstadoSeleccionarTodos();
+                actualizarEstadoBotones();
+            });
+
+            $(".incrementar").click(function () {
+                let id = $(this).data('id');
+                let input = $(this).siblings('.cantidad-input');
+                let valor = parseInt(input.val());
+                if (valor < 10) {
+                    input.val(valor + 1);
+                    actualizarCantidad(id, valor + 1);
+                }
+            });
+
+            $(".decrementar").click(function () {
+                let id = $(this).data('id');
+                let input = $(this).siblings('.cantidad-input');
+                let valor = parseInt(input.val());
+                if (valor > 1) {
+                    input.val(valor - 1);
+                    actualizarCantidad(id, valor - 1);
+                }
+            });
+
+           
+
+            $("#btnContinuar").click(function () {
+                let seleccionados = $(".item-check:checked").length;
+                if (seleccionados > 0) {
+                    window.location.href = '@Url.Action("Checkout", "Pedido")';
+                } else {
+                    alert("Selecciona al menos un producto para continuar");
+                }
+            });
+
+            function actualizarEstadoSeleccionarTodos() {
+                let total = $(".item-check").length;
+                let checked = $(".item-check:checked").length;
+                $("#seleccionarTodos").prop('checked', total === checked);
+            }
+
+            function actualizarEstadoBotones() {
+                $("#btnContinuar").prop('disabled', $(".item-check:checked").length === 0);
+            }
+
+            function actualizarCantidad(id, cantidad) {
+                $.post('@Url.Action("ActualizarCantidad", "Carrito")', { idItem: id, cantidad: cantidad })
+                    .done(function (r) {
+                        if (r.success) location.reload();
+                        else alert(r.message);
+                    })
+                    .fail(function () {
+                        alert("Error al actualizar la cantidad");
+                    });
+            }
+
+            
+
+            actualizarEstadoBotones();
+
+            $(".eliminar-item").click(function () {
+    const id = $(this).data("id");
+    const nombre = $(this).data("nombre");
+    console.log(id, nombre); // Verifica que los datos se estén obteniendo correctamente
+    $("#idProductoEliminar").val(id);
+    $("#nombreProductoEliminar").text(nombre);
+});
+
+
+        });
+
+        // Mostrar el modal con info personalizada
+
+
+    </script>
+}

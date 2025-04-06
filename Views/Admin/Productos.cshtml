@@ -40,109 +40,109 @@
 }
 
 <div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th class="text-center">Imagen</th>
-                <th class="text-center">Nombre</th>
-                <th class="text-center">Precio</th>
-                <th class="text-center">Categoría</th>
-                <th class="text-center">Talla</th>
-                <th class="text-center">Stock</th>
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="producto-table">
-            @foreach (var item in Model.Items)
+  <table class="table table-striped table-hover" style="table-layout: fixed; width: 100%;">
+    <thead class="table-dark">
+      <tr>
+        <th class="text-center" style="width: 12%;">Imagen</th>
+        <th class="text-center" style="width: 20%;">Nombre</th>
+        <th class="text-center" style="width: 12%;">Precio</th>
+        <th class="text-center" style="width: 15%;">Categoría</th>
+        <th class="text-center" style="width: 10%;">Talla</th>
+        <th class="text-center" style="width: 10%;">Stock</th>
+        <th class="text-center" style="width: 21%;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="producto-table">
+      @foreach (var item in Model.Items)
+      {
+        <tr class="fade-in">
+          <td class="text-center" data-label="Imagen">
+            @if (!string.IsNullOrEmpty(item.ImagenURL))
             {
-                <tr class="fade-in">
-                    <td class="text-center" style="width: 100px;" data-label="Imagen">
-                        @if (!string.IsNullOrEmpty(item.ImagenURL))
-                        {
-                            <img src="@item.ImagenURL" alt="@item.Nombre" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
-                        }
-                        else
-                        {
-                            <div class="bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <span class="text-muted small">Sin imagen</span>
-                            </div>
-                        }
-                    </td>
-                    <td class="text-center" data-label="Nombre">@item.Nombre</td>
-                    <td class="text-center" data-label="Precio">@item.Precio.ToString("C")</td>
-                    <td class="text-center" data-label="Categoría">@item.Categoria?.Nombre</td>
-                    <td class="text-center" data-label="Talla">@(string.IsNullOrEmpty(item.Talla) ? "-" : item.Talla)</td>
-                    <td class="text-center" data-label="Stock">@item.Stock</td>
-                    <td class="text-center" data-label="Acciones">
-                        <div class="btn-group d-flex justify-content-between w-100">
-                            <a asp-action="Edit" asp-route-id="@item.IDProducto" class="btn btn-sm btn-primary me-4">
-                                <i class="bi bi-pencil"></i> Editar
-                            </a>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
-        data-id="@item.IDProducto" data-nombre="@item.Nombre">
-    Eliminar
-</button>
-
-
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<nav aria-label="Paginación de productos">
-    <ul class="pagination justify-content-center">
-        @if (Model.HasPreviousPage)
-        {
-            <li class="page-item">
-                <a asp-action="Productos" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">&laquo; Anterior</a>
-            </li>
-        }
-        else
-        {
-            <li class="page-item disabled">
-                <span class="page-link">&laquo; Anterior</span>
-            </li>
-        }
-
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            @if (i == Model.CurrentPage)
-            {
-                <li class="page-item active">
-                    <span class="page-link">@i <span class="sr-only"></span></span>
-                </li>
+              <img src="@item.ImagenURL" alt="@item.Nombre" class="img-thumbnail" style="max-width: 80px; height: 80px; object-fit: cover;">
             }
             else
             {
-                <li class="page-item">
-                    <a asp-action="Productos" asp-route-page="@i" class="page-link">@i</a>
-                </li>
+              <div class="bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: 0 auto;">
+                <span class="text-muted small">Sin imagen</span>
+              </div>
             }
-        }
+          </td>
+          <td class="text-center text-truncate" data-label="Nombre" title="@item.Nombre">@item.Nombre</td>
+          <td class="text-center" data-label="Precio">@item.PrecioActual.ToString("C")</td>
+          <td class="text-center text-truncate" data-label="Categoría" title="@item.Categoria?.Nombre">@item.Categoria?.Nombre</td>
+          <td class="text-center" data-label="Talla">@(string.IsNullOrEmpty(item.Talla) ? "-" : item.Talla)</td>
+          <td class="text-center" data-label="Stock">@item.Stock</td>
+          <td class="text-center" data-label="Acciones">
+            <div class="btn-group d-flex justify-content-center">
+              <a asp-action="Edit" asp-route-id="@item.IDProducto" class="btn btn-sm btn-primary me-2">
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+              <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
+                data-id="@item.IDProducto" data-nombre="@item.Nombre">
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
 
-        @if (Model.HasNextPage)
+<div class="pagination-container fixed-bottom bg-light py-2 shadow-sm border-top display-flex  column justify-content-center">
+  <nav aria-label="Paginación de productos">
+    <ul class="pagination justify-content-center mb-2">
+      @if (Model.HasPreviousPage)
+      {
+        <li class="page-item">
+          <a asp-action="Productos" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">&laquo; Anterior</a>
+        </li>
+      }
+      else
+      {
+        <li class="page-item disabled">
+          <span class="page-link">&laquo; Anterior</span>
+        </li>
+      }
+
+      @for (int i = 1; i <= Model.TotalPages; i++)
+      {
+        @if (i == Model.CurrentPage)
         {
-            <li class="page-item">
-                <a asp-action="Productos" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Siguiente &raquo;</a>
-            </li>
+          <li class="page-item active">
+            <span class="page-link">@i <span class="sr-only"></span></span>
+          </li>
         }
         else
         {
-            <li class="page-item disabled">
-                <span class="page-link">Siguiente &raquo;</span>
-            </li>
+          <li class="page-item">
+            <a asp-action="Productos" asp-route-page="@i" class="page-link">@i</a>
+          </li>
         }
-    </ul>
-</nav>
+      }
 
-<div class="text-center mt-3">
-    <p>
-        Mostrando página @Model.CurrentPage de @Model.TotalPages (Total: @Model.TotalItems productos)
-    </p>
+      @if (Model.HasNextPage)
+      {
+        <li class="page-item">
+          <a asp-action="Productos" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Siguiente &raquo;</a>
+        </li>
+      }
+      else
+      {
+        <li class="page-item disabled">
+          <span class="page-link">Siguiente &raquo;</span>
+        </li>
+      }
+    </ul>
+  </nav>
+  <!-- Forced line break -->
+  
+  
 </div>
+
+<div style="margin-bottom: 150px;"></div> <!-- Spacer to prevent content from being hidden under fixed footer -->
+
 <!-- Modal -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -185,6 +185,9 @@ console.log(productId,productName)
 
 
 
-
+<br>
+<br>
+<br>
+<br>
 </body>
 </html>

@@ -89,7 +89,7 @@
             </a>
           </div>
 
-          <div class="d-none d-lg-flex align-items-center flex-grow-1">
+                <div class="d-none d-lg-flex align-items-center flex-grow-1">
             <div class="dropdown category-dropdown">
               <a
                 class="dropdown-toggle category-trigger"
@@ -103,13 +103,23 @@
                 Categorías
               </a>
               <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
-                <li>
-                  <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 1 })">Polos</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 2 })">Jeans</a>
-                </li>
-              </ul>
+    @if (ViewBag.Categorias != null)
+    {<li>
+                <a class="dropdown-item" href="@Url.Action("Index", "Catalogo")">
+                    Todos
+                </a>
+            </li>
+        foreach (var categoria in ViewBag.Categorias)
+        {
+            <li>
+                <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = categoria.IDCategoria })">
+                    @categoria.Nombre
+                </a>
+            </li>
+        }
+    }
+</ul>
+
             </div>
 
             <div class="search-container-desktop">
@@ -129,7 +139,12 @@
             </div>
 
             <div class="nav-icons-desktop">
-              <a href="#" class="cart-link" aria-label="Carrito de compras">
+              <a
+                asp-controller="Carrito"
+                asp-action="Carrito"
+                class="cart-link"
+                aria-label="Carrito de compras"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -164,7 +179,7 @@
                 <span>Iniciar Sesión</span>
               </a>
             </div>
-          </div>
+          </div >
         </div>
       </nav>
 
@@ -221,6 +236,7 @@
         </div>
       </div>
     </header>
+<div class="overlay-background"></div>
 
     <main class="main-content">
       <h1 class="page-title">DESCUBRE</h1>
@@ -245,7 +261,7 @@
               </div>
               <div class="product-info">
                 <h3>@Html.DisplayFor(modelItem => item.Nombre)</h3>
-                <p class="price">S/@Html.DisplayFor(modelItem => item.Precio)</p>
+                <p class="price">S/@Html.DisplayFor(modelItem => item.PrecioActual)</p>
                 <a class="btn btn-primary" asp-controller="" asp-action="" asp-route-id="@item.IDProducto">Agregar al carro</a>
               </div>
             </div>
@@ -350,10 +366,12 @@
             const dropdownMenu = document.querySelector('.dropdown-menu');
             dropdownMenu.classList.toggle('show');
             
-            // Si deseas, puedes prevenir el comportamiento predeterminado de Bootstrap
-            // event.preventDefault();
         }
+
+        
     </script>
+    
+
   </body>
 </html>
 

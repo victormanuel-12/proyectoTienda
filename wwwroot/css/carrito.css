@@ -1,0 +1,113 @@
+/* Estilos para el carrito de compras */
+.sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
+.item-carrito:hover {
+  background-color: #f8f9fa;
+}
+
+.cantidad-input {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+}
+
+.cantidad-input:focus {
+  box-shadow: none;
+  border-color: #212529;
+}
+
+.btn-outline-secondary {
+  border-color: #ced4da;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: #212529;
+}
+
+.btn-dark {
+  background-color: #212529;
+  border-color: #212529;
+}
+
+.btn-dark:hover {
+  background-color: #1a1e21;
+  border-color: #1a1e21;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.dropdown-toggle {
+  text-align: left;
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.action-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.action-btn.delete:hover {
+  color: #ef4444;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+.delete-icon {
+  color: gray; /* Color por defecto */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.delete-icon:hover {
+  color: red; /* Color al pasar el mouse */
+}
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Estilos para dispositivos móviles */
+@media (max-width: 767.98px) {
+  .sticky-top {
+    position: relative;
+    top: 0 !important;
+  }
+
+  .dropdown-toggle {
+    width: 120px;
+  }
+}

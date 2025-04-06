@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using proyectoTienda.Data;
 
@@ -10,9 +11,11 @@ using proyectoTienda.Data;
 namespace proyectoTienda.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250406004508_carrito")]
+    partial class carrito
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.13");
@@ -254,35 +257,6 @@ namespace proyectoTienda.Data.Migrations
                     b.ToTable("DetallesPedidos");
                 });
 
-            modelBuilder.Entity("proyectoTienda.Models.Model.ItemCarrito", b =>
-                {
-                    b.Property<int>("IDItem")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("ProductoIDProducto")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("IDItem");
-
-                    b.HasIndex("ProductoIDProducto");
-
-                    b.ToTable("ItemsCarrito");
-                });
-
             modelBuilder.Entity("proyectoTienda.Models.Pago", b =>
                 {
                     b.Property<int>("IDPago")
@@ -473,15 +447,6 @@ namespace proyectoTienda.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Pedido");
-
-                    b.Navigation("Producto");
-                });
-
-            modelBuilder.Entity("proyectoTienda.Models.Model.ItemCarrito", b =>
-                {
-                    b.HasOne("proyectoTienda.Models.Producto", "Producto")
-                        .WithMany()
-                        .HasForeignKey("ProductoIDProducto");
 
                     b.Navigation("Producto");
                 });

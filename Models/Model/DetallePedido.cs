@@ -35,18 +35,24 @@ namespace proyectoTienda.Models
     public Producto? Producto { get; set; }
     // Método para calcular el subtotal
     public decimal CalcularSubtotal()
-    {
-      if (Producto == null)
-      {
-        return 0; // O manejar este caso según los requisitos del negocio
-      }
-      return Cantidad * Producto.Precio; // Accediendo al precio desde la clase Producto
-    }
-
-    // Método para actualizar el valor de Subtotal
-    public void ActualizarSubtotal()
-    {
-      Subtotal = CalcularSubtotal();
-    }
+        {
+            if (Producto == null)
+            {
+                throw new InvalidOperationException("El producto no puede ser nulo al calcular el subtotal.");
+            }
+            
+            // Calcular el subtotal multiplicando la cantidad por el precio del producto
+      
+         return Cantidad * Producto.PrecioActual;
+      
+                
+           
+        }
+        
+        // Método para actualizar el subtotal
+        public void ActualizarSubtotal()
+        {
+            Subtotal = CalcularSubtotal();
+        }
   }
 }

@@ -233,7 +233,7 @@ public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewM
                 "Precio={Precio}, Stock={Stock}, IDCategoria={IDCategoria}",
                 viewModel.Producto.Nombre,
                 viewModel.Producto.Descripcion,
-                viewModel.Producto.Precio,
+                viewModel.Producto.PrecioActual,
                 viewModel.Producto.Stock,
                 viewModel.Producto.IDCategoria);
 

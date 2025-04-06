@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using proyectoTienda.Models;
 namespace proyectoTienda.Data;
+using proyectoTienda.Models.Model;
 
 public class ApplicationDbContext : IdentityDbContext
 {
@@ -15,10 +16,11 @@ public class ApplicationDbContext : IdentityDbContext
   public DbSet<DetallePedido> DetallesPedidos { get; set; }
   public DbSet<Categoria> Categorias { get; set; }
   public DbSet<Pago> Pagos { get; set; }
+  public DbSet<ItemCarrito> ItemsCarrito { get; set; }
   
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
-     base.OnModelCreating(modelBuilder); 
+    base.OnModelCreating(modelBuilder);
     modelBuilder.Entity<DetallePedido>()
         .HasKey(dp => new { dp.IDPedido, dp.IDProducto });
 

@@ -95,27 +95,7 @@
           </div>
 
           <div class="d-none d-lg-flex align-items-center flex-grow-1">
-            <div class="dropdown category-dropdown">
-              <a
-                class="dropdown-toggle category-trigger"
-                href="#"
-                role="button"
-                id="categoriesDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                onclick="handleDropdownClick(event)"s
-              >
-                Categorías
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
-                <li>
-                  <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 1 })">Polos</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 2 })">Jeans</a>
-                </li>
-              </ul>
-            </div>
+            
 
             <div class="search-container-desktop">
               <svg
@@ -135,7 +115,8 @@
 
             <div class="nav-icons-desktop">
               <a
-                href="carrito.html"
+                asp-controller="Carrito"
+                asp-action="Carrito"
                 class="cart-link"
                 aria-label="Carrito de compras"
               >
@@ -214,19 +195,7 @@
             />
           </div>
 
-          <ul class="navbar-nav justify-content-end flex-grow-1">
-            <li class="nav-item category-header ps-3">Categorías</li>
-            <li class="nav-item">
-              <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 1 })">Polos</a>
-            </li>
-            <li class="nav-item">
-              <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = 2 })">Jeans</a>
-            </li>
-            <li class="nav-item category-header ps-3 mt-2">Contacto</li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Atencion al cliente</a>
-            </li>
-          </ul>
+          
         </div>
       </div>
     </header>
@@ -243,10 +212,10 @@
 
         <div class="product-info-col">
           <h1 class="product-title">@Model.ProductoPrincipal.Nombre</h1>
-          <p class="product-price">S/@Model.ProductoPrincipal.Precio</p>
+          <p class="product-price">S/@Model.ProductoPrincipal.PrecioActual</p>
           <p class="product-description">@Model.ProductoPrincipal.Descripcion</p>
 
-          <form asp-controller="Catalogo" asp-action="Detalles" method="post">
+          <form asp-controller="Carrito" asp-action="AgregarAlCarrito" method="post">
     <input type="hidden" name="productoId" value="@Model.ProductoPrincipal.IDProducto" />
     <div class="d-flex align-items-center mb-3">
         <button type="button" class="btn btn-outline-secondary" onclick="decrementarCantidad()">-</button>
@@ -298,7 +267,7 @@
                             </div>
                             <div class="product-info">
                                 <h3>@similarProduct.Nombre</h3>
-                                <p class="price">S/@similarProduct.Precio</p>
+                                <p class="price">S/@similarProduct.PrecioActual</p>
                             </div>
                         </div>
                     </a>

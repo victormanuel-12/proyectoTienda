@@ -24,6 +24,9 @@ namespace proyectoTienda.Models
     [Required]
     public int Estado { get; set; } = 0; // 0=Pendiente, 1=Pagado, 2=Enviado, 3=Entregado, 4=Cancelado
 
+  [Column(TypeName = "decimal(10, 2)")]
+        public decimal Total { get; set; }
+        
     // Propiedades de navegación
     [ForeignKey("IDCliente")]
         public Usuario? Cliente { get; set; }
@@ -33,30 +36,29 @@ namespace proyectoTienda.Models
     public Pago? Pago { get; set; }
     // Método para calcular el total del pedido
     public decimal CalcularTotal()
-    {
-      decimal total = 0;
-
-      if (DetallesPedidos != null && DetallesPedidos.Any())
-      {
-        foreach (var detalle in DetallesPedidos)
         {
-          total += detalle.CalcularSubtotal();
+            decimal total = 0;
+
+            if (DetallesPedidos != null && DetallesPedidos.Any())
+            {
+                total = DetallesPedidos.Sum(d => d.Subtotal);
+            }
+
+            return total;
         }
-      }
 
-      return total;
-    }
-
-    // Método para actualizar los subtotales de todos los detalles
-    public void ActualizarSubtotales()
-    {
-      if (DetallesPedidos != null)
-      {
-        foreach (var detalle in DetallesPedidos)
+        // Método para actualizar los subtotales y el total
+        public void ActualizarTotales()
         {
-          detalle.ActualizarSubtotal();
+            if (DetallesPedidos != null)
+            {
+                foreach (var detalle in DetallesPedidos)
+                {
+                    detalle.ActualizarSubtotal();
+                }
+                
+                Total = CalcularTotal();
+            }
         }
-      }
-    }
   }
 }

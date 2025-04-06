@@ -22,8 +22,11 @@ namespace proyectoTienda.Models
     public string? Descripcion { get; set; }
 
     [Required]
-    [Column(TypeName = "decimal(10, 2)")]
-    public decimal Precio { get; set; }
+    [Column(TypeName = "decimal(10, 1)")]
+    public decimal PrecioOriginal { get; set; }
+
+[Column(TypeName = "decimal(10, 1)")]
+    public decimal PrecioActual { get; set; }
 
     [Required]
 [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser negativo")]
