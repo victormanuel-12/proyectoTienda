@@ -170,6 +170,71 @@
   color: var(--primary-color);
 }
 
+.price-container {
+  margin-bottom: 15px;
+}
+
+.current-price-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.current-price {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.discount-badge {
+  background-color: #ff0038;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.original-price {
+  color: #777;
+  text-decoration: line-through;
+  font-size: 16px;
+}
+
+.product-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.product-image-col {
+  flex: 1;
+  min-width: 300px;
+  padding-right: 20px;
+}
+
+.product-info-col {
+  flex: 1;
+  min-width: 300px;
+}
+
+.product-main-image {
+  width: 100%;
+  height: auto;
+}
+
+.product-title {
+  margin-bottom: 15px;
+}
+
+.product-description {
+  margin-bottom: 20px;
+}
+
+.product-details {
+  margin-top: 30px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 991.98px) {
   .product-image-col,
@@ -231,5 +296,74 @@
 
   .product-details li {
     font-size: 13px;
+  }
+}
+
+.temp-data-modal {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  animation: slideDown 0.5s ease forwards;
+}
+
+.temp-data-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  min-width: 300px;
+  max-width: 90vw;
+}
+
+.temp-data-icon {
+  margin-right: 15px;
+  color: #007bff;
+  font-size: 24px;
+}
+
+.temp-data-message {
+  flex-grow: 1;
+  font-size: 16px;
+  color: #333;
+}
+
+.temp-data-close {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+  line-height: 1;
+}
+
+.temp-data-close:hover {
+  color: #333;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -20px);
   }
 }

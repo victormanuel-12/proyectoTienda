@@ -670,3 +670,128 @@ footer {
     font-size: 12px;
   }
 }
+.price {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.current-price {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.discount-badge {
+  background-color: #ff0000;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.9rem;
+  width: 100%;
+  margin-top: -5px;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-card-link {
+  display: block;
+  flex: 1;
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-image-container img {
+  object-fit: cover;
+}
+
+.button-container {
+  padding: 0 15px 15px;
+  margin-top: auto;
+}
+
+.button-container .btn {
+  width: 100%;
+  padding: 8px 15px;
+  text-align: center;
+}
+
+.temp-data-modal {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  animation: slideDown 0.5s ease forwards;
+}
+
+.temp-data-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  min-width: 300px;
+  max-width: 90vw;
+}
+
+.temp-data-icon {
+  margin-right: 15px;
+  color: #007bff;
+  font-size: 24px;
+}
+
+.temp-data-message {
+  flex-grow: 1;
+  font-size: 16px;
+  color: #333;
+}
+
+.temp-data-close {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+  line-height: 1;
+}
+
+.temp-data-close:hover {
+  color: #333;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+}

@@ -202,48 +202,70 @@
 
     <main class="product-detail-container">
       <div class="product-detail-row">
-        <div class="product-image-col">
-          <img
-            src="@Model.ProductoPrincipal.ImagenURL"
-            alt="#"
-            class="product-main-image"
-          />
-        </div>
+  <div class="product-image-col">
+    <img
+      src="@Model.ProductoPrincipal.ImagenURL"
+      alt="#"
+      class="product-main-image"
+    />
+  </div>
 
-        <div class="product-info-col">
-          <h1 class="product-title">@Model.ProductoPrincipal.Nombre</h1>
-          <p class="product-price">S/@Model.ProductoPrincipal.PrecioActual</p>
-          <p class="product-description">@Model.ProductoPrincipal.Descripcion</p>
+  <div class="product-info-col">
+    <h1 class="product-title">@Model.ProductoPrincipal.Nombre</h1>
+    
+    <div class="price-container">
+      <div class="current-price-wrapper">
+        <span class="current-price">S/ @Model.ProductoPrincipal.PrecioActual</span>
+        @if (Model.ProductoPrincipal.PrecioOriginal > Model.ProductoPrincipal.PrecioActual)
+        {
+          <span class="discount-badge">-@Math.Round(((Model.ProductoPrincipal.PrecioOriginal - Model.ProductoPrincipal.PrecioActual) / Model.ProductoPrincipal.PrecioOriginal) * 100)%</span>
+        }
+      </div>
+      @if (Model.ProductoPrincipal.PrecioOriginal > Model.ProductoPrincipal.PrecioActual)
+      {
+        <div class="original-price">S/ @Model.ProductoPrincipal.PrecioOriginal</div>
+      }
+    </div>
 
-          <form asp-controller="Carrito" asp-action="AgregarAlCarrito" method="post">
-    <input type="hidden" name="productoId" value="@Model.ProductoPrincipal.IDProducto" />
-    <div class="d-flex align-items-center mb-3">
+    <p class="product-description">@Model.ProductoPrincipal.Descripcion</p>
+
+    <form asp-controller="Carrito" asp-action="AgregarAlCarrito" method="post">
+      <input type="hidden" name="productoId" value="@Model.ProductoPrincipal.IDProducto" />
+      <div class="d-flex align-items-center mb-3">
         <button type="button" class="btn btn-outline-secondary" onclick="decrementarCantidad()">-</button>
         <input type="number" name="cantidad" id="cantidadInput" value="1" min="1" max="@Model.ProductoPrincipal.Stock" class="form-control mx-2 text-center" style="width: 80px;" />
         <button type="button" class="btn btn-outline-secondary" onclick="incrementarCantidad()">+</button>
-    </div>
-    <button type="submit" class="btn btn-primary">
-        <i class="bi bi-cart-plus"></i> Agregar al carrito
-    </button>
-</form>
-
-
-          <div class="product-details">
-           <h3>Detalles del producto</></h3>
-            <ul>
-                @foreach (var detalle in Model.ProductoPrincipal.Detalle.Split(','))
-                {
-                    <li>@detalle.Trim()</li>
-                }
-            </ul>
-
-          </div>
-        </div>
       </div>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-cart-plus"></i> Agregar al carrito
+      </button>
+    </form>
+
+    <div class="product-details">
+      <h3>Detalles del producto</h3>
+      <ul>
+        @foreach (var detalle in Model.ProductoPrincipal.Detalle.Split(','))
+        {
+          <li>@detalle.Trim()</li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 @if (TempData["Mensaje"] != null && !string.IsNullOrWhiteSpace(TempData["Mensaje"].ToString()))
 {
-    <div class="alert alert-warning">
-        @TempData["Mensaje"]
+    <div id="tempDataModal" class="temp-data-modal">
+        <div class="temp-data-content">
+            <div class="temp-data-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="temp-data-message">
+                @TempData["Mensaje"]
+            </div>
+            <button class="temp-data-close">&times;</button>
+        </div>
     </div>
 }
 
@@ -332,18 +354,19 @@
     ></script>
 
     <script>
-        // Función que se ejecutará cuando se haga clic en el dropdown
+       
         function handleDropdownClick(event) {
-            // Aquí puedes hacer cualquier acción que desees cuando se haga clic
+            
             console.log('Dropdown fue clickeado');
             
-            // Ejemplo: Agregar o quitar una clase CSS cuando se haga clic
+            
             const dropdownMenu = document.querySelector('.dropdown-menu');
             dropdownMenu.classList.toggle('show');
             
-            // Si deseas, puedes prevenir el comportamiento predeterminado de Bootstrap
-            // event.preventDefault();
+           
         }
+        
+    
          function decrementarCantidad() {
         const input = document.getElementById('cantidadInput');
         let value = parseInt(input.value);
@@ -360,6 +383,29 @@
             input.value = value + 1;
         }
     }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('tempDataModal');
+            const closeButton = document.querySelector('.temp-data-close');
+            
+            
+            closeButton.addEventListener('click', function() {
+                hideModal();
+            });
+            
+            
+            setTimeout(function() {
+                hideModal();
+            }, 3500);
+            
+            function hideModal() {
+                modal.style.animation = 'slideUp 0.5s ease forwards';
+                setTimeout(function() {
+                    modal.style.display = 'none';
+                }, 500);
+            }
+        });
     </script>
   </body>
 </html>

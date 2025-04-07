@@ -239,69 +239,93 @@
 <div class="overlay-background"></div>
 
     <main class="main-content">
-      <h1 class="page-title">DESCUBRE</h1>
-      <p class="product-count">Mostrando 1-16 de 100 Productos</p>
+  <h1 class="page-title">DESCUBRE</h1>
+  <p class="product-count">Mostrando 1-16 de 100 Productos</p>
 
-      <div class="row gy-4 product-row">
-        @foreach (var item in Model){
-        <div class="col-6 col-lg-3">
-          <a
-            asp-controller="Catalogo"
-            asp-action="Detalles"
-            asp-route-id="@item.IDProducto"
-            class="product-card-link"
-            style="text-decoration: none"
-          >
-            <div class="product-card">
-              <div class="product-image-container">
-                <img
-                  src="@item.ImagenURL"
-                  alt="#"
-                />
+  <div class="row gy-4 product-row">
+    @foreach (var item in Model){
+    <div class="col-6 col-lg-3">
+      <div class="product-card">
+        <a
+          asp-controller="Catalogo"
+          asp-action="Detalles"
+          asp-route-id="@item.IDProducto"
+          class="product-card-link"
+          style="text-decoration: none"
+        >
+          <div class="product-image-container">
+            <img src="@item.ImagenURL" alt="@item.Nombre" />
+          </div>
+          <div class="product-info">
+            <h3>@Html.DisplayFor(modelItem => item.Nombre)</h3>
+            @if (item.PrecioOriginal > item.PrecioActual)
+            {
+              <div class="price">
+                <span class="current-price">S/@item.PrecioActual</span>
+                <span class="discount-badge">-@(Math.Round((1 - (item.PrecioActual / item.PrecioOriginal)) * 100, 0))%</span>
+                <div class="original-price">S/ @item.PrecioOriginal</div>
               </div>
-              <div class="product-info">
-                <h3>@Html.DisplayFor(modelItem => item.Nombre)</h3>
-                <p class="price">S/@Html.DisplayFor(modelItem => item.PrecioActual)</p>
-                <a class="btn btn-primary" asp-controller="" asp-action="" asp-route-id="@item.IDProducto">Agregar al carro</a>
-              </div>
-            </div>
-          </a>
-        </div>            
-        }
-
-      <div class="pagination-container">
-        <nav aria-label="Paginación de productos">
-          <ul class="pagination">
-            <li class="page-item disabled">
-              <a
-                class="page-link prev"
-                href="#"
-                aria-label="Anterior"
-                tabindex="-1"
-                aria-disabled="true"
-              >
-                <span class="arrow">←</span> Antes
-              </a>
-            </li>
-            <li class="page-item active" aria-current="page">
-              <a class="page-link" href="#">1</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item d-none d-sm-inline-block">
-              <span class="page-dots">..</span>
-            </li>
-            <li class="page-item d-none d-sm-inline-block">
-              <a class="page-link" href="#">8</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link next" href="#" aria-label="Siguiente">
-                Siguiente <span class="arrow">→</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+            }
+            else
+            {
+              <p class="price">S/@item.PrecioActual</p>
+            }
+          </div>
+        </a>
+        <div class="button-container">
+          <a class="btn btn-primary" asp-controller="Catalogo" asp-action="Detalles" asp-route-id="@item.IDProducto">Agregar al carro</a>
+        </div>
       </div>
-    </main>
+    </div>            
+    }
+  </div>
+@if (TempData["Mensaje"] != null && !string.IsNullOrWhiteSpace(TempData["Mensaje"].ToString()))
+{
+    <div id="tempDataModal" class="temp-data-modal">
+        <div class="temp-data-content">
+            <div class="temp-data-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="temp-data-message">
+                @TempData["Mensaje"]
+            </div>
+            <button class="temp-data-close">&times;</button>
+        </div>
+    </div>
+}
+  <div class="pagination-container">
+    <nav aria-label="Paginación de productos">
+      <ul class="pagination">
+        <li class="page-item disabled">
+          <a
+            class="page-link prev"
+            href="#"
+            aria-label="Anterior"
+            tabindex="-1"
+            aria-disabled="true"
+          >
+            <span class="arrow">←</span> Antes
+          </a>
+        </li>
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item d-none d-sm-inline-block">
+          <span class="page-dots">..</span>
+        </li>
+        <li class="page-item d-none d-sm-inline-block">
+          <a class="page-link" href="#">8</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link next" href="#" aria-label="Siguiente">
+            Siguiente <span class="arrow">→</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</main>
 
     <footer>
       <div class="container">
@@ -368,7 +392,27 @@
             
         }
 
-        
+         document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('tempDataModal');
+            const closeButton = document.querySelector('.temp-data-close');
+            
+            
+            closeButton.addEventListener('click', function() {
+                hideModal();
+            });
+            
+            
+            setTimeout(function() {
+                hideModal();
+            }, 3500);
+            
+            function hideModal() {
+                modal.style.animation = 'slideUp 0.5s ease forwards';
+                setTimeout(function() {
+                    modal.style.display = 'none';
+                }, 500);
+            }
+        });
     </script>
     
 
