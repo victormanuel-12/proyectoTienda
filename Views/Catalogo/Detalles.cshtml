@@ -1,5 +1,8 @@
 @model proyectoTienda.ViewModel.ProductoDetalleViewModel
 @{
+  Layout = "_LayoutHome";
+}
+@{
     ViewData["Title"] = "Detalles del Producto";
 }
 
@@ -36,204 +39,41 @@
     <link rel="stylesheet" href="~/css/detalleProducto.css" />
   </head>
   <body>
-    <header class="sticky-top">
-      <nav class="navbar navbar-expand-lg bg-white">
-        <div class="container-fluid">
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <a class="navbar-brand logo" href="/Home/Index">SHOP.CO</a>
-
-          <div
-            class="d-lg-none ms-auto d-flex align-items-center navbar-nav-icons-mobile"
-          >
-            <a
-              href="carrito.html"
-              class="nav-link px-2"
-              aria-label="Carrito de compras"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path
-                  d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
-                ></path>
-              </svg>
-            </a>
-            <a
-              href="iniciarSesion.html"
-              class="nav-link ps-2 pe-0"
-              aria-label="Iniciar sesión"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </a>
-          </div>
-
-          <div class="d-none d-lg-flex align-items-center flex-grow-1">
-            
-
-            <div class="search-container-desktop">
-              <svg
-                class="search-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input type="search" placeholder="Buscar productos..." />
-            </div>
-
-            <div class="nav-icons-desktop">
-              <a
-                asp-controller="Carrito"
-                asp-action="Carrito"
-                class="cart-link"
-                aria-label="Carrito de compras"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path
-                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
-                  ></path>
-                </svg>
-              </a>
-              <a
-                href="iniciarSesion.html"
-                class="user-account-link"
-                aria-label="Iniciar sesión"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <span>Iniciar Sesión</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div
-        class="offcanvas offcanvas-start"
-        tabindex="-1"
-        id="offcanvasNavbar"
-        aria-labelledby="offcanvasNavbarLabel"
-      >
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">SHOP.CO</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="offcanvas-body">
-          <div class="search-container-mobile position-relative mb-3">
-            <svg
-              class="search-icon-mobile"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input
-              class="form-control"
-              type="search"
-              placeholder="Buscar productos..."
-            />
-          </div>
-
-          
-        </div>
-      </div>
-    </header>
-
+   
     <main class="product-detail-container">
       <div class="product-detail-row">
   <div class="product-image-col">
     <img
-      src="@Model.ProductoPrincipal.ImagenURL"
+      src="@(Model?.ProductoPrincipal?.ImagenURL ?? "/images/no-image.jpg")"
       alt="#"
       class="product-main-image"
     />
   </div>
 
   <div class="product-info-col">
-    <h1 class="product-title">@Model.ProductoPrincipal.Nombre</h1>
+    <h1 class="product-title">@(Model?.ProductoPrincipal?.Nombre ?? "Producto")</h1>
     
     <div class="price-container">
       <div class="current-price-wrapper">
-        <span class="current-price">S/ @Model.ProductoPrincipal.PrecioActual</span>
-        @if (Model.ProductoPrincipal.PrecioOriginal > Model.ProductoPrincipal.PrecioActual)
+        <span class="current-price">S/ @(Model?.ProductoPrincipal?.PrecioActual ?? 0)</span>
+        @if (Model?.ProductoPrincipal != null && Model.ProductoPrincipal.PrecioOriginal > Model.ProductoPrincipal.PrecioActual)
         {
           <span class="discount-badge">-@Math.Round(((Model.ProductoPrincipal.PrecioOriginal - Model.ProductoPrincipal.PrecioActual) / Model.ProductoPrincipal.PrecioOriginal) * 100)%</span>
         }
       </div>
-      @if (Model.ProductoPrincipal.PrecioOriginal > Model.ProductoPrincipal.PrecioActual)
+      @if (Model?.ProductoPrincipal != null && Model.ProductoPrincipal.PrecioOriginal > Model.ProductoPrincipal.PrecioActual)
       {
         <div class="original-price">S/ @Model.ProductoPrincipal.PrecioOriginal</div>
       }
     </div>
 
-    <p class="product-description">@Model.ProductoPrincipal.Descripcion</p>
+    <p class="product-description">@(Model?.ProductoPrincipal?.Descripcion ?? "Sin descripción disponible")</p>
 
     <form asp-controller="Carrito" asp-action="AgregarAlCarrito" method="post">
-      <input type="hidden" name="productoId" value="@Model.ProductoPrincipal.IDProducto" />
+      <input type="hidden" name="productoId" value="@(Model?.ProductoPrincipal?.IDProducto ?? 0)" />
       <div class="d-flex align-items-center mb-3">
         <button type="button" class="btn btn-outline-secondary" onclick="decrementarCantidad()">-</button>
-        <input type="number" name="cantidad" id="cantidadInput" value="1" min="1" max="@Model.ProductoPrincipal.Stock" class="form-control mx-2 text-center" style="width: 80px;" />
+        <input type="number" name="cantidad" id="cantidadInput" value="1" min="1" max="@(Model?.ProductoPrincipal?.Stock ?? 1)" class="form-control mx-2 text-center" style="width: 80px;" />
         <button type="button" class="btn btn-outline-secondary" onclick="incrementarCantidad()">+</button>
       </div>
       <button type="submit" class="btn btn-primary">
@@ -244,9 +84,16 @@
     <div class="product-details">
       <h3>Detalles del producto</h3>
       <ul>
-        @foreach (var detalle in Model.ProductoPrincipal.Detalle.Split(','))
+        @if (Model?.ProductoPrincipal?.Detalle != null)
         {
-          <li>@detalle.Trim()</li>
+          @foreach (var detalle in Model.ProductoPrincipal.Detalle.Split(','))
+          {
+            <li>@detalle.Trim()</li>
+          }
+        }
+        else
+        {
+          <li>No hay detalles disponibles</li>
         }
       </ul>
     </div>
@@ -254,7 +101,7 @@
 </div>
 
 
-@if (TempData["Mensaje"] != null && !string.IsNullOrWhiteSpace(TempData["Mensaje"].ToString()))
+@if (TempData["Mensaje"] != null && !string.IsNullOrWhiteSpace(TempData["Mensaje"]?.ToString()))
 {
     <div id="tempDataModal" class="temp-data-modal">
         <div class="temp-data-content">
@@ -275,9 +122,11 @@
         </h2>
 
         <div class="row gy-4 product-row">
-            @foreach (var similarProduct in Model.ProductosSimilares)
+            @if (Model?.ProductosSimilares != null)
             {
-                <div class="col-6 col-lg-3">
+                @foreach (var similarProduct in Model.ProductosSimilares)
+                {
+                    <div class="col-6 col-lg-3">
                     <a asp-controller="Catalogo"
                         asp-action="Detalles"
                         asp-route-id="@similarProduct.IDProducto"
@@ -290,11 +139,17 @@
                             <div class="product-info">
                                 <h3>@similarProduct.Nombre</h3>
                                 <p class="price">S/@similarProduct.PrecioActual</p>
-                            </div>
-                        </div>
                     </a>
                 </div>
+                }
             }
+            else
+            {
+                <div class="col-12 text-center">
+                    <p>No hay productos similares disponibles</p>
+                </div>
+            }
+        </div>
 
         </div>
       </div>
@@ -371,14 +226,14 @@
         const input = document.getElementById('cantidadInput');
         let value = parseInt(input.value);
         if (value > 1) {
-            input.value = value - 1;
+        const maxStock = @(Model?.ProductoPrincipal?.Stock ?? 1);
         }
     }
 
     function incrementarCantidad() {
         const input = document.getElementById('cantidadInput');
         let value = parseInt(input.value);
-        const maxStock = @Model.ProductoPrincipal.Stock;
+        const maxStock = @(Model?.ProductoPrincipal?.Stock ?? 1);
         if (value < maxStock) {
             input.value = value + 1;
         }
