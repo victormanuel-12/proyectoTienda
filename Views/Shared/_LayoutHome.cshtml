@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -54,37 +54,7 @@
                 </div>
 
                 <div class="d-none d-lg-flex align-items-center flex-grow-1">
-                     <div class="dropdown category-dropdown">
-              <a
-                class="dropdown-toggle category-trigger"
-                href="#"
-                role="button"
-                id="categoriesDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                onclick="handleDropdownClick(event)"s
-              >
-                Categorías
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
-    @if (ViewBag.Categorias != null)
-    {<li>
-                <a class="dropdown-item" href="@Url.Action("Index", "Catalogo")">
-                    Todos
-                </a>
-            </li>
-        foreach (var categoria in ViewBag.Categorias)
-        {
-            <li>
-                <a class="dropdown-item" href="@Url.Action("Index", "Catalogo", new { categoriaId = categoria.IDCategoria })">
-                    @categoria.Nombre
-                </a>
-            </li>
-        }
-    }
-</ul>
-
-            </div>
+                     
 
                     <div class="main-nav-links">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -92,21 +62,7 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">Admin</a>
                     </div>
 
-                    <div class="search-container-desktop">
-                        <svg
-                            class="search-icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <input type="search" placeholder="Buscar productos..." />
-                    </div>
+                    
 
                     <div class="nav-icons-desktop">
                         <a
@@ -152,26 +108,7 @@
                 ></button>
             </div>
             <div class="offcanvas-body">
-                <div class="search-container-mobile position-relative mb-3">
-                    <svg
-                        class="search-icon-mobile"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input
-                        class="form-control"
-                        type="search"
-                        placeholder="Buscar productos..."
-                    />
-                </div>
+                
 
                 <ul class="navbar-nav justify-content-end flex-grow-1">
                     <li class="nav-item">
@@ -224,39 +161,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        // Función que se ejecutará cuando se haga clic en el dropdown
-        function handleDropdownClick(event) {
-            // Aquí puedes hacer cualquier acción que desees cuando se haga clic
-            console.log('Dropdown fue clickeado');
-            
-            // Ejemplo: Agregar o quitar una clase CSS cuando se haga clic
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            dropdownMenu.classList.toggle('show');
-            
-        }
-
-         document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('tempDataModal');
-            const closeButton = document.querySelector('.temp-data-close');
-            
-            
-            closeButton.addEventListener('click', function() {
-                hideModal();
-            });
-            
-            
-            setTimeout(function() {
-                hideModal();
-            }, 3500);
-            
-            function hideModal() {
-                modal.style.animation = 'slideUp 0.5s ease forwards';
-                setTimeout(function() {
-                    modal.style.display = 'none';
-                }, 500);
-            }
-        });
-    </script>
+   
 </body>
 </html>

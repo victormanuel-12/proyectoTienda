@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PC\\Desktop\\Nueva carpeta (17)\\proyectoTienda\\proyectoTienda.csproj": {}
+    "C:\\Users\\PC\\Desktop\\proyecto actual 2\\proyectoTienda\\proyectoTienda.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PC\\Desktop\\Nueva carpeta (17)\\proyectoTienda\\proyectoTienda.csproj": {
+    "C:\\Users\\PC\\Desktop\\proyecto actual 2\\proyectoTienda\\proyectoTienda.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PC\\Desktop\\Nueva carpeta (17)\\proyectoTienda\\proyectoTienda.csproj",
+        "projectUniqueName": "C:\\Users\\PC\\Desktop\\proyecto actual 2\\proyectoTienda\\proyectoTienda.csproj",
         "projectName": "proyectoTienda",
-        "projectPath": "C:\\Users\\PC\\Desktop\\Nueva carpeta (17)\\proyectoTienda\\proyectoTienda.csproj",
+        "projectPath": "C:\\Users\\PC\\Desktop\\proyecto actual 2\\proyectoTienda\\proyectoTienda.csproj",
         "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PC\\Desktop\\Nueva carpeta (17)\\proyectoTienda\\obj\\",
+        "outputPath": "C:\\Users\\PC\\Desktop\\proyecto actual 2\\proyectoTienda\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -65,7 +65,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[8.0.13, )"
+              "version": "[8.0.2, )"
             }
           },
           "imports": [
