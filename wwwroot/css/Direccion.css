@@ -1,0 +1,134 @@
+body {
+  background-color: #f5f7fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Estilos del indicador de progreso */
+.progress-container {
+  position: relative;
+  margin: 40px 0;
+}
+
+.progress-bar-container {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #e0e0e0;
+  z-index: 1;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #333;
+  width: 33.33%; /* Inicialmente hasta el segundo paso */
+  transition: width 0.5s ease;
+  z-index: 2;
+}
+
+.step-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 3;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 25%;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.step-icon i {
+  color: #999;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.step-text {
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+  border-color: #333;
+  background-color: #333;
+}
+
+.step.active .step-icon i {
+  color: #fff;
+}
+
+.step.active .step-text {
+  color: #333;
+  font-weight: 600;
+}
+
+.step.completed .step-icon {
+  border-color: #333;
+  background-color: #333;
+}
+
+.step.completed .step-icon i {
+  color: #fff;
+}
+
+.step.completed .step-text {
+  color: #333;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .step-text {
+    font-size: 12px;
+  }
+
+  .step-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .step-icon i {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .progress-container {
+    margin: 20px 0;
+  }
+
+  .step-text {
+    font-size: 10px;
+  }
+
+  .step-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .step-icon i {
+    font-size: 12px;
+  }
+}

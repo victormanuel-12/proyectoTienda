@@ -1,0 +1,233 @@
+body {
+  background-color: #f5f7fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Estilos del indicador de progreso */
+.progress-container {
+  position: relative;
+  margin: 40px 0;
+}
+
+.progress-bar-container {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #e0e0e0;
+  z-index: 1;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #333;
+  width: 100%; /* Hasta el cuarto paso */
+  transition: width 0.5s ease;
+  z-index: 2;
+}
+
+.step-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 3;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 25%;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.step-icon i {
+  color: #999;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.step-text {
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+  border-color: #333;
+  background-color: #333;
+}
+
+.step.active .step-icon i {
+  color: #fff;
+}
+
+.step.active .step-text {
+  color: #333;
+  font-weight: 600;
+}
+
+.step.completed .step-icon {
+  border-color: #333;
+  background-color: #333;
+}
+
+.step.completed .step-icon i {
+  color: #fff;
+}
+
+.step.completed .step-text {
+  color: #333;
+}
+
+/* Estilos para la animación de éxito */
+.success-animation {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  display: none;
+}
+
+.success-animation.show {
+  display: block;
+}
+
+.checkmark-circle {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  background-color: #4caf50;
+  border-radius: 50%;
+}
+
+.checkmark {
+  border-radius: 5px;
+}
+
+.checkmark.draw:after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 80px;
+  border: solid #fff;
+  border-width: 0 10px 10px 0;
+  position: absolute;
+  left: 30px;
+  top: 0;
+  transform-origin: left top;
+  transform: scaleX(-1) rotate(135deg);
+  animation: checkmark 0.8s ease-in-out forwards;
+}
+
+@keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: 20px;
+    opacity: 1;
+  }
+  40% {
+    height: 40px;
+    width: 40px;
+    opacity: 1;
+  }
+  100% {
+    height: 80px;
+    width: 40px;
+    opacity: 1;
+  }
+}
+
+/* Estilos del modal de confirmación */
+.confirmation-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirmation-modal.show {
+  display: flex;
+}
+
+.confirmation-content {
+  background-color: white;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.thumbs-up {
+  font-size: 60px;
+  color: #4caf50;
+  margin-bottom: 20px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .step-text {
+    font-size: 12px;
+  }
+
+  .step-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .step-icon i {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .progress-container {
+    margin: 20px 0;
+  }
+
+  .step-text {
+    font-size: 10px;
+  }
+
+  .step-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .step-icon i {
+    font-size: 12px;
+  }
+}
