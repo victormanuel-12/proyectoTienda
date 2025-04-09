@@ -46,7 +46,7 @@ namespace proyectoTienda.Controllers
         .Where(o => o.UserName == userID && o.Status == "PENDIENTE")
         .ToListAsync();
         
-      var totalOriginal = items.Sum(o => o.Precio * o.Cantidad); // Calcula el total del carrito
+      var totalOriginal = items.Sum(o => (o.Producto?.PrecioOriginal ?? 0) * o.Cantidad); // Calcula el total del carrito
 
       var preciosOriginales = await _context.Productos
         .Select(o => o.PrecioOriginal)
@@ -63,117 +63,105 @@ namespace proyectoTienda.Controllers
       return View(model);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AgregarAlCarrito(int productoId, int cantidad)
+ [HttpPost]
+public async Task<IActionResult> AgregarAlCarrito(int productoId, int cantidad)
+{
+    var userID = _userManager.GetUserName(User);
+
+    if (userID == null)
     {
-      var userID = _userManager.GetUserName(User);
-
-      if (userID == null)
-      {
         _logger.LogInformation("No existe usuario");
-        TempData["Mensaje"] = "Usuario No autenticado, inicia sesión por favor";
-        return RedirectToAction("Detalles", "Catalogo", new { id = productoId });
-      }
-      else
-      {
-        var producto = await _context.Productos.FindAsync(productoId);
+        return Json(new { success = false, message = "Usuario no autenticado, inicia sesión por favor" });
+    }
 
-        if (producto == null)
-        {
-          _logger.LogInformation($"Producto con ID {productoId} no encontrado");
-          TempData["Mensaje"] = "Producto no encontrado";
-          return RedirectToAction("Detalles", "Catalogo", new { id = productoId });
-        }
+    var producto = await _context.Productos.FindAsync(productoId);
 
-        if (producto.Stock < cantidad)
-        {
-          TempData["Mensaje"] = $"Stock insuficiente. Solo hay {producto.Stock} disponibles.";
-          return RedirectToAction("Detalles", "Catalogo", new { id = productoId });
-        }
-        
-        // Check if the product already exists in the user's cart with PENDIENTE status
-        var existingItem = await _context.ItemsCarrito
-          .Include(i => i.Producto)
-          .FirstOrDefaultAsync(i => i.UserName == userID && 
-                    i.Producto.IDProducto == productoId && 
-                    i.Status == "PENDIENTE");
+    if (producto == null)
+    {
+        _logger.LogInformation($"Producto con ID {productoId} no encontrado");
+        return Json(new { success = false, message = "Producto no encontrado" });
+    }
 
+    if (producto.Stock < cantidad)
+    {
+        return Json(new { success = false, message = $"Stock insuficiente. Solo hay {producto.Stock} disponibles." });
+    }
+
+    var existingItem = await _context.ItemsCarrito
+        .FirstOrDefaultAsync(i => i.UserName == userID &&
+                                  i.Producto.IDProducto == productoId &&
+                                  i.Status == "PENDIENTE");
+
+    try
+    {
         if (existingItem != null)
         {
-          // Update the quantity of the existing item
-          existingItem.Cantidad = cantidad;
-          
-          try
-          {
+            existingItem.Cantidad = cantidad;
             await _context.SaveChangesAsync();
-            TempData["Mensaje"] = "Se actualizó la cantidad del producto en el carrito";
-            _logger.LogInformation("Se actualizó la cantidad de un producto en el carrito");
-            return RedirectToAction("Detalles", "Catalogo", new { id = productoId });
-          }
-          catch (Exception ex)
-          {
-            _logger.LogError($"Error al actualizar la cantidad en el carrito: {ex.Message}", ex);
-            TempData["Mensaje"] = "Hubo un error al intentar actualizar el carrito. Por favor, intente de nuevo más tarde.";
-            return RedirectToAction("Detalles", "Catalogo", new { id = productoId });
-          }
+            _logger.LogInformation("Cantidad actualizada en el carrito");
+            return Json(new { success = true, message = "Se actualizó la cantidad del producto en el carrito" });
         }
-
-        // If item doesn't exist in cart, continue with creation
-        ItemCarrito itemCarrito = new ItemCarrito
+        else
         {
-          Cantidad = cantidad,
-          Producto = producto,
-          UserName = userID,
-          Precio = producto.PrecioOriginal, 
-          Status = "PENDIENTE"
-        };
-        
-        try
-        {
-          _context.Add(itemCarrito);
-          await _context.SaveChangesAsync();
+            var item = new ItemCarrito
+            {
+                UserName = userID,
+                Producto = producto,
+                Cantidad = cantidad,
+                Status = "PENDIENTE"
+            };
 
-          TempData["Mensaje"] = "Producto agregado al carrito correctamente";
-          _logger.LogInformation("Se agregó un producto al carrito");
+            _context.ItemsCarrito.Add(item);
+            await _context.SaveChangesAsync();
 
-          return RedirectToAction("Detalles", "Catalogo", new { id = productoId });
+            _logger.LogInformation("Producto agregado al carrito");
+            return Json(new { success = true, message = "Producto agregado al carrito" });
         }
-        catch (Exception ex)
-        {
-          _logger.LogError($"Error al guardar en la base de datos al agregar el producto al carrito: {ex.Message}", ex);
-          TempData["Mensaje"] = "Hubo un error al intentar agregar el producto al carrito. Por favor, intente de nuevo más tarde.";
-          
-          return RedirectToAction("Detalles", "Catalogo", new { id = productoId });
-        }
-      }
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Eliminar(int? idProductoEliminar)
+    catch (Exception ex)
     {
-      if (idProductoEliminar == null)
-      {
-        _logger.LogWarning("Intento de eliminar con id nulo");
-        return NotFound();
-      }
+        _logger.LogError($"Error al guardar el carrito: {ex.Message}", ex);
+        return Json(new { success = false, message = "Hubo un error al intentar actualizar el carrito. Intente más tarde." });
+    }
+}
 
-      var item = await _context.ItemsCarrito.FindAsync(idProductoEliminar);
 
-      if (item != null)
-      {
+    public async Task<IActionResult> Eliminar(int? idProductoEliminar)
+{
+    var response = new { success = false, message = "No se pudo eliminar el producto." };
+
+    try
+    {
+        // Validar si el idProductoEliminar está presente
+        if (!idProductoEliminar.HasValue)
+        {
+            response = new { success = false, message = "El ID del producto es obligatorio." };
+            return Json(response);
+        }
+
+        // Buscar el producto en la base de datos
+        var item = await _context.ItemsCarrito.FindAsync(idProductoEliminar.Value);
+        if (item == null)
+        {
+            response = new { success = false, message = "Producto no encontrado." };
+            return Json(response);
+        }
+
+        // Eliminar el producto del carrito
         _context.ItemsCarrito.Remove(item);
         await _context.SaveChangesAsync();
-        TempData["Mensaje"] = "Producto eliminado del carrito correctamente.";
-        _logger.LogInformation($"Se eliminó el item con ID {idProductoEliminar} del carrito.");
-      }
-      else
-      {
-        _logger.LogWarning($"No se encontró item con ID {idProductoEliminar} para eliminar.");
-        TempData["Mensaje"] = "No se encontró el producto en el carrito.";
-      }
 
-      return RedirectToAction("Carrito");
+        response = new { success = true, message = "Producto eliminado correctamente." };
     }
+    catch (Exception ex)
+    {
+        response = new { success = false, message = "Error al procesar la solicitud." };
+        _logger.LogError(ex, "Error al eliminar producto del carrito.");
+    }
+
+    return Json(response);
+}
+
 
 
 

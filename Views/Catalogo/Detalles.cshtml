@@ -69,17 +69,28 @@
 
     <p class="product-description">@(Model?.ProductoPrincipal?.Descripcion ?? "Sin descripción disponible")</p>
 
-    <form asp-controller="Carrito" asp-action="AgregarAlCarrito" method="post">
-      <input type="hidden" name="productoId" value="@(Model?.ProductoPrincipal?.IDProducto ?? 0)" />
-      <div class="d-flex align-items-center mb-3">
-        <button type="button" class="btn btn-outline-secondary" onclick="decrementarCantidad()">-</button>
-        <input type="number" name="cantidad" id="cantidadInput" value="1" min="1" max="@(Model?.ProductoPrincipal?.Stock ?? 1)" class="form-control mx-2 text-center" style="width: 80px;" />
-        <button type="button" class="btn btn-outline-secondary" onclick="incrementarCantidad()">+</button>
-      </div>
-      <button type="submit" class="btn btn-primary">
-        <i class="bi bi-cart-plus"></i> Agregar al carrito
-      </button>
-    </form>
+    <form id="formAgregarCarrito">
+  <input type="hidden" name="productoId" value="@(Model?.ProductoPrincipal?.IDProducto ?? 0)" />
+  <div class="d-flex align-items-center mb-3">
+    <button type="button" class="btn btn-outline-secondary" onclick="decrementarCantidad()">-</button>
+    <input 
+  type="number" 
+  name="cantidad" 
+  id="cantidadInput" 
+  value="1" 
+  min="1" 
+  max="@(Model?.ProductoPrincipal?.Stock ?? 1)" 
+  data-max-stock="@(Model?.ProductoPrincipal?.Stock ?? 1)" 
+  class="form-control mx-2 text-center" 
+  style="width: 80px;" />
+
+    <button type="button" class="btn btn-outline-secondary" onclick="incrementarCantidad()">+</button>
+  </div>
+  <button type="submit" class="btn btn-primary">
+    <i class="bi bi-cart-plus"></i> Agregar al carrito
+  </button>
+</form>
+
 
     <div class="product-details">
       <h3>Detalles del producto</h3>
@@ -101,20 +112,18 @@
 </div>
 
 
-@if (TempData["Mensaje"] != null && !string.IsNullOrWhiteSpace(TempData["Mensaje"]?.ToString()))
-{
-    <div id="tempDataModal" class="temp-data-modal">
-        <div class="temp-data-content">
-            <div class="temp-data-icon">
-                <i class="fas fa-info-circle"></i>
-            </div>
-            <div class="temp-data-message">
-                @TempData["Mensaje"]
-            </div>
-            <button class="temp-data-close">&times;</button>
-        </div>
+
+
+<div id="mensajeModal" class="temp-data-modal" style="display:none;">
+  <div class="temp-data-content">
+    <div class="temp-data-icon">
+      <i class="fas fa-info-circle"></i>
     </div>
-}
+    <div class="temp-data-message" id="mensajeTexto"></div>
+    <button class="temp-data-close">&times;</button>
+  </div>
+</div>
+
 
       <div class="similar-products-section">
         <h2 class="similar-products-title">
@@ -208,59 +217,11 @@
       crossorigin="anonymous"
     ></script>
 
-    <script>
-       
-        function handleDropdownClick(event) {
-            
-            console.log('Dropdown fue clickeado');
-            
-            
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            dropdownMenu.classList.toggle('show');
-            
-           
-        }
-        
     
-         function decrementarCantidad() {
-        const input = document.getElementById('cantidadInput');
-        let value = parseInt(input.value);
-        if (value > 1) {
-        const maxStock = @(Model?.ProductoPrincipal?.Stock ?? 1);
-        }
-    }
+       
+       
+<script src="~/js/detallesProducto.js"></script>
 
-    function incrementarCantidad() {
-        const input = document.getElementById('cantidadInput');
-        let value = parseInt(input.value);
-        const maxStock = @(Model?.ProductoPrincipal?.Stock ?? 1);
-        if (value < maxStock) {
-            input.value = value + 1;
-        }
-    }
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('tempDataModal');
-            const closeButton = document.querySelector('.temp-data-close');
-            
-            
-            closeButton.addEventListener('click', function() {
-                hideModal();
-            });
-            
-            
-            setTimeout(function() {
-                hideModal();
-            }, 3500);
-            
-            function hideModal() {
-                modal.style.animation = 'slideUp 0.5s ease forwards';
-                setTimeout(function() {
-                    modal.style.display = 'none';
-                }, 500);
-            }
-        });
-    </script>
+    
   </body>
 </html>
