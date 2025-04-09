@@ -1,0 +1,192 @@
+/* Estilos generales */
+:root {
+  --primary-color: #2563eb; /* Azul más vibrante */
+  --text-color: #333;
+  --light-gray: #f5f5f5;
+  --border-color: #e2e8f0;
+  --error-color: #dc2626;
+}
+
+/* Contenedor principal */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 1rem;
+}
+
+/* Tarjeta de login */
+.login-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 700; /* Bold */
+  margin-bottom: 0.5rem;
+  text-align: center;
+  color: #1e293b;
+}
+
+.login-title .text-primary {
+  color: var(--primary-color);
+  font-weight: 700; /* Bold */
+}
+
+.login-subtitle {
+  color: #64748b;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 400; /* Normal */
+}
+
+/* Formulario */
+.login-form {
+  margin-top: 1.5rem;
+}
+
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 700; /* Bold */
+  margin-bottom: 1.25rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 8px;
+  color: #1e293b;
+}
+
+.form-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background-color: var(--primary-color);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600; /* Semi-bold */
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  color: #334155;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Checkbox "Recordarme" */
+.remember-me {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 500; /* Medium */
+}
+
+.remember-me .form-check-input {
+  margin-right: 0.5rem;
+  width: 1em;
+  height: 1em;
+}
+
+/* Botón de login */
+.login-btn {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600; /* Semi-bold */
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.login-btn:hover {
+  background-color: #1d4ed8; /* Azul más oscuro al hover */
+  transform: translateY(-1px);
+}
+
+/* Enlaces */
+.login-links {
+  margin-top: 1.25rem;
+  text-align: center;
+}
+
+.login-links a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600; /* Semi-bold */
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+  color: #1d4ed8;
+}
+
+.register-link {
+  margin-bottom: 0.8rem;
+}
+
+/* Mensajes de error */
+.text-danger {
+  color: var(--error-color);
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+  display: block;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .login-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .login-title {
+    font-size: 1.3rem;
+  }
+
+  .form-title {
+    font-size: 1.1rem;
+  }
+
+  .form-control {
+    padding: 0.6rem 0.75rem;
+  }
+}
