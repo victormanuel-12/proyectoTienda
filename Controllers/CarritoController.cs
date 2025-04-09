@@ -11,6 +11,7 @@ using proyectoTienda.Models;
 using proyectoTienda.Data;
 using System.Dynamic;
 using proyectoTienda.Models.Model;
+using proyectoTienda.Servicios;
 
 namespace proyectoTienda.Controllers
 {
@@ -19,16 +20,20 @@ namespace proyectoTienda.Controllers
     private readonly ILogger<CarritoController> _logger;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly ApplicationDbContext _context;
+private readonly ICarritoService _carritoService;
 
-    public CarritoController(
-      ILogger<CarritoController> logger,
-      UserManager<IdentityUser> userManager, 
-      ApplicationDbContext context)
-    {
-      _userManager = userManager;
-      _context = context;
-      _logger = logger;
-    }
+public CarritoController(
+    ILogger<CarritoController> logger,
+    UserManager<IdentityUser> userManager,
+    ApplicationDbContext context,
+    ICarritoService carritoService) // Asegúrate de que esta dependencia esté siendo inyectada
+{
+    _userManager = userManager;
+    _context = context;
+    _logger = logger;
+    _carritoService = carritoService;
+}
+
 
     public async Task<IActionResult> Carrito()
     {
@@ -128,14 +133,14 @@ public async Task<IActionResult> AgregarAlCarrito(int productoId, int cantidad)
 
     public async Task<IActionResult> Eliminar(int? idProductoEliminar)
 {
-    var response = new { success = false, message = "No se pudo eliminar el producto." };
+    var response = new { success = false, message = "No se pudo eliminar el producto." ,carrito = (object)null };
 
     try
     {
         // Validar si el idProductoEliminar está presente
         if (!idProductoEliminar.HasValue)
         {
-            response = new { success = false, message = "El ID del producto es obligatorio." };
+            response = new { success = false, message = "El ID del producto es obligatorio." ,carrito = (object)null };
             return Json(response);
         }
 
@@ -143,25 +148,27 @@ public async Task<IActionResult> AgregarAlCarrito(int productoId, int cantidad)
         var item = await _context.ItemsCarrito.FindAsync(idProductoEliminar.Value);
         if (item == null)
         {
-            response = new { success = false, message = "Producto no encontrado." };
+            response = new { success = false, message = "Producto no encontrado." ,carrito = (object)null };
             return Json(response);
         }
 
-        // Eliminar el producto del carrito
-        _context.ItemsCarrito.Remove(item);
-        await _context.SaveChangesAsync();
-
-        response = new { success = true, message = "Producto eliminado correctamente." };
+    // Eliminar el producto del carrito
+    _context.ItemsCarrito.Remove(item);
+    await _context.SaveChangesAsync();
+    var userID = _userManager.GetUserName(User);
+    var modelo = await _carritoService.ObtenerCarritoActual(userID);
+    response = new { success = true, message = "Producto eliminado correctamente.", carrito = modelo };
     }
     catch (Exception ex)
     {
-        response = new { success = false, message = "Error al procesar la solicitud." };
+        response = new { success = false, message = "Error al procesar la solicitud." ,carrito = (object)null};
         _logger.LogError(ex, "Error al eliminar producto del carrito.");
     }
 
     return Json(response);
 }
 
+       
 
 
 

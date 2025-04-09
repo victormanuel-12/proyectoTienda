@@ -1,0 +1,39 @@
+@model dynamic
+
+
+      
+        <div class=" resumen card shadow-sm mb-4 sticky-top" style="top: 20px; z-index: 100;">
+            <div class="card-header bg-white py-3">
+                <h3 class="mb-0 fs-4">Resumen de la orden</h3>
+            </div>
+            <div class="card-body  ">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Productos (@Model.elementosCarrito.Count)</span>
+                    <span>S/ @Model.montoOriginal.ToString("0.00")</span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Descuentos</span>
+                    <span class="text-success">-S/ @((Model.montoOriginal - Model.montoActual).ToString("0.00"))</span>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fw-bold">Total:</span>
+                    <span class="fw-bold">S/ @Model.montoActual.ToString("0.00")</span>
+                </div>
+
+                <button id="btnContinuar" class="btn btn-dark w-100 py-3">
+                    Continuar compra
+                </button>
+
+                <div class="mt-4 p-3 bg-light rounded text-center">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="~/img/logo-yape.webp" alt="Yape" style="height: 30px;">
+                        <span class="ms-2">¡Ahora puedes pagar tus compras con Yape!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+

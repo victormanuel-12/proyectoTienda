@@ -111,25 +111,25 @@
        
  @if (Model.elementosCarrito.Count > 0)
     {
-      <div class="col-12 col-lg-4">
+      <div id="resumen-carrito"class="col-12 col-lg-4">
         <div class=" resumen card shadow-sm mb-4 sticky-top" style="top: 20px; z-index: 100;">
             <div class="card-header bg-white py-3">
                 <h3 class="mb-0 fs-4">Resumen de la orden</h3>
             </div>
             <div class="card-body  ">
-                <div class="d-flex justify-content-between mb-2">
+                <div class=" product d-flex justify-content-between mb-2">
                     <span>Productos (@Model.elementosCarrito.Count)</span>
                     <span>S/ @Model.montoOriginal.ToString("0.00")</span>
                 </div>
 
-                <div class="d-flex justify-content-between mb-3">
+                <div class="desc d-flex justify-content-between mb-3">
                     <span>Descuentos</span>
                     <span class="text-success">-S/ @((Model.montoOriginal - Model.montoActual).ToString("0.00"))</span>
                 </div>
 
                 <hr>
 
-                <div class="d-flex justify-content-between mb-4">
+                <div class=" total d-flex justify-content-between mb-4">
                     <span class="fw-bold">Total:</span>
                     <span class="fw-bold">S/ @Model.montoActual.ToString("0.00")</span>
                 </div>
@@ -227,49 +227,52 @@
 
             // Confirmar eliminación desde el modal
             $("#btnConfirmarEliminar").click(function () {
-                const id = $("#nombreProductoEliminar").data('id') || $(".eliminar-item:last").data('id');
-                console.log(id);
-                // Utilizar AJAX para enviar la solicitud al controlador
-                $.ajax({
-                    url: '@Url.Action("Eliminar", "Carrito")',
-                    type: 'POST',
-                    data: { idProductoEliminar: id },
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.success) {
-                            // Eliminar el producto del DOM sin recargar la página
-                            $(`[data-item-id="${id}"]`).fadeOut(300, function() {
-                                $(this).remove();
-                                
-                                // Actualizar contadores y resumen después de eliminar
-                                actualizarResumenCarrito();
-                            });
-                            
-                            // Mostrar mensaje de éxito
-                            mostrarMensaje(result.message || "Producto eliminado correctamente.", true);
-                            
-                            // Cerrar el modal
-                            $('#modalConfirmarEliminacion').modal('hide');
-                        } else {
-                            // Mostrar mensaje de error
-                            mostrarMensaje(result.message || "Error al eliminar el producto.", false);
-                        }
-                    },
-                    error: function() {
-                        mostrarMensaje("Ocurrió un error al eliminar el producto.", false);
-                    }
+    const id = $("#nombreProductoEliminar").data('id') || $(".eliminar-item:last").data('id');
+    console.log(id);
+    // Utilizar AJAX para enviar la solicitud al controlador
+    $.ajax({
+        url: '@Url.Action("Eliminar", "Carrito")',
+        type: 'POST',
+        data: { idProductoEliminar: id },
+        dataType: 'json',
+        success: function(result) {
+            if (result.success) {
+                // Eliminar el producto del DOM sin recargar la página
+                $(`[data-item-id="${id}"]`).fadeOut(300, function() {
+                    $(this).remove();
+                    
+                    // Actualizar contadores y resumen después de eliminar
+                    actualizarResumenCarrito(result.carrito);  // Enviar el carrito actualizado al frontend
                 });
-            });
+                
+                // Mostrar mensaje de éxito
+                mostrarMensaje(result.message || "Producto eliminado correctamente.", true);
+                
+                // Cerrar el modal
+                $('#modalConfirmarEliminacion').modal('hide');
+            } else {
+                // Mostrar mensaje de error
+                mostrarMensaje(result.message || "Error al eliminar el producto.", false);
+            }
+        },
+        error: function() {
+            mostrarMensaje("Ocurrió un error al eliminar el producto.", false);
+        }
+    });
+});
+
 
            
             
-            function actualizarResumenCarrito() {
+            function actualizarResumenCarrito(carrito) {
                 // Contar productos restantes
                 let numProductos = $(".item-carrito").length;
-                
+                console.log(carrito.montoActual.toFixed(2));
+                console.log(carrito.montoOriginal.toFixed(2));
+
                 // Actualizar contador en título del carrito
                 $(".card-header h2").text(`Carro (${numProductos} productos)`);
-                
+                if (numProductos !=0) {}
                 // Si no quedan productos, mostrar carrito vacío
                 if (numProductos === 0) {
                     $(".carrito").html(`
@@ -285,10 +288,25 @@
                     $(".resumen").html(`
                         
                     `);
-                }
+                }else {
+        // Actualizar el resumen del carrito con la información recibida del backend
+        $(".total").html(`
+            <span class="fw-bold">Total:</span>
+            <span class="fw-bold">S/ ${carrito.montoActual.toFixed(2)}</span>
+            
+        `);
+        $(".product").html(`
+            <span>Productos (${carrito.elementosCarrito.length})</span>
+            <span>S/ ${carrito.montoOriginal.toFixed(2)}</span>
+        `);
+        $(".desc").html(`
+            <span>Descuentos</span>
+            <span class="text-success">-S/ ${(carrito.montoOriginal - carrito.montoActual).toFixed(2)}</span>
+        `);
+    }
+                 
+                   
                 
-                // También se debería recalcular el total, pero eso requeriría una llamada adicional al servidor
-                // o tener los precios disponibles en el cliente
             }
 
             // Inicializar estado de botones
