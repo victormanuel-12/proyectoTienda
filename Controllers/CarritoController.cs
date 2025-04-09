@@ -46,23 +46,16 @@ public CarritoController(
         return RedirectToAction("Index", "Catalogo");
       }
 
-      var items = await _context.ItemsCarrito
-        .Include(o => o.Producto)
-        .Where(o => o.UserName == userID && o.Status == "PENDIENTE")
-        .ToListAsync();
-        
-      var totalOriginal = items.Sum(o => (o.Producto?.PrecioOriginal ?? 0) * o.Cantidad); // Calcula el total del carrito
+      
 
       var preciosOriginales = await _context.Productos
         .Select(o => o.PrecioOriginal)
         .ToListAsync();
 
-      var totalActual = items.Sum(o => (o.Producto?.PrecioActual ?? 0) * o.Cantidad);
+    var model = await _carritoService.ObtenerCarritoActual(userID);
       
-      dynamic model = new ExpandoObject();
-      model.montoOriginal = totalOriginal;
-      model.montoActual = totalActual;
-      model.elementosCarrito = items;
+      
+      
       model.preciosOriginales = preciosOriginales;
       
       return View(model);
