@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SHOP.CO</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/proyectoTienda.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/LayoutHomeLogin.css" asp-append-version="true" />
+    <style>
+       
+
+
+    </style>
+</head>
+<body>
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg bg-white">
+            <div class="container-fluid">
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar"
+                    aria-controls="offcanvasNavbar"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <a class="navbar-brand logo" asp-area="" asp-controller="Home" asp-action="Index">SHOP.CO</a>
+            </div>
+        </nav>
+
+        <div
+            class="offcanvas offcanvas-start"
+            tabindex="-1"
+            id="offcanvasNavbar"
+            aria-labelledby="offcanvasNavbarLabel"
+        >
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">SHOP.CO</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                ></button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-12 col-lg-4 footer-col">
+            <a href="index.html" class="footer-logo">SHOP.CO</a>
+            <p>
+              Tenemos ropa que se adapta a tu estilo y que te enorgullecerá
+              llevar. Para mujer y hombre.
+            </p>
+          </div>
+          <div class="col-6 col-lg-2 footer-col">
+            <h4>Empresa</h4>
+            <ul>
+              <li>Empresa dedicada a la venta de prendas de vestir</li>
+              
+            </ul>
+          </div>
+          <div class="col-6 col-lg-3 footer-col">
+            <h4>Ayuda</h4>
+            <ul>
+              <li><a href="#">Soporte al Cliente</a></li>
+            </ul>
+          </div>
+          <div class="col-12 col-lg-3 footer-col">
+            <h4>Contacto</h4>
+            <div class="contact-block">
+              <div class="contact-block-text">
+                <p>Atención al cliente:<br />987645321</p>
+              </div>
+              <div class="whatsapp-icon">
+                <a
+                  href="https://wa.me/51987645321"
+                  target="_blank"
+                  aria-label="WhatsApp"
+                >
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          Shop.co © 2000-2025, All Rights Reserved
+        </div>
+      </div>
+    </footer>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
