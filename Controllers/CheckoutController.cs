@@ -18,10 +18,7 @@ namespace proyectoTienda.Controllers
             _logger = logger;
         }
 
-        public IActionResult Direccion()
-        {
-            return View();
-        }
+        
 
 
 
