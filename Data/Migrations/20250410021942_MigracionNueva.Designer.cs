@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using proyectoTienda.Data;
 
@@ -10,9 +11,11 @@ using proyectoTienda.Data;
 namespace proyectoTienda.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250410021942_MigracionNueva")]
+    partial class MigracionNueva
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.13");
@@ -260,10 +263,6 @@ namespace proyectoTienda.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Complemento")
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Departamento")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -428,9 +427,6 @@ namespace proyectoTienda.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("IdDireccion")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("TipoEntrega")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -441,9 +437,9 @@ namespace proyectoTienda.Data.Migrations
 
                     b.HasKey("IDPedido");
 
-                    b.HasIndex("IDCliente");
+                    b.HasIndex("DireccionID");
 
-                    b.HasIndex("IdDireccion");
+                    b.HasIndex("IDCliente");
 
                     b.ToTable("Pedidos");
                 });
@@ -641,15 +637,17 @@ namespace proyectoTienda.Data.Migrations
 
             modelBuilder.Entity("proyectoTienda.Models.Pedido", b =>
                 {
+                    b.HasOne("proyectoTienda.Models.Model.Direccion", "Direccion")
+                        .WithMany("Pedidos")
+                        .HasForeignKey("DireccionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("proyectoTienda.Models.Usuario", "Cliente")
                         .WithMany("Pedidos")
                         .HasForeignKey("IDCliente")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("proyectoTienda.Models.Model.Direccion", "Direccion")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("IdDireccion");
 
                     b.Navigation("Cliente");
 

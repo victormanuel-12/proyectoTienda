@@ -18,9 +18,6 @@ namespace proyectoTienda.Models
     [StringLength(100)]
     public string? Nombre { get; set; }
 
-   
-    [StringLength(255)]
-    public string? Direccion { get; set; }
 
     [Required]
     [EmailAddress]

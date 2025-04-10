@@ -3,3 +3,4 @@ obj/
 *.db
 *.db-wal
 *.db-shm
+.ionide/

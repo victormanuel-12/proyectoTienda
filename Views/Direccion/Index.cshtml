@@ -1,0 +1,261 @@
+@model proyectoTienda.ViewModel.DireccionViewModel
+@{
+    ViewData["Title"] = "Información de Envío";
+}
+
+<!-- Enlaces a CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="~/css/Direccion.css">
+
+<div class="container mt-4 mb-5">
+    <!-- Indicador de progreso -->
+    <div class="progress-container mb-5">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="step-container">
+            <div class="step completed" id="step-1">
+                <div class="step-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="step-text">Carro</div>
+            </div>
+            
+            <div class="step active" id="step-2">
+                <div class="step-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="step-text">Información de envío</div>
+            </div>
+            
+            <div class="step" id="step-3">
+                <div class="step-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="step-text">Entrega</div>
+            </div>
+            
+            <div class="step" id="step-4">
+                <div class="step-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="step-text">Pago</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Información de envío -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">Ingresa tu dirección</h4>
+                <p class="text-muted mb-0">para ver las opciones de entrega y retiro</p>
+            </div>
+            <div class="card-body">
+                <form asp-controller="Direccion" asp-action="GuardarDireccion" method="post" id="shipping-form">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="DepartamentoId" class="form-label">Departamento</label>
+                            <select asp-for="DepartamentoId" class="form-select" id="departamento" required>
+                                <option value="">Seleccionar...</option>
+                                @foreach (var item in ViewBag.Departamentos)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            <span asp-validation-for="DepartamentoId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ProvinciaId" class="form-label">Provincia</label>
+                            <select asp-for="ProvinciaId" class="form-select" id="provincia" required disabled>
+                                <option value="">Seleccionar...</option>
+                            </select>
+                            <span asp-validation-for="ProvinciaId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="DistritoId" class="form-label">Distrito</label>
+                            <select asp-for="DistritoId" class="form-select" id="distrito" required disabled>
+                                <option value="">Seleccionar...</option>
+                            </select>
+                            <span asp-validation-for="DistritoId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DireccionTexto" class="form-label">Avenida/Calle/Jirón</label>
+                            <input asp-for="DireccionTexto" class="form-control" value="AAHH JUAN LANDAZURI MZ D LT 7" required>
+                            <span asp-validation-for="DireccionTexto" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Complemento" class="form-label">Dpto./Interior/Piso/Lote/Bloque (opcional)</label>
+                            <input asp-for="Complemento" class="form-control">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-secondary" id="discard-changes-btn">Descartar cambios</button>
+                        <button type="submit" class="btn btn-primary" id="confirm-address-btn">Confirmar dirección</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a asp-controller="Checkout" asp-action="Entrega" class="btn btn-success mt-4">Siguiente</a>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const departamentoSelect = document.getElementById('departamento');
+            const provinciaSelect = document.getElementById('provincia');
+            const distritoSelect = document.getElementById('distrito');
+            const shippingForm = document.getElementById('shipping-form');
+            const discardChangesBtn = document.getElementById('discard-changes-btn');
+            
+            // Cargar provincias cuando se selecciona un departamento
+            departamentoSelect.addEventListener('change', async function() {
+                const departamentoId = this.value;
+                
+                if (departamentoId) {
+                    try {
+                        // Limpiar y deshabilitar los selects dependientes
+                        provinciaSelect.innerHTML = '<option value="">Seleccionar...</option>';
+                        distritoSelect.innerHTML = '<option value="">Seleccionar...</option>';
+                        distritoSelect.disabled = true;
+                        
+                        // Habilitar el select de provincia
+                        provinciaSelect.disabled = false;
+                        
+                        // Obtener las provincias del departamento seleccionado
+                        const response = await fetch(`/Direccion/GetProvincias?departamentoId=${departamentoId}`);
+                        
+                        if (!response.ok) {
+                            throw new Error('Error al obtener provincias');
+                        }
+                        
+                        const provincias = await response.json();
+                        
+                        // Agregar las opciones de provincias al select
+                        provincias.forEach(provincia => {
+                            const option = document.createElement('option');
+                            option.value = provincia.id;
+                            option.textContent = provincia.nombre;
+                            provinciaSelect.appendChild(option);
+                        });
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Hubo un error al cargar las provincias. Por favor, intenta nuevamente.');
+                    }
+                } else {
+                    // Si no hay departamento seleccionado, deshabilitar y limpiar
+                    provinciaSelect.disabled = true;
+                    distritoSelect.disabled = true;
+                    provinciaSelect.innerHTML = '<option value="">Seleccionar...</option>';
+                    distritoSelect.innerHTML = '<option value="">Seleccionar...</option>';
+                }
+            });
+            
+            // Cargar distritos cuando se selecciona una provincia
+            provinciaSelect.addEventListener('change', async function() {
+                const provinciaId = this.value;
+                
+                if (provinciaId) {
+                    try {
+                        // Limpiar y habilitar el select de distrito
+                        distritoSelect.innerHTML = '<option value="">Seleccionar...</option>';
+                        distritoSelect.disabled = false;
+                        
+                        // Obtener los distritos de la provincia seleccionada
+                        const response = await fetch(`/Direccion/GetDistritos?provinciaId=${provinciaId}`);
+                        
+                        if (!response.ok) {
+                            throw new Error('Error al obtener distritos');
+                        }
+                        
+                        const distritos = await response.json();
+                        
+                        // Agregar las opciones de distritos al select
+                        distritos.forEach(distrito => {
+                            const option = document.createElement('option');
+                            option.value = distrito.id;
+                            option.textContent = distrito.nombre;
+                            distritoSelect.appendChild(option);
+                        });
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Hubo un error al cargar los distritos. Por favor, intenta nuevamente.');
+                    }
+                } else {
+                    // Si no hay provincia seleccionada, deshabilitar y limpiar
+                    distritoSelect.disabled = true;
+                    distritoSelect.innerHTML = '<option value="">Seleccionar...</option>';
+                }
+            });
+            
+            // Descartar cambios
+            discardChangesBtn.addEventListener('click', function() {
+                shippingForm.reset();
+                provinciaSelect.disabled = true;
+                distritoSelect.disabled = true;
+                provinciaSelect.innerHTML = '<option value="">Seleccionar...</option>';
+                distritoSelect.innerHTML = '<option value="">Seleccionar...</option>';
+            });
+            
+            // Validación del formulario antes de enviar
+            shippingForm.addEventListener('submit', function(e) {
+                if (!validateShippingForm()) {
+                    e.preventDefault(); // Evitar el envío del formulario si no es válido
+                }
+            });
+            
+            // Función de validación
+            function validateShippingForm() {
+                let isValid = true;
+                
+                // Validar departamento
+                if (!departamentoSelect.value) {
+                    departamentoSelect.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    departamentoSelect.classList.remove('is-invalid');
+                }
+                
+                // Validar provincia
+                if (!provinciaSelect.value) {
+                    provinciaSelect.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    provinciaSelect.classList.remove('is-invalid');
+                }
+                
+                // Validar distrito
+                if (!distritoSelect.value) {
+                    distritoSelect.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    distritoSelect.classList.remove('is-invalid');
+                }
+                
+                // Validar dirección
+                const direccion = document.getElementById('DireccionTexto');
+                if (!direccion.value.trim()) {
+                    direccion.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    direccion.classList.remove('is-invalid');
+                }
+                
+                return isValid;
+            }
+        });
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

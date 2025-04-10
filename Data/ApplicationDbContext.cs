@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using proyectoTienda.Models;
 namespace proyectoTienda.Data;
 using proyectoTienda.Models.Model;
+using proyectoTienda.Models.Model.ubicacion;
 
 public class ApplicationDbContext : IdentityDbContext
 {
@@ -17,6 +18,10 @@ public class ApplicationDbContext : IdentityDbContext
   public DbSet<Categoria> Categorias { get; set; }
   public DbSet<Pago> Pagos { get; set; }
   public DbSet<ItemCarrito> ItemsCarrito { get; set; }
+   public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Provincia> Provincias { get; set; }
+        public DbSet<Distrito> Distritos { get; set; }
+        public DbSet<Direccion> Direcciones { get; set; } 
   
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
