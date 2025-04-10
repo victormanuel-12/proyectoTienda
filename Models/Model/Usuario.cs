@@ -9,12 +9,12 @@ using proyectoTienda.Models.ENUM;
 namespace proyectoTienda.Models
 {
   [Table("Usuarios")]
-    public class Usuario
+  public class Usuario
   {
     [Key]
     public string? ID { get; set; }
 
-    [Required]
+
     [StringLength(100)]
     public string? Nombre { get; set; }
 
@@ -24,11 +24,11 @@ namespace proyectoTienda.Models
     [StringLength(255)]
     public string? Email { get; set; }
 
-   
 
-    
-    public TipoUsuario TipoUsuario { get; set; } // 0 = Cliente, 1 = Admin
-                                                 // Enum para representar los tipos de usuario
+
+
+    public string? TipoUsuario { get; set; } // 0 = Cliente, 1 = Admin
+                                             // Enum para representar los tipos de usuario
 
 
     public ICollection<Pedido>? Pedidos { get; set; }
