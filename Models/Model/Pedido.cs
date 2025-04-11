@@ -12,38 +12,38 @@ namespace proyectoTienda.Models
   [Table("Pedidos")]
   public class Pedido
   {
-    
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IDPedido { get; set; }
 
-    
+
     [Required]
     public string? IDCliente { get; set; }
-    
+
     [Required]
     public DateTime FechaPedido { get; set; } = DateTime.Now;
-    
+
     [Required]
     public string? Estado { get; set; } = "PENDIENTE"; // 0=Pendiente, 1=Pagado 
-    
-    public int DireccionID { get; set; }
-    
+    [Required]
+    public int IdDireccion { get; set; }
+
     [Column(TypeName = "decimal(10, 2)")]
     public decimal Total { get; set; }
 
     [Required]
     [StringLength(100)]
-    public string? TipoEntrega { get; set; } 
+    public string? TipoEntrega { get; set; }
 
     [ForeignKey("IDCliente")]
     public Usuario? Cliente { get; set; }
-    
+
     [ForeignKey("IdDireccion")]
-    public Direccion? Direccion { get; set; } 
-    
+    public Direccion? Direccion { get; set; }
+
     public ICollection<DetallePedido>? DetallesPedidos { get; set; }
-    
+
     public Pago? Pago { get; set; }
 
     // Methods
@@ -67,7 +67,7 @@ namespace proyectoTienda.Models
         {
           detalle.ActualizarSubtotal();
         }
-        
+
         Total = CalcularTotal();
       }
     }

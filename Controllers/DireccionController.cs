@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proyectoTienda.ViewModel;
 using Microsoft.AspNetCore.Identity;
+using proyectoTienda.Session;
 
 
 namespace proyectoTienda.Controllers
@@ -82,7 +83,8 @@ namespace proyectoTienda.Controllers
 
         var direccion = new Direccion
         {
-          IDCliente = usuarioAspNet.Id, // O el ID del usuario actual
+
+
           DireccionTexto = model.DireccionTexto,
           Departamento = departamento.Nombre,
           Complemento = model.Complemento,
@@ -90,15 +92,30 @@ namespace proyectoTienda.Controllers
           Distrito = distrito.Nombre
         };
         // Log direccion object details
-        _logger.LogInformation("Direccion creada: ID Cliente: {IDCliente}, Dirección: {DireccionTexto}, " +
+        _logger.LogInformation(" Dirección: {DireccionTexto}, " +
                      "Departamento: {Departamento}, Provincia: {Provincia}, " +
-                     "Distrito: {Distrito}, Complemento: {Complemento}",
-                     direccion.IDCliente, direccion.DireccionTexto,
+                     "Distrito: {Distrito}, Complemento: {Complemento}", direccion.DireccionTexto,
                      direccion.Departamento, direccion.Provincia,
                      direccion.Distrito, direccion.Complemento);
+        SessionExtension.Set<Direccion>(HttpContext.Session, "direccionPedido", direccion);
 
-        _context.Direcciones.Add(direccion);
-        await _context.SaveChangesAsync();
+        var direccionEnSesion = SessionExtension.Get<Direccion>(HttpContext.Session, "direccionPedido");
+
+        if (direccionEnSesion != null)
+        {
+          _logger.LogInformation("Dirección recuperada de sesión: {DireccionTexto}, {Departamento}, {Provincia}, {Distrito}, {Complemento}",
+              direccionEnSesion.DireccionTexto,
+              direccionEnSesion.Departamento,
+              direccionEnSesion.Provincia,
+              direccionEnSesion.Distrito,
+              direccionEnSesion.Complemento);
+        }
+        else
+        {
+          _logger.LogWarning("No se encontró la dirección en la sesión.");
+        }
+
+
 
         return RedirectToAction("Entrega", "Checkout");
       }

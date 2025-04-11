@@ -44,21 +44,11 @@ namespace proyectoTienda.Controllers
         return RedirectToAction("Index", "Catalogo");
       }
 
-      var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(u => u.ID == userID);
+      var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == userID);
       // Buscar el usuario de AspNetUsers con el nombre de usuario
       var usuarioAspNet = await _userManager.FindByNameAsync(userID);
       // Log information about the AspNetUser
-      if (usuarioAspNet != null)
-      {
-        _logger.LogInformation("Usuario AspNet encontrado: ID={Id}, UserName={UserName}, Email={Email}",
-          usuarioAspNet.Id,
-          usuarioAspNet.UserName,
-          usuarioAspNet.Email);
-      }
-      else
-      {
-        _logger.LogWarning("No se encontró el usuario AspNet con ID {UserID}", userID);
-      }
+
       if (usuarioExistente == null)
       {
         var nuevoUsuario = new Usuario

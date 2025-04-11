@@ -14,14 +14,13 @@ namespace proyectoTienda.Models.Model
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdDireccion { get; set; }
 
-    [Required]
-    public string? IDCliente { get; set; }
+
 
     [Required]
     [MaxLength(200)]
     public string? DireccionTexto { get; set; }
 
-    
+
     [MaxLength(100)]
     public string? Complemento { get; set; }
 
@@ -38,8 +37,7 @@ namespace proyectoTienda.Models.Model
     public string? Departamento { get; set; }
 
     // Relación de navegación
-    [ForeignKey("IDCliente")]
-    public Usuario? Cliente { get; set; }
-        public ICollection<Pedido>? Pedidos { get; set; } 
-    }
+
+    public ICollection<Pedido>? Pedidos { get; set; }
+  }
 }
