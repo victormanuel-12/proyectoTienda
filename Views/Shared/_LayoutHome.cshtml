@@ -59,6 +59,10 @@
                     <div class="main-nav-links">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Catalogo" asp-action="Index">Catálogo</a>
+                         @if (User.IsInRole("ADMIN"))
+    {
+        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">Admin</a>
+    }
                         
                     </div>
 

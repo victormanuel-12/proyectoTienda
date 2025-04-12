@@ -1,103 +1,144 @@
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>URBAN THREADS - Dashboard</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/css/AdminHome.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div class="sidebar">
+</head>
+<body>
+    <!-- Botón para abrir menú en móviles -->
+    <button class="menu-toggle" id="menuToggle">
+        <span>☰</span>
+    </button>
+
+    <div class="sidebar" id="sidebar">
         <div class="logo">SHOP.CO</div>
         <div class="nav-items">
-          <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="HomeAdmin"><i>📊</i>
-                <span>Dashboard</span></a>
-            
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="Categoria"><i>👗</i>
-                <span>Categorias</span></a>
-            
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="AgregarCategoria"><i>➕</i>
-                <span>Agregar Categoria</span></a>
-            
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="Productos"><i>👗</i>
-                <span>Productos</span></a>
-            
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="AgregarProducto"><i>➕</i>
-                <span>Agregar Producto</span></a>
-            
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="ListaOrdenes"> <i>📝</i>
-                <span>Pedidos</span></a>
-            
+            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">
+                <i>📊</i>
+                <span>Dashboard</span>
+            </a>
+            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="Categoria">
+                <i>👗</i>
+                <span>Categorías</span>
+            </a>
+            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="AgregarCategoria">
+                <i>➕</i>
+                <span>Agregar Categoría</span>
+            </a>
+            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="Productos">
+                <i>👗</i>
+                <span>Productos</span>
+            </a>
+            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="AgregarProducto">
+                <i>➕</i>
+                <span>Agregar Producto</span>
+            </a>
+            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="ListaOrdenes">
+                <i>📝</i>
+                <span>Pedidos</span>
+            </a>
+        </div>
+        <!-- Login Partial integrado en la barra lateral -->
+        <div class="login-container">
+            <partial name="_LoginPartial" />
         </div>
     </div>
 
     <div class="main-content">
-      <h1 class="page-title">DASHBOARD</h1>
-      <div class="dashboard-grid">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-icon-wrapper">
-              <div class="card-icon revenue-icon">
-                <div class="icon">💸</div>
-              </div>
+        <h1 class="page-title">DASHBOARD</h1>
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-icon-wrapper">
+                        <div class="card-icon revenue-icon">
+                            <div class="icon">💸</div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-title">Ingresos Totales</h3>
+                        <div class="card-value">$0.00</div>
+                    </div>
+                </div>
             </div>
-            <div class="card-info">
-              <h3 class="card-title">Ingresos Totales</h3>
-              <div class="card-value"></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-body">
-            <div class="card-icon-wrapper">
-              <div class="card-icon products-icon">
-                <div class="icon">👗</div>
-              </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-icon-wrapper">
+                        <div class="card-icon products-icon">
+                            <div class="icon">👗</div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-title">Total de Productos</h3>
+                        <div class="card-value">0</div>
+                    </div>
+                </div>
             </div>
-            <div class="card-info">
-              <h3 class="card-title">Total de Productos</h3>
-              <div class="card-value"></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-body">
-            <div class="card-icon-wrapper">
-              <div class="card-icon orders-icon">
-                <div class="icon">🛍️</div>
-              </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-icon-wrapper">
+                        <div class="card-icon orders-icon">
+                            <div class="icon">🛍️</div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-title">Órdenes Mensuales</h3>
+                        <div class="card-value">0</div>
+                    </div>
+                </div>
             </div>
-            <div class="card-info">
-              <h3 class="card-title">Órdenes Mensuales</h3>
-              <div class="card-value"></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-body">
-            <div class="card-icon-wrapper">
-              <div class="card-icon customers-icon">
-                <div class="icon">👥</div>
-              </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-icon-wrapper">
+                        <div class="card-icon customers-icon">
+                            <div class="icon">👥</div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="card-title">Nuevos Clientes</h3>
+                        <div class="card-value">0</div>
+                    </div>
+                </div>
             </div>
-            <div class="card-info">
-              <h3 class="card-title">Nuevos Clientes</h3>
-              <div class="card-value"></div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </body>
+
+    <script>
+        // Script para controlar el menú responsivo
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // Cerrar menú al hacer clic fuera en dispositivos móviles
+            document.addEventListener('click', function(event) {
+                const isClickInsideMenu = sidebar.contains(event.target);
+                const isClickOnToggle = menuToggle.contains(event.target);
+                
+                if (!isClickInsideMenu && !isClickOnToggle && window.innerWidth <= 991) {
+                    sidebar.classList.remove('active');
+                }
+            });
+            
+            // Ajustar al cambiar tamaño de ventana
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 991) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
 </html>
