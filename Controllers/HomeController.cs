@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using proyectoTienda.Models;
 using proyectoTienda.Data;
 using System.Diagnostics;
-
+using Microsoft.AspNetCore.Authorization;
 namespace proyectoTienda.Controllers
 {
+  [Authorize(Roles = "User")]
   public class HomeController : Controller
   {
     private readonly ILogger<HomeController> _logger;

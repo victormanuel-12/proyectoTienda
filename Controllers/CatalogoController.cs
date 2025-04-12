@@ -11,12 +11,14 @@ using Microsoft.EntityFrameworkCore;
 using proyectoTienda.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using proyectoTienda.Areas.Identity.Pages.Account; // Corrected namespace for ApplicationUser
+using Microsoft.AspNetCore.Authorization;
 
 
 
 
 namespace proyectoTienda.Controllers
 {
+
   public class CatalogoController : Controller
   {
     private readonly ILogger<CatalogoController> _logger;

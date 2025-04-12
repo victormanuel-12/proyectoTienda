@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ using proyectoTienda.ViewModel;
 
 namespace proyectoTienda.Controllers
 {
-
+  [Authorize(Roles = "Admin")]
   public class AdminController : Controller
   {
     private readonly ILogger<AdminController> _logger;
@@ -38,8 +39,8 @@ namespace proyectoTienda.Controllers
         var categorias = await _context.Categorias
 .Select(c => new CategoriaViewModel
 {
-Categoria = c,
-ProductosCount = c.Productos.Count()
+  Categoria = c,
+  ProductosCount = c.Productos.Count()
 })
 .ToListAsync();
 

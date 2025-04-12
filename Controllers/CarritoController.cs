@@ -12,9 +12,11 @@ using proyectoTienda.Data;
 using System.Dynamic;
 using proyectoTienda.Models.Model;
 using proyectoTienda.Servicios;
+using Microsoft.AspNetCore.Authorization;
 
 namespace proyectoTienda.Controllers
 {
+  [Authorize(Roles = "User")]
   public class CarritoController : Controller
   {
     private readonly ILogger<CarritoController> _logger;

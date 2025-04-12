@@ -13,11 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using proyectoTienda.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using proyectoTienda.Session;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace proyectoTienda.Controllers
 {
-
+  [Authorize(Roles = "User")]
   public class DireccionController : Controller
   {
     private readonly ILogger<DireccionController> _logger;
