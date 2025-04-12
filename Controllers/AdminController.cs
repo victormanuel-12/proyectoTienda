@@ -225,10 +225,8 @@ namespace proyectoTienda.Controllers
     [HttpPost]
     public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewModel)
     {
-
       try
       {
-        // Log de los datos del producto
         _logger.LogInformation(
             "Datos del producto recibidos: Nombre={Nombre}, Descripcion={Descripcion}, " +
             "Precio={Precio}, Stock={Stock}, IDCategoria={IDCategoria}",
@@ -238,28 +236,66 @@ namespace proyectoTienda.Controllers
             viewModel.Producto.Stock,
             viewModel.Producto.IDCategoria);
 
-        // Buscar o crear la categoría
+        // Buscar si ya existe un producto con ese ID
+        var productoExistente = await _context.Productos
+          .FirstOrDefaultAsync(p => p.IDProducto == viewModel.Producto.IDProducto);
+
+        // Buscar la categoría
         var categoriaSeleccionada = await _context.Categorias
-            .FirstOrDefaultAsync(c => c.IDCategoria == viewModel.Producto.IDCategoria);
+          .FirstOrDefaultAsync(c => c.IDCategoria == viewModel.Producto.IDCategoria);
 
+        if (productoExistente != null)
+        {
+          // Actualizar los campos del producto existente
+          productoExistente.Nombre = viewModel.Producto.Nombre;
+          productoExistente.Descripcion = viewModel.Producto.Descripcion;
+          productoExistente.PrecioActual = viewModel.Producto.PrecioActual;
+          productoExistente.Stock = viewModel.Producto.Stock;
+          productoExistente.IDCategoria = viewModel.Producto.IDCategoria;
+          productoExistente.Categoria = categoriaSeleccionada;
 
+          _context.Productos.Update(productoExistente);
+        }
+        else
+        {
+          // Asignar categoría al nuevo producto
+          viewModel.Producto.Categoria = categoriaSeleccionada;
 
-        // Asignar la categoría al producto
-        viewModel.Producto.Categoria = categoriaSeleccionada;
+          // Agregar nuevo producto
+          _context.Productos.Add(viewModel.Producto);
+        }
 
-        // Agregar el producto al contexto
-        _context.Productos.Add(viewModel.Producto);
         await _context.SaveChangesAsync();
-
         return RedirectToAction("Productos");
       }
       catch (Exception ex)
       {
-        // Log del error
-        _logger.LogError(ex, "Error al agregar producto y categoría");
+        _logger.LogError(ex, "Error al agregar o actualizar producto");
         TempData["ErrorMessage"] = "Error: " + ex.Message;
         return RedirectToAction("Productos");
       }
+    }
+
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+      // Buscar el producto en la base de datos
+      var producto = _context.Productos.Include(p => p.Categoria).FirstOrDefault(p => p.IDProducto == id);
+      if (producto == null)
+      {
+        return NotFound();
+      }
+
+      // Crear el ViewModel para pasar los datos al formulario
+      var viewModel = new ProductoCategoriaViewModel
+      {
+        Producto = producto,
+        Categorias = _context.Categorias.ToList() // Asegúrate de obtener todas las categorías
+      };
+
+      return View("AgregarProducto", viewModel);
+
     }
 
 
@@ -278,6 +314,8 @@ namespace proyectoTienda.Controllers
       TempData["SuccessMessage"] = "Producto eliminado correctamente.";
       return RedirectToAction("Productos");
     }
+
+
 
 
 
