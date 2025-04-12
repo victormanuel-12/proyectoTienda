@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace proyectoTienda.Servicios
 {
-    public interface ICarritoService
-    {
-         Task<dynamic> ObtenerCarritoActual(string userID);
-    }
+  public interface ICarritoService
+  {
+    Task<dynamic> ObtenerCarritoActual(string userID);
+  }
 }

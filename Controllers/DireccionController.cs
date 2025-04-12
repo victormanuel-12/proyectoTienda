@@ -76,6 +76,7 @@ namespace proyectoTienda.Controllers
         var provincia = await _context.Provincias.FindAsync(model.ProvinciaId);
         var distrito = await _context.Distritos.FindAsync(model.DistritoId);
         var userID = _userManager.GetUserName(User);
+
         var usuarioAspNet = await _userManager.FindByNameAsync(userID);
         // Crear la dirección
         // Log model information
