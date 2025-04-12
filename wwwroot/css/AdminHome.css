@@ -15,13 +15,20 @@ body {
 }
 
 .sidebar {
-  width: 280px;
+  width: auto; /* Cambio de width fijo a auto */
+  min-width: 250px; /* Ancho mínimo para mantener legibilidad */
+  max-width: 320px; /* Ancho máximo para evitar que sea demasiado grande */
   background: #1e3a8a;
   color: white;
   padding: 20px 0;
   box-shadow: 10px 0 20px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 20;
+}
+
+/* Cambiar el color del texto de los enlaces de navegación */
+.nav-item.text-dark {
+  color: white !important; /* Sobrescribir la clase text-dark */
 }
 
 .logo {
@@ -33,6 +40,11 @@ body {
   margin-bottom: 25px;
   letter-spacing: 1.5px;
   color: #fff;
+  white-space: nowrap; /* Evitar que el logo se rompa en múltiples líneas */
+}
+
+.nav-items {
+  width: 100%;
 }
 
 .nav-item {
@@ -45,6 +57,7 @@ body {
   border-radius: 8px;
   position: relative;
   overflow: hidden;
+  white-space: nowrap; /* Evitar que los elementos de navegación se rompan */
 }
 
 .nav-item:hover {
@@ -181,6 +194,36 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* Estilos para el login partial */
+.login-container {
+  padding: 15px 20px;
+  border-top: 1px solid rgba(230, 227, 227, 0.1);
+  margin-top: auto;
+  background: rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Para asegurarnos que el menú toggle se muestre correctamente en móviles */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001;
+  background: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+@media (max-width: 991px) {
+  .menu-toggle {
+    display: block;
+  }
+}
+
 @media (max-width: 1200px) {
   .dashboard-grid {
     grid-template-columns: repeat(2, minmax(250px, 1fr));
@@ -192,15 +235,53 @@ body {
     flex-direction: column;
   }
 
-  .sidebar {
-    width: 100%;
-  }
-
   .main-content {
     padding: 20px;
   }
 
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    position: fixed; /* Cambiar a fixed en lugar de relative */
+    height: 100vh;
+    transform: translateX(-100%);
+    z-index: 1000;
+    width: auto; /* Ajustar ancho automáticamente */
+    min-width: 250px; /* Ancho mínimo para mantener legibilidad */
+    max-width: 80%; /* Limitar a un porcentaje de la pantalla en móvil */
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 70px; /* Espacio para el botón de menú */
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-body {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .card-icon-wrapper {
+    margin-right: 0;
+    margin-bottom: 15px;
   }
 }
