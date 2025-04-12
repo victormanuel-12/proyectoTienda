@@ -17,34 +17,34 @@ using proyectoTienda.Areas.Identity.Pages.Account; // Corrected namespace for Ap
 
 namespace proyectoTienda.Controllers
 {
-    public class CatalogoController : Controller
-    {
-        private readonly ILogger<CatalogoController> _logger;
-        private readonly ApplicationDbContext _context;
-       private readonly UserManager<IdentityUser> _userManager;
+  public class CatalogoController : Controller
+  {
+    private readonly ILogger<CatalogoController> _logger;
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
     public CatalogoController(ILogger<CatalogoController> logger, ApplicationDbContext context, UserManager<IdentityUser> userManager)
-{
-    _logger = logger;
-    _context = context;
-    _userManager = userManager;
-}
+    {
+      _logger = logger;
+      _context = context;
+      _userManager = userManager;
+    }
 
 
-       public IActionResult Index(int? categoriaId)
-{
-    var productos = categoriaId == null
-        ? _context.Productos.ToList()
-        : _context.Productos.Where(p => p.IDCategoria == categoriaId).ToList();
+    public IActionResult Index(int? categoriaId)
+    {
+      var productos = categoriaId == null
+          ? _context.Productos.ToList()
+          : _context.Productos.Where(p => p.IDCategoria == categoriaId).ToList();
 
-    var categorias = _context.Categorias.ToList(); // Consulta las categorías
-    ViewBag.Categorias = categorias;
+      var categorias = _context.Categorias.ToList(); // Consulta las categorías
+      ViewBag.Categorias = categorias;
 
-    return View(productos);
-}
+      return View(productos);
+    }
 
 
-[HttpGet]
+    [HttpGet]
     public async Task<IActionResult> Detalles(int? id)
     {
 
@@ -75,12 +75,12 @@ namespace proyectoTienda.Controllers
     }
 
 
-    
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
-        }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+      return View("Error!");
     }
+  }
 }

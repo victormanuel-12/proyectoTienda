@@ -8,32 +8,32 @@ using Microsoft.Extensions.Logging;
 
 namespace proyectoTienda.Controllers
 {
-  
-    public class PagoController : Controller
+
+  public class PagoController : Controller
+  {
+    private readonly ILogger<PagoController> _logger;
+
+    public PagoController(ILogger<PagoController> logger)
     {
-        private readonly ILogger<PagoController> _logger;
-
-        public PagoController(ILogger<PagoController> logger)
-        {
-            _logger = logger;
-        }
-
-        public IActionResult Pago()
-        {
-            return View();
-        }
-
-        public IActionResult confirmacion()
-        {
-            return View();
-        }
-
-        
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
-        }
+      _logger = logger;
     }
+
+    public IActionResult Pago()
+    {
+      return View();
+    }
+
+    public IActionResult confirmacion()
+    {
+      return View();
+    }
+
+
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+      return View("Error!");
+    }
+  }
 }

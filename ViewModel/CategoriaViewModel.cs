@@ -7,9 +7,9 @@ using proyectoTienda.Models; // Assuming Categoria is in the Models namespace
 
 namespace proyectoTienda.ViewModel
 {
-    public class CategoriaViewModel
-    {
-          public Categoria? Categoria { get; set; }
+  public class CategoriaViewModel
+  {
+    public Categoria? Categoria { get; set; }
     public int? ProductosCount { get; set; }
-    }
+  }
 }
