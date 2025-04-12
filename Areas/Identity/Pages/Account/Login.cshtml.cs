@@ -125,17 +125,17 @@ namespace proyectoTienda.Areas.Identity.Pages.Account
           // Extraemos la lista de roles asignados al usuario
           var roles = await _userManager.GetRolesAsync(user);
 
-          // Asumimos que tiene solo un rol principal
+
 
 
           _logger.LogInformation("El usuario con ID {UserId} tiene el rol: {UserRole}", user.Id, roles);
 
           // Redirigimos según el rol
-          if (roles.Contains("Admin"))
+          if (roles.Contains("ADMIN"))
           {
             return LocalRedirect("/Admin/HomeAdmin");
           }
-          else if (roles.Contains("User"))
+          else if (roles.Contains("USER"))
           {
             return LocalRedirect("/Home/Index");
           }

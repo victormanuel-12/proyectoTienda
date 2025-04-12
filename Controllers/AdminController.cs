@@ -13,7 +13,7 @@ using proyectoTienda.ViewModel;
 
 namespace proyectoTienda.Controllers
 {
-  [Authorize(Roles = "Admin")]
+  [Authorize(Roles = "ADMIN")]
   public class AdminController : Controller
   {
     private readonly ILogger<AdminController> _logger;
