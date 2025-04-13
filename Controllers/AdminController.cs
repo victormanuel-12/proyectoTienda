@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,12 +23,14 @@ namespace proyectoTienda.Controllers
   {
     private readonly ILogger<AdminController> _logger;
     private readonly ApplicationDbContext _context;
+    private readonly IConfiguration _configuration;
 
     // Constructor con la inyección de dependencias para el DbContext
-    public AdminController(ILogger<AdminController> logger, ApplicationDbContext context)
+    public AdminController(ILogger<AdminController> logger, ApplicationDbContext context, IConfiguration configuration)
     {
       _logger = logger;
       _context = context;
+      _configuration = configuration;
     }
 
     public IActionResult HomeAdmin()
@@ -223,7 +230,7 @@ namespace proyectoTienda.Controllers
       return View(viewModel);
     }
     [HttpPost]
-    public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewModel)
+    public async Task<IActionResult> AgregaProductos(ProductoCategoriaViewModel viewModel)
     {
       try
       {
@@ -274,6 +281,85 @@ namespace proyectoTienda.Controllers
         TempData["ErrorMessage"] = "Error: " + ex.Message;
         return RedirectToAction("Productos");
       }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewModel)
+    {
+      var imagen = Request.Form.Files.FirstOrDefault(f => f.Name == "Producto.ImagenURL");
+      if (imagen == null || imagen.Length == 0)
+        return BadRequest("No se seleccionó ninguna imagen");
+
+      using var ms = new MemoryStream();
+      await imagen.CopyToAsync(ms);
+      var bytes = ms.ToArray();
+      var base64Image = Convert.ToBase64String(bytes);
+
+      string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(imagen.FileName);
+
+      // Leer token y repo desde appsettings.json
+      var gitHubToken = _configuration["GitHub:Token"];
+      var repo = _configuration["GitHub:Repo"];
+      var url = $"https://api.github.com/repos/{repo}/contents/{nombreArchivo}";
+
+      var payload = new
+      {
+        message = "Subida de imagen desde formulario",
+        content = base64Image
+      };
+
+      var httpClient = new HttpClient();
+      httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("MiApp");
+      httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("token", gitHubToken);
+
+      var json = JsonSerializer.Serialize(payload);
+      var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+      var response = await httpClient.PutAsync(url, content);
+
+      if (!response.IsSuccessStatusCode)
+        return StatusCode((int)response.StatusCode, "Error al subir la imagen a GitHub");
+
+      // Construir URL pública de la imagen
+      var imagenUrl = $"https://raw.githubusercontent.com/{repo}/main/{nombreArchivo}";
+
+
+
+
+
+
+      // Buscar si ya existe un producto con ese ID
+      var productoExistente = await _context.Productos
+        .FirstOrDefaultAsync(p => p.IDProducto == viewModel.Producto.IDProducto);
+
+      // Buscar la categoría
+      var categoriaSeleccionada = await _context.Categorias
+        .FirstOrDefaultAsync(c => c.IDCategoria == viewModel.Producto.IDCategoria);
+      // Guardar en la BD
+
+      if (productoExistente != null)
+      {
+        // Actualizar los campos del producto existente
+        productoExistente.Nombre = viewModel.Producto.Nombre;
+        productoExistente.Descripcion = viewModel.Producto.Descripcion;
+        productoExistente.PrecioActual = viewModel.Producto.PrecioActual;
+        productoExistente.Stock = viewModel.Producto.Stock;
+        productoExistente.IDCategoria = viewModel.Producto.IDCategoria;
+        productoExistente.Categoria = categoriaSeleccionada;
+
+        _context.Productos.Update(productoExistente);
+      }
+      else
+      {
+        // Asignar categoría al nuevo producto
+        viewModel.Producto.Categoria = categoriaSeleccionada;
+        viewModel.Producto.ImagenURL = imagenUrl; // Asignar la URL de la imagen al nuevo producto
+                                                  // Agregar nuevo producto
+        _context.Productos.Add(viewModel.Producto);
+      }
+
+      await _context.SaveChangesAsync();
+      return RedirectToAction("Productos");
     }
 
 
