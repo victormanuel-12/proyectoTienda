@@ -9,39 +9,44 @@
     <title>URBAN THREADS - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="~/css/AdminHome.css" rel="stylesheet" />
 </head>
 <body>
     <!-- Botón para abrir menú en móviles -->
     <button class="menu-toggle" id="menuToggle">
-        <span>☰</span>
+        <i class="fas fa-bars"></i>
     </button>
 
+    <!-- Overlay para cuando el menú está abierto en móvil -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- Barra lateral -->
     <div class="sidebar" id="sidebar">
         <div class="logo">SHOP.CO</div>
         <div class="nav-items">
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">
-                <i>📊</i>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">
+                <i class="fas fa-chart-pie"></i>
                 <span>Dashboard</span>
             </a>
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="Categoria">
-                <i>👗</i>
+            <a class="nav-item active" asp-area="" asp-controller="Admin" asp-action="Categoria">
+                <i class="fas fa-tags"></i>
                 <span>Categorías</span>
             </a>
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="AgregarCategoria">
-                <i>➕</i>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="AgregarCategoria">
+                <i class="fas fa-plus"></i>
                 <span>Agregar Categoría</span>
             </a>
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="Productos">
-                <i>👗</i>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="Productos">
+                <i class="fas fa-tshirt"></i>
                 <span>Productos</span>
             </a>
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="AgregarProducto">
-                <i>➕</i>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="AgregarProducto">
+                <i class="fas fa-plus-circle"></i>
                 <span>Agregar Producto</span>
             </a>
-            <a class="nav-item text-dark" asp-area="" asp-controller="Admin" asp-action="ListaOrdenes">
-                <i>📝</i>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="ListaOrdenes">
+                <i class="fas fa-clipboard-list"></i>
                 <span>Pedidos</span>
             </a>
         </div>

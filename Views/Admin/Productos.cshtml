@@ -6,191 +6,341 @@
     ViewData["Title"] = "Productos";
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-   <link rel="stylesheet" href="~/css/Adminproducto.css">
-   <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <title>Administración de Productos</title>
+  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="~/css/Adminproducto.css">
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-
-
-<h1>Catálogo de Productos</h1>
-
-@if (ViewData["NombreCategoria"] != null)
-{
-    <h2>Categoría: @ViewData["NombreCategoria"]</h2>
-}
-
-<p>
-    <a asp-action="AgregarProducto" class="btn btn-primary">Agregar Nuevo Producto</a>
-</p>
-
-@if (ViewBag.TotalProductosEnBD != null)
-{
-    <div class="alert alert-info">
-        Total de productos  @ViewBag.TotalProductosEnBD
+  <div class="container animate__animated animate__fadeIn">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Catálogo de Productos</h1>
+      <a asp-action="AgregarProducto" class="add-product-btn">
+        <i class="bi bi-plus-circle-fill"></i> Agregar Nuevo Producto
+      </a>
     </div>
-}
 
-@if (ViewBag.TotalProductosCategoria != null)
-{
-    <div class="alert alert-info">
-        Total de productos en esta categoría: @ViewBag.TotalProductosCategoria
-    </div>
-}
+    @if (ViewData["NombreCategoria"] != null)
+    {
+      <h2 class="mb-4">
+        <i class="bi bi-tag-fill me-2"></i>Categoría: @ViewData["NombreCategoria"]
+      </h2>
+    }
 
-<div class="table-responsive">
-  <table class="table table-striped table-hover" style="table-layout: fixed; width: 100%;">
-    <thead class="table-dark">
-      <tr>
-        <th class="text-center" style="width: 12%;">Imagen</th>
-        <th class="text-center" style="width: 20%;">Nombre</th>
-        <th class="text-center" style="width: 12%;">Precio</th>
-        <th class="text-center" style="width: 15%;">Categoría</th>
-        <th class="text-center" style="width: 10%;">Talla</th>
-        <th class="text-center" style="width: 10%;">Stock</th>
-        <th class="text-center" style="width: 21%;">Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="producto-table">
-      @foreach (var item in Model.Items)
+    <!-- Tarjetas de estadísticas -->
+    <div class="stats-container">
+      @if (ViewBag.TotalProductosEnBD != null)
       {
-        <tr class="fade-in">
-          <td class="text-center" data-label="Imagen">
-            @if (!string.IsNullOrEmpty(item.ImagenURL))
+        <div class="stat-card">
+          <h3><i class="bi bi-box-seam me-2"></i>Total de Productos</h3>
+          <div class="stat-value">@ViewBag.TotalProductosEnBD</div>
+        </div>
+      }
+
+      @if (ViewBag.TotalProductosCategoria != null)
+      {
+        <div class="stat-card">
+          <h3><i class="bi bi-tag me-2"></i>Productos en Categoría</h3>
+          <div class="stat-value">@ViewBag.TotalProductosCategoria</div>
+        </div>
+      }
+
+      <div class="stat-card">
+        <h3><i class="bi bi-eye me-2"></i>Mostrando</h3>
+        <div class="stat-value">@Model.Items.Count() <span class="fs-6 text-muted">de @Model.TotalItems</span></div>
+      </div>
+
+      <div class="stat-card">
+        <h3><i class="bi bi-file-earmark-text me-2"></i>Página</h3>
+        <div class="stat-value">@Model.CurrentPage <span class="fs-6 text-muted">de @Model.TotalPages</span></div>
+      </div>
+    </div>
+
+    <!-- Filtros y búsqueda -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <form asp-action="Productos" method="get" class="row g-3">
+          <div class="col-md-4">
+            <div class="input-group">
+              <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+              <input type="text" name="search" class="form-control" placeholder="Buscar productos..." value="@ViewBag.CurrentSearch">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <select name="category" class="form-select">
+              <option value="">Todas las categorías</option>
+              <!-- Aquí puedes agregar opciones de categorías dinámicamente -->
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select name="sort" class="form-select">
+              <option value="name">Nombre</option>
+              <option value="price_asc">Precio: Menor a Mayor</option>
+              <option value="price_desc">Precio: Mayor a Menor</option>
+              <option value="stock">Stock</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-funnel-fill me-2"></i>Aplicar Filtros
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabla de productos -->
+    <div class="products-table-container">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 12%;">Imagen</th>
+              <th class="text-center" style="width: 20%;">Nombre</th>
+              <th class="text-center" style="width: 12%;">Precio</th>
+              <th class="text-center" style="width: 15%;">Categoría</th>
+              <th class="text-center" style="width: 10%;">Talla</th>
+              <th class="text-center" style="width: 10%;">Stock</th>
+              <th class="text-center" style="width: 21%;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="producto-table">
+            @foreach (var item in Model.Items)
             {
-              <img src="@item.ImagenURL" alt="@item.Nombre" class="img-thumbnail" style="max-width: 80px; height: 80px; object-fit: cover;">
+              <tr class="fade-in">
+                <td class="text-center" data-label="Imagen">
+                  <div class="product-img-container">
+                    @if (!string.IsNullOrEmpty(item.ImagenURL))
+                    {
+                      <img src="@item.ImagenURL" alt="@item.Nombre" class="product-img">
+                    }
+                    else
+                    {
+                      <div class="no-image">
+                        <i class="bi bi-image me-1"></i> Sin imagen
+                      </div>
+                    }
+                  </div>
+                </td>
+                <td class="text-center text-truncate" data-label="Nombre" title="@item.Nombre">
+                  <span class="fw-bold">@item.Nombre</span>
+                </td>
+                <td class="text-center" data-label="Precio">
+                  <span class="fw-bold text-success">@item.PrecioActual.ToString("C")</span>
+                </td>
+                <td class="text-center" data-label="Categoría">
+                  <span class="badge badge-primary">@(item.Categoria?.Nombre ?? "Sin categoría")</span>
+                </td>
+                <td class="text-center" data-label="Talla">
+                  @if (!string.IsNullOrEmpty(item.Talla))
+                  {
+                    <span class="badge badge-secondary">@item.Talla</span>
+                  }
+                  else
+                  {
+                    <span class="text-muted">-</span>
+                  }
+                </td>
+                <td class="text-center" data-label="Stock">
+                  @{
+                    string stockClass = item.Stock > 10 ? "stock-high" : (item.Stock > 5 ? "stock-medium" : "stock-low");
+                  }
+                  <span class="stock-badge @stockClass">@item.Stock</span>
+                </td>
+                <td class="text-center" data-label="Acciones">
+                  <div class="d-flex justify-content-center">
+                    <a asp-action="Edit" asp-route-id="@item.IDProducto" class="btn btn-sm btn-primary me-2">
+                      <i class="bi bi-pencil-fill me-1"></i> Editar
+                    </a>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
+                      data-id="@item.IDProducto" data-nombre="@item.Nombre">
+                      <i class="bi bi-trash-fill me-1"></i> Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination-container">
+      <nav aria-label="Paginación de productos">
+        <ul class="pagination justify-content-center mb-0">
+          @if (Model.HasPreviousPage)
+          {
+            <li class="page-item">
+              <a asp-action="Productos" asp-route-page="1" class="page-link" title="Primera página">
+                <i class="bi bi-chevron-double-left"></i>
+              </a>
+            </li>
+            <li class="page-item">
+              <a asp-action="Productos" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">
+                <i class="bi bi-chevron-left me-1"></i> Anterior
+              </a>
+            </li>
+          }
+          else
+          {
+            <li class="page-item disabled">
+              <span class="page-link">
+                <i class="bi bi-chevron-double-left"></i>
+              </span>
+            </li>
+            <li class="page-item disabled">
+              <span class="page-link">
+                <i class="bi bi-chevron-left me-1"></i> Anterior
+              </span>
+            </li>
+          }
+
+          @{
+            int startPage = Math.Max(1, Model.CurrentPage - 2);
+            int endPage = Math.Min(Model.TotalPages, startPage + 4);
+            
+            if (endPage - startPage < 4 && Model.TotalPages > 5)
+            {
+              startPage = Math.Max(1, endPage - 4);
+            }
+          }
+
+          @for (int i = startPage; i <= endPage; i++)
+          {
+            @if (i == Model.CurrentPage)
+            {
+              <li class="page-item active">
+                <span class="page-link">@i</span>
+              </li>
             }
             else
             {
-              <div class="bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: 0 auto;">
-                <span class="text-muted small">Sin imagen</span>
-              </div>
+              <li class="page-item">
+                <a asp-action="Productos" asp-route-page="@i" class="page-link">@i</a>
+              </li>
             }
-          </td>
-          <td class="text-center text-truncate" data-label="Nombre" title="@item.Nombre">@item.Nombre</td>
-          <td class="text-center" data-label="Precio">@item.PrecioActual.ToString("C")</td>
-          <td class="text-center text-truncate" data-label="Categoría" title="@item.Categoria?.Nombre">@item.Categoria?.Nombre</td>
-          <td class="text-center" data-label="Talla">@(string.IsNullOrEmpty(item.Talla) ? "-" : item.Talla)</td>
-          <td class="text-center" data-label="Stock">@item.Stock</td>
-          <td class="text-center" data-label="Acciones">
-            <div class="btn-group d-flex justify-content-center">
-              <a asp-action="Edit" asp-route-id="@item.IDProducto" class="btn btn-sm btn-primary me-2">
-                <i class="bi bi-pencil"></i> Editar
+          }
+
+          @if (Model.HasNextPage)
+          {
+            <li class="page-item">
+              <a asp-action="Productos" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">
+                Siguiente <i class="bi bi-chevron-right ms-1"></i>
               </a>
-              <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
-                data-id="@item.IDProducto" data-nombre="@item.Nombre">
-                Eliminar
-              </button>
-            </div>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
-</div>
-
-<div class="pagination-container fixed-bottom bg-light py-2 shadow-sm border-top display-flex  column justify-content-center">
-  <nav aria-label="Paginación de productos">
-    <ul class="pagination justify-content-center mb-2">
-      @if (Model.HasPreviousPage)
-      {
-        <li class="page-item">
-          <a asp-action="Productos" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">&laquo; Anterior</a>
-        </li>
-      }
-      else
-      {
-        <li class="page-item disabled">
-          <span class="page-link">&laquo; Anterior</span>
-        </li>
-      }
-
-      @for (int i = 1; i <= Model.TotalPages; i++)
-      {
-        @if (i == Model.CurrentPage)
-        {
-          <li class="page-item active">
-            <span class="page-link">@i <span class="sr-only"></span></span>
-          </li>
-        }
-        else
-        {
-          <li class="page-item">
-            <a asp-action="Productos" asp-route-page="@i" class="page-link">@i</a>
-          </li>
-        }
-      }
-
-      @if (Model.HasNextPage)
-      {
-        <li class="page-item">
-          <a asp-action="Productos" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Siguiente &raquo;</a>
-        </li>
-      }
-      else
-      {
-        <li class="page-item disabled">
-          <span class="page-link">Siguiente &raquo;</span>
-        </li>
-      }
-    </ul>
-  </nav>
-  <!-- Forced line break -->
-  
-  
-</div>
-
-<div style="margin-bottom: 150px;"></div> <!-- Spacer to prevent content from being hidden under fixed footer -->
-
-<!-- Modal -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Eliminación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Estás seguro de que deseas eliminar el producto <strong id="productoNombre"></strong>?</p>
-            </div>
-            <div class="modal-footer">
-                <form id="deleteForm" method="post">
-                    <input type="hidden" name="id" id="productoId">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                </form>
-            </div>
-        </div>
+            </li>
+            <li class="page-item">
+              <a asp-action="Productos" asp-route-page="@Model.TotalPages" class="page-link" title="Última página">
+                <i class="bi bi-chevron-double-right"></i>
+              </a>
+            </li>
+          }
+          else
+          {
+            <li class="page-item disabled">
+              <span class="page-link">
+                Siguiente <i class="bi bi-chevron-right ms-1"></i>
+              </span>
+            </li>
+            <li class="page-item disabled">
+              <span class="page-link">
+                <i class="bi bi-chevron-double-right"></i>
+              </span>
+            </li>
+          }
+        </ul>
+      </nav>
     </div>
-</div>
+  </div>
 
-<!-- Script para manejar el modal -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    var confirmDeleteModal = document.getElementById("confirmDeleteModal");
-    confirmDeleteModal.addEventListener("show.bs.modal", function (event) {
+  <!-- Modal de confirmación mejorado -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="delete-warning-icon">
+            <i class="bi bi-trash-fill"></i>
+          </div>
+          <p class="fs-5">¿Estás seguro de que deseas eliminar el producto?</p>
+          <p class="product-to-delete fs-4" id="productoNombre"></p>
+          <p class="text-muted">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <form id="deleteForm" method="post">
+            <input type="hidden" name="id" id="productoId">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="bi bi-x-circle me-1"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-trash-fill me-1"></i> Eliminar Producto
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script para manejar el modal y efectos -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Configuración del modal de eliminación
+      var confirmDeleteModal = document.getElementById("confirmDeleteModal");
+      confirmDeleteModal.addEventListener("show.bs.modal", function (event) {
         var button = event.relatedTarget;
         var productId = button.getAttribute("data-id");
         var productName = button.getAttribute("data-nombre");
-console.log(productId,productName) 
+        
         document.getElementById("productoNombre").textContent = productName;
         document.getElementById("productoId").value = productId;
         document.getElementById("deleteForm").action = "/Admin/EliminarProducto";
+      });
+      
+      // Animación de entrada para las filas de la tabla
+      const rows = document.querySelectorAll("#producto-table tr");
+      rows.forEach((row, index) => {
+        row.style.animationDelay = `${index * 0.05}s`;
+      });
+      
+      // Efecto hover para las imágenes
+      const imgContainers = document.querySelectorAll(".product-img-container");
+      imgContainers.forEach(container => {
+        container.addEventListener("mouseenter", function() {
+          this.style.transform = "scale(1.1)";
+        });
+        
+        container.addEventListener("mouseleave", function() {
+          this.style.transform = "scale(1)";
+        });
+      });
+      
+      // Colorear las filas según el stock
+      const stockCells = document.querySelectorAll("[data-label='Stock']");
+      stockCells.forEach(cell => {
+        const stockValue = parseInt(cell.textContent.trim());
+        const row = cell.closest("tr");
+        
+        if (stockValue <= 5) {
+          row.style.borderLeft = "4px solid var(--danger)";
+        } else if (stockValue <= 10) {
+          row.style.borderLeft = "4px solid var(--warning)";
+        } else {
+          row.style.borderLeft = "4px solid var(--success)";
+        }
+      });
     });
-});
-</script>
-
-
-
-
-
-<br>
-<br>
-<br>
-<br>
+  </script>
 </body>
 </html>

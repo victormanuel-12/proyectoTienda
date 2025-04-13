@@ -3,35 +3,162 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Categoría</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="~/css/AdminagregarCategoria.css" />
+    
+    
 </head>
 <body>
-  <div class="container mt-4"></div>
-    <h1>Agregar Categoría</h1>
+    <div class="container">
+        <div class="form-container animate__animated animate__fadeIn">
+            <h1 class="page-title">
+                <i class="fas fa-tags me-2"></i>
+                @(Model.IDCategoria > 0 ? "Editar" : "Agregar") Categoría
+            </h1>
 
-    <form asp-action="AgregarCategoria" method="post">
-        <input type="hidden" name="IDCategoria" value="@Model.IDCategoria" />
+            <form asp-action="AgregarCategoria" method="post" class="needs-validation" novalidate>
+                <input type="hidden" name="IDCategoria" value="@Model.IDCategoria" />
 
-        <div class="mb-3">
-            <label for="Nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="Nombre" name="Nombre" value="@Model.Nombre" required />
+                <div class="mb-4">
+                    <label for="Nombre" class="form-label">
+                        <i class="fas fa-tag"></i> Nombre de la categoría
+                    </label>
+                    <div class="input-group has-validation">
+                        <span class="input-group-text bg-light">
+                            <i class="fas fa-bookmark"></i>
+                        </span>
+                        <input type="text" class="form-control" id="Nombre" name="Nombre" value="@Model.Nombre" 
+                               placeholder="Ej: Electrónicos, Ropa, Hogar..." required maxlength="50" />
+                       
+                    </div>
+                    
+                    <div class="character-counter" id="nombreCounter">0/50 caracteres</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="Descripcion" class="form-label">
+                        <i class="fas fa-align-left"></i> Descripción
+                    </label>
+                    <div class="input-group has-validation">
+                        <span class="input-group-text bg-light">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                        <textarea class="form-control" id="Descripcion" name="Descripcion" 
+                                  rows="4" placeholder="Describe brevemente esta categoría..." 
+                                  required maxlength="200">@Model.Descripcion</textarea>
+                      
+                    </div>
+                    
+                    <div class="character-counter" id="descripcionCounter">0/200 caracteres</div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>
+                        @(Model.IDCategoria > 0 ? "Actualizar" : "Guardar") categoría
+                    </button>
+                    <a asp-controller="Admin" asp-action="Categoria" class="btn btn-danger">
+                        <i class="fas fa-times me-2"></i>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label for="Descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="Descripcion" name="Descripcion" required>@Model.Descripcion</textarea>
-        </div>
+    <script>
+        // Bootstrap validación
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
 
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        <a asp-controller="Admin" asp-action="Categoria" class="btn btn-danger">Cancelar</a>
-    </form>
-</div>
+Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+        // Verificar si el formulario es válido
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+            // Si no es válido, añadir la clase 'was-validated' para mostrar los errores
+            form.classList.add('was-validated');
+        } else {
+            // Si es válido, eliminar cualquier clase 'was-validated' previamente añadida
+            form.classList.remove('was-validated');
+        }
+    }, false);
+});
+            
+            // Contadores de caracteres
+            const nombreInput = document.getElementById('Nombre');
+            const descripcionInput = document.getElementById('Descripcion');
+            const nombreCounter = document.getElementById('nombreCounter');
+            const descripcionCounter = document.getElementById('descripcionCounter');
+            
+            function updateCounter(input, counter, maxLength) {
+                const length = input.value.length;
+                counter.textContent = `${length}/${maxLength} caracteres`;
+                
+                if (length > maxLength * 0.8) {
+                    counter.style.color = '#fd7e14';
+                } else {
+                    counter.style.color = '#6c757d';
+                }
+                
+                if (length >= maxLength) {
+                    counter.style.color = '#dc3545';
+                }
+            }
+            
+            nombreInput.addEventListener('input', () => {
+                updateCounter(nombreInput, nombreCounter, 50);
+            });
+            
+            descripcionInput.addEventListener('input', () => {
+                updateCounter(descripcionInput, descripcionCounter, 200);
+            });
+            
+            // Inicializar contadores
+            updateCounter(nombreInput, nombreCounter, 50);
+            updateCounter(descripcionInput, descripcionCounter, 200);
+            
+          
+
+    // Obtener todos los campos del formulario
+    const fields = document.querySelectorAll('.form-control');
+
+    fields.forEach(field => {
+        // Escuchar los eventos de validación en cada campo
+        field.addEventListener('input', () => {
+            validateField(field);
+        });
+
+        field.addEventListener('blur', () => {
+            validateField(field);
+        });
+    });
+
+    // Función para validar cada campo individualmente
+    function validateField(field) {
+        if (!field.checkValidity()) {
+            field.classList.remove('is-valid');   // Eliminar el estado "valid"
+            field.classList.add('is-invalid');    // Añadir el estado "invalid"
+        } else {
+            field.classList.remove('is-invalid');   // Eliminar el estado "valid"
+            field.classList.add('is-valid');    // Añadir el estado "invalid"
+        }
+    }
+
+
+            
+        })();
+    </script>
 </body>
 </html>
-
-
