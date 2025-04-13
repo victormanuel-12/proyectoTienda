@@ -3,19 +3,17 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-  // Obtenemos el objeto del usuario logueado
-  var user = await UserManager.FindByEmailAsync(@User.Identity?.Name);
-
-  // Extraemos la lista de roles asignados al usuario
-  var roles = await UserManager.GetRolesAsync(user);
-  var esAdmin = roles.Contains("ADMIN");
-  var colorClase = esAdmin ? "text-white" : "text-dark";
-
+    string colorClase = "text-dark"; // Valor por defecto para no logueados
 }
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    var user = await UserManager.FindByEmailAsync(User.Identity?.Name);
+    var roles = await UserManager.GetRolesAsync(user);
+    var esAdmin = roles.Contains("ADMIN");
+    colorClase = esAdmin ? "text-white" : "text-dark";
+  
     <li class="nav-item">
         <a class="nav-link @colorClase" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity?.Name</a>
     </li>

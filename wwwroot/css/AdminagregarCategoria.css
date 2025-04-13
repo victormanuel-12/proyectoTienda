@@ -1,14 +1,14 @@
 :root {
-  --primary-color: #4361ee;
-  --secondary-color: #3f37c9;
-  --accent-color: #4895ef;
-  --success-color: #4cc9f0;
-  --light-color: #f8f9fa;
-  --dark-color: #212529;
+  --primary-color: #1e3a8a; /* Azul marino oscuro (color principal) */
+  --secondary-color: #2563eb; /* Azul más claro */
+  --accent-color: #3b82f6; /* Azul celeste */
+  --success-color: #60a5fa; /* Azul cielo */
+  --light-color: #f8f9fa; /* Blanco grisáceo */
+  --dark-color: #111827; /* Casi negro */
 }
 
 body {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #f5f7fa 0%, #dbeafe 100%);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
   display: flex;
@@ -24,7 +24,7 @@ body {
   width: 100%;
   max-width: 650px;
   margin: 20px auto;
-  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 15px 35px rgba(30, 58, 138, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -32,7 +32,8 @@ body {
 
 .form-container:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(50, 50, 93, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .form-container::before {
@@ -45,7 +46,7 @@ body {
   background: linear-gradient(
     90deg,
     var(--primary-color),
-    var(--success-color)
+    var(--secondary-color)
   );
 }
 
@@ -69,7 +70,7 @@ body {
   background: linear-gradient(
     90deg,
     var(--primary-color),
-    var(--success-color)
+    var(--secondary-color)
   );
   border-radius: 2px;
 }
@@ -97,7 +98,7 @@ body {
 
 .form-control:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+  box-shadow: 0 0 0 0.25rem rgba(30, 58, 138, 0.15);
 }
 
 .form-control::placeholder {
@@ -151,7 +152,7 @@ body {
     var(--secondary-color)
   );
   border: none;
-  box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
 }
 
 .btn-primary:hover,
@@ -162,20 +163,20 @@ body {
     var(--primary-color)
   );
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
 }
 
 .btn-danger {
-  background: linear-gradient(90deg, #ff6b6b, #ee5253);
+  background: linear-gradient(90deg, #b91c1c, #ef4444);
   border: none;
-  box-shadow: 0 4px 15px rgba(238, 82, 83, 0.3);
+  box-shadow: 0 4px 15px rgba(185, 28, 28, 0.3);
 }
 
 .btn-danger:hover,
 .btn-danger:focus {
-  background: linear-gradient(90deg, #ee5253, #ff6b6b);
+  background: linear-gradient(90deg, #ef4444, #b91c1c);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(238, 82, 83, 0.4);
+  box-shadow: 0 6px 20px rgba(185, 28, 28, 0.4);
 }
 
 .btn-group {

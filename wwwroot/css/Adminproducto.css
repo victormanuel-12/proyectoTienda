@@ -1,25 +1,28 @@
 /* Variables globales */
 :root {
-  --primary: #4361ee;
-  --primary-dark: #3a56d4;
-  --secondary: #4cc9f0;
-  --success: #2ecc71;
-  --warning: #f39c12;
-  --danger: #e74c3c;
-  --light: #f8f9fa;
-  --dark: #343a40;
-  --gray: #6c757d;
-  --gray-light: #e9ecef;
+  --primary: #284db4; /* Azul marino oscuro (color principal) */
+  --primary-dark: #0229a7; /* Azul marino más oscuro */
+  --secondary: #3b82f6; /* Azul más claro para acentos */
+  --success: #10b981; /* Verde */
+  --warning: #f59e0b; /* Ámbar */
+  --danger: #ef4444; /* Rojo */
+  --light: #f8f9fa; /* Blanco grisáceo */
+  --dark: #1e293b; /* Azul grisáceo oscuro */
+  --gray: #64748b; /* Gris slate */
+  --gray-light: #e9ecef; /* Gris muy claro */
   --border-radius: 10px;
-  --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  --box-shadow: 0 5px 15px rgba(30, 58, 138, 0.08);
   --transition: all 0.3s ease;
-} /* Estilos generales */
+}
+
+/* Estilos generales */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
+  background-color: #f1f5f9;
   color: #333;
   padding-bottom: 150px;
 }
+
 h1,
 h2 {
   color: var(--primary);
@@ -28,6 +31,7 @@ h2 {
   padding-bottom: 0.5rem;
   font-weight: 700;
 }
+
 h1::after {
   content: "";
   position: absolute;
@@ -38,11 +42,14 @@ h1::after {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   border-radius: 2px;
 }
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
-} /* Botones y acciones */
+}
+
+/* Botones y acciones */
 .btn {
   border-radius: 8px;
   font-weight: 600;
@@ -52,28 +59,33 @@ h1::after {
   letter-spacing: 0.5px;
   font-size: 0.85rem;
 }
+
 .btn-primary {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   border: none;
-  box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
 }
+
 .btn-primary:hover,
 .btn-primary:focus {
   background: linear-gradient(90deg, var(--primary-dark), var(--primary));
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+  box-shadow: 0 6px 15px rgba(30, 58, 138, 0.4);
 }
+
 .btn-danger {
-  background: linear-gradient(90deg, #ff6b6b, #ee5253);
+  background: linear-gradient(90deg, #b91c1c, #ef4444);
   border: none;
-  box-shadow: 0 4px 10px rgba(238, 82, 83, 0.3);
+  box-shadow: 0 4px 10px rgba(185, 28, 28, 0.3);
 }
+
 .btn-danger:hover,
 .btn-danger:focus {
-  background: linear-gradient(90deg, #ee5253, #ff6b6b);
+  background: linear-gradient(90deg, #ef4444, #b91c1c);
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(238, 82, 83, 0.4);
+  box-shadow: 0 6px 15px rgba(185, 28, 28, 0.4);
 }
+
 .action-btn {
   display: inline-flex;
   align-items: center;
@@ -84,12 +96,15 @@ h1::after {
   height: 36px;
   transition: var(--transition);
 }
+
 .action-btn i {
   font-size: 1rem;
 }
+
 .action-btn:hover {
   transform: translateY(-2px);
 }
+
 .add-product-btn {
   display: inline-flex;
   align-items: center;
@@ -100,24 +115,29 @@ h1::after {
   color: white;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
   transition: var(--transition);
 }
+
 .add-product-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
   color: white;
 }
+
 .add-product-btn i {
   margin-right: 0.5rem;
   font-size: 1.1rem;
-} /* Tarjetas de estadísticas */
+}
+
+/* Tarjetas de estadísticas */
 .stats-container {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
 }
+
 .stat-card {
   flex: 1;
   min-width: 200px;
@@ -128,20 +148,25 @@ h1::after {
   transition: var(--transition);
   border-left: 5px solid var(--primary);
 }
+
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(30, 58, 138, 0.1);
 }
+
 .stat-card h3 {
   font-size: 1rem;
   color: var(--gray);
   margin-bottom: 0.5rem;
 }
+
 .stat-card .stat-value {
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--dark);
-} /* Tabla de productos */
+}
+
+/* Tabla de productos */
 .products-table-container {
   background: white;
   border-radius: var(--border-radius);
@@ -149,12 +174,14 @@ h1::after {
   overflow: hidden;
   margin-bottom: 2rem;
 }
+
 .table {
   margin-bottom: 0;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
+
 .table thead th {
   background: linear-gradient(90deg, var(--primary), var(--primary-dark));
   color: white;
@@ -168,18 +195,23 @@ h1::after {
   top: 0;
   z-index: 10;
 }
+
 .table tbody tr {
   transition: var(--transition);
 }
+
 .table tbody tr:hover {
-  background-color: rgba(67, 97, 238, 0.05);
+  background-color: rgba(30, 58, 138, 0.05);
   transform: scale(1.01);
 }
+
 .table td {
   padding: 1rem;
   vertical-align: middle;
   border-top: 1px solid var(--gray-light);
-} /* Imágenes de productos */
+}
+
+/* Imágenes de productos */
 .product-img-container {
   width: 80px;
   height: 80px;
@@ -190,21 +222,25 @@ h1::after {
   transition: var(--transition);
   position: relative;
 }
+
 .product-img-container:hover {
   transform: scale(1.1);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
+
 .product-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: var(--transition);
 }
+
 .product-img-container:hover .product-img {
   transform: scale(1.1);
 }
+
 .no-image {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
   width: 100%;
   height: 100%;
   display: flex;
@@ -212,51 +248,63 @@ h1::after {
   justify-content: center;
   color: var(--gray);
   font-size: 0.75rem;
-} /* Badges y etiquetas */
+}
+
+/* Badges y etiquetas */
 .badge {
   padding: 0.5rem 0.75rem;
   border-radius: 50px;
   font-weight: 600;
   font-size: 0.75rem;
 }
+
 .badge-primary {
-  background-color: rgba(67, 97, 238, 0.1);
+  background-color: rgba(30, 58, 138, 0.1);
   color: var(--primary);
 }
+
 .badge-success {
-  background-color: rgba(46, 204, 113, 0.1);
+  background-color: rgba(16, 185, 129, 0.1);
   color: var(--success);
 }
+
 .badge-warning {
-  background-color: rgba(243, 156, 18, 0.1);
+  background-color: rgba(245, 158, 11, 0.1);
   color: var(--warning);
 }
+
 .badge-danger {
-  background-color: rgba(231, 76, 60, 0.1);
+  background-color: rgba(239, 68, 68, 0.1);
   color: var(--danger);
 }
+
 .stock-badge {
   padding: 0.35rem 0.75rem;
   border-radius: 50px;
   font-weight: 600;
   font-size: 0.75rem;
 }
+
 .stock-high {
-  background-color: rgba(46, 204, 113, 0.1);
+  background-color: rgba(16, 185, 129, 0.1);
   color: var(--success);
 }
+
 .stock-medium {
-  background-color: rgba(243, 156, 18, 0.1);
+  background-color: rgba(245, 158, 11, 0.1);
   color: var(--warning);
 }
+
 .stock-low {
-  background-color: rgba(231, 76, 60, 0.1);
+  background-color: rgba(239, 68, 68, 0.1);
   color: var(--danger);
-} /* Paginación */
+}
+
+/* Paginación */
 .pagination-container {
   background: white;
   border-radius: 15px 15px 0 0;
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -5px 15px rgba(30, 58, 138, 0.05);
   padding: 1rem;
   position: fixed;
   bottom: 0;
@@ -264,9 +312,11 @@ h1::after {
   right: 0;
   z-index: 100;
 }
+
 .pagination {
   margin-bottom: 0;
 }
+
 .page-link {
   border: none;
   padding: 0.5rem 1rem;
@@ -276,51 +326,64 @@ h1::after {
   font-weight: 600;
   transition: var(--transition);
 }
+
 .page-link:hover {
-  background-color: rgba(67, 97, 238, 0.1);
+  background-color: rgba(30, 58, 138, 0.1);
   color: var(--primary-dark);
   transform: translateY(-2px);
 }
+
 .page-item.active .page-link {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   color: white;
-  box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
 }
+
 .page-item.disabled .page-link {
   color: var(--gray);
   background-color: transparent;
-} /* Modal de confirmación */
+}
+
+/* Modal de confirmación */
 .modal-content {
   border-radius: 15px;
   border: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
+
 .modal-header {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   color: white;
   border-bottom: none;
   padding: 1.5rem;
 }
+
 .modal-title {
   font-weight: 700;
 }
+
 .modal-body {
   padding: 2rem;
 }
+
 .modal-footer {
   border-top: none;
   padding: 1rem 2rem 2rem;
 }
+
 .delete-warning-icon {
   font-size: 4rem;
   color: var(--danger);
   margin-bottom: 1rem;
 }
+
 .product-to-delete {
   font-weight: 700;
   color: var(--danger);
-} /* Animaciones */
+}
+
+/* Animaciones */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -331,13 +394,17 @@ h1::after {
     transform: translateY(0);
   }
 }
+
 .fade-in {
   animation: fadeIn 0.5s ease forwards;
-} /* Responsividad */
+}
+
+/* Responsividad */
 @media (max-width: 992px) {
   .table thead {
     display: none;
   }
+
   .table,
   .table tbody,
   .table tr,
@@ -345,6 +412,7 @@ h1::after {
     display: block;
     width: 100%;
   }
+
   .table tr {
     margin-bottom: 1rem;
     border: 1px solid var(--gray-light);
@@ -353,6 +421,7 @@ h1::after {
     box-shadow: var(--box-shadow);
     background-color: white;
   }
+
   .table td {
     text-align: right;
     padding: 0.75rem 0;
@@ -361,9 +430,11 @@ h1::after {
     position: relative;
     padding-left: 50%;
   }
+
   .table td:last-child {
     border-bottom: none;
   }
+
   .table td::before {
     content: attr(data-label);
     position: absolute;
@@ -373,26 +444,32 @@ h1::after {
     text-align: left;
     color: var(--primary);
   }
+
   .product-img-container {
     margin: 0;
   }
 }
+
 @media (max-width: 768px) {
   .stats-container {
     flex-direction: column;
   }
+
   .stat-card {
     width: 100%;
   }
+
   .add-product-btn {
     width: 100%;
     justify-content: center;
   }
 }
+
 @media (max-width: 576px) {
   h1 {
     font-size: 1.75rem;
   }
+
   .pagination .page-link {
     padding: 0.4rem 0.75rem;
     font-size: 0.85rem;

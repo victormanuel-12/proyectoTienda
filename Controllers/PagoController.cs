@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace proyectoTienda.Controllers
 {
-  [Authorize(Roles = "User")]
+  [Authorize(Roles = "USER")]
   public class PagoController : Controller
   {
     private readonly ILogger<PagoController> _logger;

@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace proyectoTienda.Controllers
 {
-  [Authorize(Roles = "User")]
+  [Authorize(Roles = "USER")]
   public class CarritoController : Controller
   {
     private readonly ILogger<CarritoController> _logger;
