@@ -1,0 +1,45 @@
+@inject SignInManager<IdentityUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<div class="h-100 p-3">
+    <div class="card-body p-2">
+        <ul class="nav nav-pills flex-column gap-2">
+            <li class="nav-item">
+                <a class="nav-link rounded-pill @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">
+                    <i class="bi bi-person-fill me-2"></i>Perfil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link rounded-pill @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">
+                    <i class="bi bi-envelope-fill me-2"></i>Correo
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link rounded-pill @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">
+                    <i class="bi bi-shield-lock-fill me-2"></i>Contraseña
+                </a>
+            </li>
+            @if (hasExternalLogins)
+            {
+                <li id="external-logins" class="nav-item">
+                    <a id="external-login" class="nav-link rounded-pill @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Logins externos
+                    </a>
+                </li>
+            }
+            <!--
+            <li class="nav-item">
+                <a class="nav-link rounded-pill @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">
+                    <i class="bi bi-lock-fill me-2"></i>Autenticación en dos pasos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link rounded-pill @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">
+                    <i class="bi bi-file-earmark-person-fill me-2"></i>Datos personales
+                </a>
+            </li>
+            -->
+        </ul>
+    </div>
+</div>
