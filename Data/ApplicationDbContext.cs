@@ -21,7 +21,8 @@ public class ApplicationDbContext : IdentityDbContext
    public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Provincia> Provincias { get; set; }
         public DbSet<Distrito> Distritos { get; set; }
-        public DbSet<Direccion> Direcciones { get; set; } 
+        public DbSet<Direccion> Direcciones { get; set; }
+        public DbSet<Contacto> Contacto { get; set; }
   
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

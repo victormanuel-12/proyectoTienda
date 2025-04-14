@@ -1,0 +1,200 @@
+.contact-container {
+  max-width: 600px;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+.contact-header h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.contact-subtitle {
+  color: #7f8c8d;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.contact-form-container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  padding: 1.8rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 7px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background-color: #f8f9fa;
+  font-family: "Poppins", sans-serif;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  background-color: #ffffff;
+}
+
+.form-control[readonly] {
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.btn-submit {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(41, 128, 185, 0.2);
+}
+
+.validation-message {
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 1.2rem;
+  }
+
+  .contact-form-container {
+    padding: 1.5rem;
+  }
+
+  .contact-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .form-control {
+    padding: 0.65rem 0.8rem;
+  }
+
+  textarea.form-control {
+    min-height: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-container {
+    padding: 1rem;
+  }
+
+  .contact-form-container {
+    padding: 1.2rem;
+  }
+
+  .contact-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .btn-submit {
+    padding: 0.7rem;
+  }
+}
+
+.swal-custom-popup {
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 12px !important;
+  padding: 2rem !important;
+  width: auto !important;
+  max-width: 420px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.03) !important;
+}
+
+.swal2-title {
+  font-size: 1.3rem !important;
+  font-weight: 600 !important;
+  color: #2d3748 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.swal2-content {
+  font-size: 1rem !important;
+  color: #4a5568 !important;
+  line-height: 1.5 !important;
+}
+
+.swal-custom-btn {
+  background-color: #3b82f6 !important;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  padding: 0.6rem 1.5rem !important;
+  border-radius: 8px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  margin: 0.5rem 0 0 0 !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+  border: none !important;
+  outline: none !important;
+  color: white !important;
+}
+
+.swal-custom-btn:hover {
+  background-color: #2563eb !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+.swal-custom-btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3) !important;
+}
+
+.swal-custom-btn:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+}
+
+.swal2-timer-progress-bar {
+  background: rgba(59, 130, 246, 0.3) !important;
+  height: 3px !important;
+  border-radius: 0 0 12px 12px !important;
+}
