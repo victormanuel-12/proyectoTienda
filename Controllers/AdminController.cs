@@ -191,7 +191,7 @@ namespace proyectoTienda.Controllers
     [HttpGet]
     public async Task<IActionResult> Productos(int page = 1)
     {
-      int pageSize = 5; // Tamaño de página: 5 productos por página
+      int pageSize = 7; // Tamaño de página: 5 productos por página
 
       // Obtenemos todos los productos ordenados por categoría
       // Primero los de categoría ID=1, luego las demás categorías en orden ascendente
@@ -229,59 +229,7 @@ namespace proyectoTienda.Controllers
 
       return View(viewModel);
     }
-    [HttpPost]
-    public async Task<IActionResult> AgregaProductos(ProductoCategoriaViewModel viewModel)
-    {
-      try
-      {
-        _logger.LogInformation(
-            "Datos del producto recibidos: Nombre={Nombre}, Descripcion={Descripcion}, " +
-            "Precio={Precio}, Stock={Stock}, IDCategoria={IDCategoria}",
-            viewModel.Producto.Nombre,
-            viewModel.Producto.Descripcion,
-            viewModel.Producto.PrecioActual,
-            viewModel.Producto.Stock,
-            viewModel.Producto.IDCategoria);
 
-        // Buscar si ya existe un producto con ese ID
-        var productoExistente = await _context.Productos
-          .FirstOrDefaultAsync(p => p.IDProducto == viewModel.Producto.IDProducto);
-
-        // Buscar la categoría
-        var categoriaSeleccionada = await _context.Categorias
-          .FirstOrDefaultAsync(c => c.IDCategoria == viewModel.Producto.IDCategoria);
-
-        if (productoExistente != null)
-        {
-          // Actualizar los campos del producto existente
-          productoExistente.Nombre = viewModel.Producto.Nombre;
-          productoExistente.Descripcion = viewModel.Producto.Descripcion;
-          productoExistente.PrecioActual = viewModel.Producto.PrecioActual;
-          productoExistente.Stock = viewModel.Producto.Stock;
-          productoExistente.IDCategoria = viewModel.Producto.IDCategoria;
-          productoExistente.Categoria = categoriaSeleccionada;
-
-          _context.Productos.Update(productoExistente);
-        }
-        else
-        {
-          // Asignar categoría al nuevo producto
-          viewModel.Producto.Categoria = categoriaSeleccionada;
-
-          // Agregar nuevo producto
-          _context.Productos.Add(viewModel.Producto);
-        }
-
-        await _context.SaveChangesAsync();
-        return RedirectToAction("Productos");
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(ex, "Error al agregar o actualizar producto");
-        TempData["ErrorMessage"] = "Error: " + ex.Message;
-        return RedirectToAction("Productos");
-      }
-    }
 
     [HttpPost]
     public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewModel)
