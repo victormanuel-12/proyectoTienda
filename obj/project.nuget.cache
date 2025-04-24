@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BRuCD1WVsNg=",
+  "dgSpecHash": "hwojVcJpxTM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\PC\\Desktop\\GITHUB2\\proyectoTienda\\proyectoTienda.csproj",
+  "projectFilePath": "C:\\Users\\PC\\Desktop\\proyectoTiendas\\proyectoTienda\\proyectoTienda.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

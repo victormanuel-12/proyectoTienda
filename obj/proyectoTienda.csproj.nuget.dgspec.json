@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PC\\Desktop\\GITHUB2\\proyectoTienda\\proyectoTienda.csproj": {}
+    "C:\\Users\\PC\\Desktop\\proyectoTiendas\\proyectoTienda\\proyectoTienda.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PC\\Desktop\\GITHUB2\\proyectoTienda\\proyectoTienda.csproj": {
+    "C:\\Users\\PC\\Desktop\\proyectoTiendas\\proyectoTienda\\proyectoTienda.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PC\\Desktop\\GITHUB2\\proyectoTienda\\proyectoTienda.csproj",
+        "projectUniqueName": "C:\\Users\\PC\\Desktop\\proyectoTiendas\\proyectoTienda\\proyectoTienda.csproj",
         "projectName": "proyectoTienda",
-        "projectPath": "C:\\Users\\PC\\Desktop\\GITHUB2\\proyectoTienda\\proyectoTienda.csproj",
+        "projectPath": "C:\\Users\\PC\\Desktop\\proyectoTiendas\\proyectoTienda\\proyectoTienda.csproj",
         "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PC\\Desktop\\GITHUB2\\proyectoTienda\\obj\\",
+        "outputPath": "C:\\Users\\PC\\Desktop\\proyectoTiendas\\proyectoTienda\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"

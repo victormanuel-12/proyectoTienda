@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using proyectoTienda.Data;
 
 #nullable disable
 
-namespace proyectoTienda.Data.Migrations
+namespace proyectoTienda.Data
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250421054716_MigracionNuevass")]
+    partial class MigracionNuevass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.13");
@@ -415,24 +418,11 @@ namespace proyectoTienda.Data.Migrations
                     b.Property<Guid>("IDPedido")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MetodoPago")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("MetodoPago")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Monto")
                         .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("NumeroDocumento")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Telefono")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TipoDocumento")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.HasKey("IDPago");
 

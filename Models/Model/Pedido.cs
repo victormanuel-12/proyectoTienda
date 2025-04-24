@@ -14,8 +14,8 @@ namespace proyectoTienda.Models
   {
 
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IDPedido { get; set; }
+    public Guid IDPedido { get; set; }
+
 
 
     [Required]
@@ -26,6 +26,7 @@ namespace proyectoTienda.Models
 
     [Required]
     public string? Estado { get; set; } = "PENDIENTE"; // 0=Pendiente, 1=Pagado 
+
     [Required]
     public int IdDireccion { get; set; }
 

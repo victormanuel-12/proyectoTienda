@@ -101,25 +101,13 @@ namespace proyectoTienda.Controllers
                      direccion.Distrito, direccion.Complemento);
         SessionExtension.Set<Direccion>(HttpContext.Session, "direccionPedido", direccion);
 
-        var direccionEnSesion = SessionExtension.Get<Direccion>(HttpContext.Session, "direccionPedido");
-
-        if (direccionEnSesion != null)
-        {
-          _logger.LogInformation("Dirección recuperada de sesión: {DireccionTexto}, {Departamento}, {Provincia}, {Distrito}, {Complemento}",
-              direccionEnSesion.DireccionTexto,
-              direccionEnSesion.Departamento,
-              direccionEnSesion.Provincia,
-              direccionEnSesion.Distrito,
-              direccionEnSesion.Complemento);
-        }
-        else
-        {
-          _logger.LogWarning("No se encontró la dirección en la sesión.");
-        }
 
 
 
-        return RedirectToAction("Entrega", "Checkout");
+
+
+
+        return RedirectToAction("Pago", "Pago");
       }
 
       // Si hay errores, volvemos a cargar los departamentos
