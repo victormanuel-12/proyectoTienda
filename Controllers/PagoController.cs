@@ -57,7 +57,16 @@ namespace proyectoTienda.Controllers
         .Where(o => o.UserName == userID && o.Status == "PENDIENTE")
         .CountAsync(); // Contar los registros
 
-
+      var direccionEnSesion = SessionExtension.Get<Direccion>(HttpContext.Session, "direccionPedido");
+      if (direccionEnSesion == null)
+      {
+        _logger.LogWarning("No se encontró dirección en la sesión para el pedido de pago de {0}", userID);
+        return Json(new { success = false, message = "No se encontró dirección en la sesión" });
+      }
+      else
+      {
+        _logger.LogWarning("se recupero y este es hjasjasjasjasjajsajsjasajs");
+      }
 
       var model = new PagoResumenViewModel
       {
@@ -93,11 +102,16 @@ namespace proyectoTienda.Controllers
           });
         }
         var direccionEnSesion = SessionExtension.Get<Direccion>(HttpContext.Session, "direccionPedido");
+        if (direccionEnSesion == null)
+        {
+          _logger.LogWarning("No se encontró dirección en la sesión para el pedido");
+          return Json(new { success = false, message = "No se encontró dirección en la sesión" });
+        }
         if (direccionEnSesion != null)
         {
           var direccionExistente = await _context.Direcciones
               .FirstOrDefaultAsync(d => d.IdDireccion == direccionEnSesion.IdDireccion);
-
+          _logger.LogInformation("Dirección mostrada solo si hay en la base de datos se muestra: {0}", direccionExistente);
           if (direccionExistente == null)
           {
             _context.Direcciones.Add(direccionEnSesion);
@@ -110,6 +124,7 @@ namespace proyectoTienda.Controllers
         var userID = _userManager.GetUserName(User);
         var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == userID);
         var item = await _carritoService.ObtenerCarritoActual(userID);
+        _logger.LogInformation("Usuario encontrado: {0}", usuarioExistente != null ? usuarioExistente.Email : "No encontrado");
         if (usuarioExistente == null)
         {
           _logger.LogWarning("Usuario no encontrado");

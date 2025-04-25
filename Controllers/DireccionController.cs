@@ -104,9 +104,18 @@ namespace proyectoTienda.Controllers
           Provincia = provincia.Nombre,
           Distrito = distrito.Nombre
         };
-
         SessionExtension.Set<Direccion>(HttpContext.Session, "direccionPedido", direccion);
-
+        var direcciones = HttpContext.Session.Get<Direccion>("direccionPedido");
+        // Log the direcciones object
+        if (direcciones != null)
+        {
+          _logger.LogInformation("Dirección recuperada de sesión: {Direccion}",
+            JsonSerializer.Serialize(direcciones));
+        }
+        else
+        {
+          _logger.LogInformation("No se encontró dirección en la sesión");
+        }
 
 
 
