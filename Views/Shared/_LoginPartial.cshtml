@@ -2,24 +2,22 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-@{
-    string colorClase = "text-dark"; // Valor por defecto para no logueados
-}
-
-<ul class="navbar-nav">
+<ul class="navbar-nav d-flex align-items-center">
 @if (SignInManager.IsSignedIn(User))
 {
     var user = await UserManager.FindByEmailAsync(User.Identity?.Name);
     var roles = await UserManager.GetRolesAsync(user);
     var esAdmin = roles.Contains("ADMIN");
-    colorClase = esAdmin ? "text-white" : "text-dark";
-  
-    <li class="nav-item">
-        <a class="nav-link @colorClase" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity?.Name</a>
+    
+    <li class="nav-item mx-2">
+        <a class="nav-link d-flex flex-column align-items-center" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="min-width: 80px;">
+            <i class="fas fa-user-circle" style="font-size: 1.8rem; color: #555;"></i>
+            <span style="font-size: 0.85rem; margin-top: 3px; font-weight: 500;">Mi cuenta</span>
+        </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item mx-2">
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" class="nav-link btn btn-link @colorClase">Salir</button>
+            <button type="submit" class="nav-link btn btn-link" style="color: #555; font-weight: 500; padding: 0.5rem 0.75rem;">Salir</button>
         </form>
     </li>
 }
