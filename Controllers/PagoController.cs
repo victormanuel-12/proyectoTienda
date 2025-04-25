@@ -10,7 +10,7 @@ using proyectoTienda.Models.Model;
 using proyectoTienda.Models.Model.ubicacion;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using proyectoTienda.ViewModel;
+
 using Microsoft.AspNetCore.Identity;
 using proyectoTienda.Session;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +18,8 @@ using System.Text.Json;
 using proyectoTienda.Models;
 using proyectoTienda.Servicios;
 using proyectoTienda.Models.DTO;
+using System.Dynamic;
+using proyectoTienda.Models.ViewModels;
 
 
 namespace proyectoTienda.Controllers
@@ -41,18 +43,38 @@ namespace proyectoTienda.Controllers
     [HttpGet]
     public async Task<IActionResult> Pago()
     {
-      var modelo = new PagoDTO();
 
-      return View(modelo);
+      var userID = _userManager.GetUserName(User);
+      var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == userID);
+      var elementos = await _context.ItemsCarrito
+          .Include(o => o.Producto)
+          .Where(o => o.UserName == userID && o.Status == "PENDIENTE")
+          .ToListAsync();
+
+      decimal montoOriginal = elementos.Sum(e => e.Producto.PrecioOriginal * e.Cantidad);
+      decimal montoActual = elementos.Sum(e => e.Producto.PrecioActual * e.Cantidad);
+      var elemento = await _context.ItemsCarrito
+        .Where(o => o.UserName == userID && o.Status == "PENDIENTE")
+        .CountAsync(); // Contar los registros
+
+
+
+      var model = new PagoResumenViewModel
+      {
+        Pago = new PagoDTO(),
+        montoOriginal = montoOriginal,
+        elementosCarrito = elemento,
+        montoActual = montoActual
+
+      };
+      // Agregar los otros atributos
+
+      return View(model);
     }
 
     [HttpPost]
     public async Task<IActionResult> PagoHecho([FromBody] PagoDTO pago)
     {
-
-
-
-
       try
       {
         if (!ModelState.IsValid)
