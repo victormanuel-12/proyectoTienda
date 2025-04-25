@@ -139,14 +139,9 @@
                   <span class="badge badge-primary">@(item.Categoria?.Nombre ?? "Sin categoría")</span>
                 </td>
                 <td class="text-center" data-label="Talla">
-                  @if (!string.IsNullOrEmpty(item.Talla))
-                  {
-                    <span class="badge badge-secondary">@item.Talla</span>
-                  }
-                  else
-                  {
-                    <span class="text-muted">-</span>
-                  }
+                  
+                    <span class="fw-bold text-secondary">@item.Talla</span>
+                  
                 </td>
                 <td class="text-center" data-label="Stock">
                   @{
