@@ -14,7 +14,7 @@ using proyectoTienda.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using proyectoTienda.Session;
 using Microsoft.AspNetCore.Authorization;
-
+using System.Text.Json;
 
 namespace proyectoTienda.Controllers
 {
@@ -34,6 +34,17 @@ namespace proyectoTienda.Controllers
 
     public async Task<IActionResult> Index()
     {
+      var direccionEnSesion = SessionExtension.Get<Direccion>(HttpContext.Session, "direccionPedido");
+      if (direccionEnSesion != null)
+      {
+        var direccionExistente = await _context.Direcciones
+            .FirstOrDefaultAsync(d => d.IdDireccion == direccionEnSesion.IdDireccion);
+
+        if (direccionExistente == null)
+        {
+          return RedirectToAction("Pago", "Pago");
+        }
+      }
       // Cargar los departamentos para el dropdown inicial
       ViewBag.Departamentos = await _context.Departamentos
           .OrderBy(d => d.Nombre)
@@ -93,12 +104,7 @@ namespace proyectoTienda.Controllers
           Provincia = provincia.Nombre,
           Distrito = distrito.Nombre
         };
-        // Log direccion object details
-        _logger.LogInformation(" Dirección: {DireccionTexto}, " +
-                     "Departamento: {Departamento}, Provincia: {Provincia}, " +
-                     "Distrito: {Distrito}, Complemento: {Complemento}", direccion.DireccionTexto,
-                     direccion.Departamento, direccion.Provincia,
-                     direccion.Distrito, direccion.Complemento);
+
         SessionExtension.Set<Direccion>(HttpContext.Session, "direccionPedido", direccion);
 
 
