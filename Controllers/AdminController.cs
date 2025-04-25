@@ -195,7 +195,7 @@ namespace proyectoTienda.Controllers
 
       // Obtenemos todos los productos ordenados por categoría
       // Primero los de categoría ID=1, luego las demás categorías en orden ascendente
-      var productos = _context.Productos
+      var productos = _context.Productos.Include(p => p.Categoria)
           .OrderBy(p => p.IDCategoria == 1 ? 0 : 1) // Prioriza categoría ID=1
           .ThenBy(p => p.IDCategoria)               // Luego ordena por las demás categorías
           .ThenBy(p => p.Nombre);                   // Orden secundario por nombre
