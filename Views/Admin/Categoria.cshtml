@@ -87,8 +87,9 @@
                             <thead>
                                 <tr>
                                     <th>Categoría <i class="fas fa-sort ms-1"></i></th>
-                                    <th>Nombre <i class="fas fa-sort ms-1"></i></th>
-                                    <th>Tarifa <i class="fas fa-sort ms-1"></i></th>
+                                    <th>Descripcion <i class="fas fa-sort ms-1"></i></th>
+                                    <th>Productos <i class="fas fa-sort ms-1"></i></th>
+                                    <th>Fecha <i class="fas fa-sort ms-1"></i></th>
                                     <th>Acción</th>
                                 </tr>
                             </thead>
@@ -100,18 +101,23 @@
                                         <tr>
                                             <td>@item.Categoria.Nombre</td>
                                             <td>@item.Categoria.Descripcion</td>
-                                            <td>$50.00</td>
+                                            <td>@item.ProductosCount</td>
+                                            <td>@item.Categoria.FechaCreacion?.ToString("dd/MM/yyyy")</td>
                                             <td>
-                                                <button class="action-btn check">
-                                                    <i class="fas fa-check"></i>
-                                                </button>
-                                                <a asp-controller="Admin" asp-action="EditarCategoria" asp-route-id="@item.Categoria.IDCategoria" class="action-btn edit">
-                                                    <i class="fas fa-pencil-alt"></i>
-                                                </a>
-                                                <button class="action-btn delete" data-id="@item.Categoria.IDCategoria" data-name="@item.Categoria.Nombre" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
+    <div class="action-buttons">
+        <a asp-controller="Admin" asp-action="EditarCategoria" asp-route-id="@item.Categoria.IDCategoria" 
+           class="action-btn btn-edit" title="Editar categoría">
+            <i class="fas fa-edit"></i>
+        </a>
+        <button class="action-btn btn-delete" title="Eliminar categoría"
+                data-id="@item.Categoria.IDCategoria" 
+                data-name="@item.Categoria.Nombre" 
+                data-bs-toggle="modal" 
+                data-bs-target="#deleteModal">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</td>
                                         </tr>
                                     }
                                 }

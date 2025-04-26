@@ -195,35 +195,54 @@ body {
 }
 
 /* Action buttons */
+/* Estilos para los botones de acción */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
 .action-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin: 0 3px;
-  padding: 5px;
-  border-radius: 5px;
-  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .action-btn:hover {
-  background-color: #f3f4f6;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-.action-btn.edit {
-  color: #3b82f6;
+.btn-edit,
+a.action-btn.btn-edit {
+  background-color: #2563eb;
+  color: white;
+  text-decoration: none;
 }
 
-.action-btn.delete {
-  color: #ef4444;
+.btn-delete {
+  background-color: #dc2626;
 }
 
-.action-btn.check {
-  color: #10b981;
+/* Asegurarse de que los iconos estén centrados */
+.action-btn i {
+  font-size: 14px;
 }
 
+/* Estilos para dispositivos móviles */
+@media (max-width: 576px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
 /* Hamburger menu */
 .menu-toggle {
   display: none;
