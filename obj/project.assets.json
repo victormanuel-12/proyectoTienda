@@ -7082,19 +7082,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\palom\\.nuget\\packages\\": {}
+    "C:\\Users\\PC\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\palom\\Downloads\\Proyecto C#\\Proyecto-oficial\\proyectoTienda.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\Desktop\\PROYECTOFINALLL\\proyectoTienda\\proyectoTienda.csproj",
       "projectName": "proyectoTienda",
-      "projectPath": "C:\\Users\\palom\\Downloads\\Proyecto C#\\Proyecto-oficial\\proyectoTienda.csproj",
-      "packagesPath": "C:\\Users\\palom\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\palom\\Downloads\\Proyecto C#\\Proyecto-oficial\\obj\\",
+      "projectPath": "C:\\Users\\PC\\Desktop\\PROYECTOFINALLL\\proyectoTienda\\proyectoTienda.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\PC\\Desktop\\PROYECTOFINALLL\\proyectoTienda\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\palom\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -7167,7 +7167,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.407/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

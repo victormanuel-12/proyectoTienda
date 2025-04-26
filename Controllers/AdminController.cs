@@ -226,84 +226,115 @@ namespace proyectoTienda.Controllers
       return View(viewModel);
     }
 
-
     [HttpPost]
     public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewModel)
     {
-      var imagen = Request.Form.Files.FirstOrDefault(f => f.Name == "Producto.ImagenURL");
-      if (imagen == null || imagen.Length == 0)
-        return BadRequest("No se seleccionó ninguna imagen");
-
-      using var ms = new MemoryStream();
-      await imagen.CopyToAsync(ms);
-      var bytes = ms.ToArray();
-      var base64Image = Convert.ToBase64String(bytes);
-
-      string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(imagen.FileName);
-
-      // Leer token y repo desde appsettings.json
-      var gitHubToken = _configuration["GitHub:Token"];
-      var repo = _configuration["GitHub:Repo"];
-      var url = $"https://api.github.com/repos/{repo}/contents/{nombreArchivo}";
-
-      var payload = new
+      try
       {
-        message = "Subida de imagen desde formulario",
-        content = base64Image
-      };
+        var imagen = Request.Form.Files.FirstOrDefault(f => f.Name == "Producto.ImagenURL");
+        if (imagen == null || imagen.Length == 0)
+        {
+          TempData["ErrorMessage"] = "No se seleccionó ninguna imagen";
+          return RedirectToAction("AgregarProducto");
+        }
 
-      var httpClient = new HttpClient();
-      httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("MiApp");
-      httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("token", gitHubToken);
+        // Verificar el tamaño de la imagen (máximo 5MB para GitHub)
+        if (imagen.Length > 5 * 1024 * 1024)
+        {
+          TempData["ErrorMessage"] = "La imagen supera el límite de 5MB permitido";
+          return RedirectToAction("AgregarProducto");
+        }
 
-      var json = JsonSerializer.Serialize(payload);
-      var content = new StringContent(json, Encoding.UTF8, "application/json");
+        using var ms = new MemoryStream();
+        await imagen.CopyToAsync(ms);
+        var bytes = ms.ToArray();
+        var base64Image = Convert.ToBase64String(bytes);
 
-      var response = await httpClient.PutAsync(url, content);
+        string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(imagen.FileName);
 
-      if (!response.IsSuccessStatusCode)
-        return StatusCode((int)response.StatusCode, "Error al subir la imagen a GitHub");
+        // Leer token y repo desde appsettings.json
+        var gitHubToken = _configuration["GitHub:Token"];
+        var repo = _configuration["GitHub:Repo"];
 
-      // Construir URL pública de la imagen
-      var imagenUrl = $"https://raw.githubusercontent.com/{repo}/main/{nombreArchivo}";
+        if (string.IsNullOrEmpty(gitHubToken) || string.IsNullOrEmpty(repo))
+        {
+          _logger.LogError("Faltan configuraciones para GitHub Token o Repo");
+          TempData["ErrorMessage"] = "Error en la configuración de GitHub";
+          return RedirectToAction("AgregarProducto");
+        }
 
+        var url = $"https://api.github.com/repos/{repo}/contents/images/{nombreArchivo}";
 
+        var payload = new
+        {
+          message = "Subida de imagen desde formulario",
+          content = base64Image
+        };
 
+        using var httpClient = new HttpClient();
+        // Ajuste del User-Agent (GitHub requiere un User-Agent válido)
+        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("proyectoTienda/1.0");
+        // Usando Bearer token en lugar de "token"
+        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", gitHubToken);
 
+        var json = JsonSerializer.Serialize(payload);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+        var response = await httpClient.PutAsync(url, content);
 
-      // Buscar si ya existe un producto con ese ID
-      var productoExistente = await _context.Productos
-        .FirstOrDefaultAsync(p => p.IDProducto == viewModel.Producto.IDProducto);
+        if (!response.IsSuccessStatusCode)
+        {
+          var responseContent = await response.Content.ReadAsStringAsync();
+          _logger.LogError($"Error al subir a GitHub: {response.StatusCode}, {responseContent}");
+          TempData["ErrorMessage"] = $"Error al subir la imagen: {response.StatusCode}";
+          return RedirectToAction("AgregarProducto");
+        }
 
-      // Buscar la categoría
-      var categoriaSeleccionada = await _context.Categorias
-        .FirstOrDefaultAsync(c => c.IDCategoria == viewModel.Producto.IDCategoria);
-      // Guardar en la BD
+        // Construir URL pública de la imagen
+        var imagenUrl = $"https://raw.githubusercontent.com/{repo}/main/images/{nombreArchivo}";
 
-      if (productoExistente != null)
-      {
-        // Actualizar los campos del producto existente
-        productoExistente.Nombre = viewModel.Producto.Nombre;
-        productoExistente.Descripcion = viewModel.Producto.Descripcion;
-        productoExistente.PrecioActual = viewModel.Producto.PrecioActual;
-        productoExistente.Stock = viewModel.Producto.Stock;
-        productoExistente.IDCategoria = viewModel.Producto.IDCategoria;
-        productoExistente.Categoria = categoriaSeleccionada;
+        // Buscar si ya existe un producto con ese ID
+        var productoExistente = await _context.Productos
+            .FirstOrDefaultAsync(p => p.IDProducto == viewModel.Producto.IDProducto);
 
-        _context.Productos.Update(productoExistente);
+        // Buscar la categoría
+        var categoriaSeleccionada = await _context.Categorias
+            .FirstOrDefaultAsync(c => c.IDCategoria == viewModel.Producto.IDCategoria);
+
+        // Guardar en la BD
+        if (productoExistente != null)
+        {
+          // Actualizar los campos del producto existente
+          productoExistente.Nombre = viewModel.Producto.Nombre;
+          productoExistente.Descripcion = viewModel.Producto.Descripcion;
+          productoExistente.PrecioActual = viewModel.Producto.PrecioActual;
+          productoExistente.Stock = viewModel.Producto.Stock;
+          productoExistente.IDCategoria = viewModel.Producto.IDCategoria;
+          productoExistente.Categoria = categoriaSeleccionada;
+          productoExistente.ImagenURL = imagenUrl; // Actualizar URL de imagen
+
+          _context.Productos.Update(productoExistente);
+        }
+        else
+        {
+          // Asignar categoría al nuevo producto
+          viewModel.Producto.Categoria = categoriaSeleccionada;
+          viewModel.Producto.ImagenURL = imagenUrl; // Asignar la URL de la imagen al nuevo producto
+
+          // Agregar nuevo producto
+          _context.Productos.Add(viewModel.Producto);
+        }
+
+        await _context.SaveChangesAsync();
+        TempData["SuccessMessage"] = "Producto guardado correctamente";
+        return RedirectToAction("Productos");
       }
-      else
+      catch (Exception ex)
       {
-        // Asignar categoría al nuevo producto
-        viewModel.Producto.Categoria = categoriaSeleccionada;
-        viewModel.Producto.ImagenURL = imagenUrl; // Asignar la URL de la imagen al nuevo producto
-                                                  // Agregar nuevo producto
-        _context.Productos.Add(viewModel.Producto);
+        _logger.LogError(ex, "Error al procesar la solicitud");
+        TempData["ErrorMessage"] = "Ocurrió un error al procesar la solicitud: " + ex.Message;
+        return RedirectToAction("AgregarProducto");
       }
-
-      await _context.SaveChangesAsync();
-      return RedirectToAction("Productos");
     }
 
 
@@ -330,21 +361,37 @@ namespace proyectoTienda.Controllers
 
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> EliminarProducto(int id)
     {
+      _logger.LogInformation("Intentando eliminar producto con ID: {ProductId}", id);
+
       var producto = await _context.Productos.FindAsync(id);
       if (producto == null)
       {
         return NotFound();
       }
 
-      _context.Productos.Remove(producto);
-      await _context.SaveChangesAsync();
+      try
+      {
 
-      TempData["SuccessMessage"] = "Producto eliminado correctamente.";
+        var detallesPedidosRelacionados = _context.DetallesPedidos.Where(d => d.IDProducto == id);
+        _context.DetallesPedidos.RemoveRange(detallesPedidosRelacionados);
+
+
+        _context.Productos.Remove(producto);
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Producto eliminado correctamente.";
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error al eliminar el producto con ID {ProductId}", id);
+        TempData["ErrorMessage"] = "No se pudo eliminar el producto. Es posible que tenga referencias en otros registros.";
+      }
+
       return RedirectToAction("Productos");
     }
-
 
 
 

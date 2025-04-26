@@ -154,6 +154,7 @@
                     <a asp-action="Edit" asp-route-id="@item.IDProducto" class="btn btn-sm btn-primary me-2">
                       <i class="bi bi-pencil-fill me-1"></i> Editar
                     </a>
+                    
                     <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" 
                       data-id="@item.IDProducto" data-nombre="@item.Nombre">
                       <i class="bi bi-trash-fill me-1"></i> Eliminar
@@ -274,15 +275,17 @@
           <p class="text-muted">Esta acción no se puede deshacer.</p>
         </div>
         <div class="modal-footer">
-          <form id="deleteForm" method="post">
-            <input type="hidden" name="id" id="productoId">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              <i class="bi bi-x-circle me-1"></i> Cancelar
-            </button>
-            <button type="submit" class="btn btn-danger">
-              <i class="bi bi-trash-fill me-1"></i> Eliminar Producto
-            </button>
-          </form>
+          <!-- En tu formulario -->
+<form id="deleteForm" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="productoId" />
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <i class="bi bi-x-circle me-1"></i> Cancelar
+    </button>
+    <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash-fill me-1"></i> Eliminar Producto
+    </button>
+</form>
         </div>
       </div>
     </div>
@@ -295,12 +298,12 @@
       var confirmDeleteModal = document.getElementById("confirmDeleteModal");
       confirmDeleteModal.addEventListener("show.bs.modal", function (event) {
         var button = event.relatedTarget;
-        var productId = button.getAttribute("data-id");
+        var productoId = button.getAttribute("data-id");
         var productName = button.getAttribute("data-nombre");
         
         document.getElementById("productoNombre").textContent = productName;
-        document.getElementById("productoId").value = productId;
-        document.getElementById("deleteForm").action = "/Admin/EliminarProducto";
+        document.getElementById("productoId").value = productoId;
+        document.getElementById("deleteForm").action = "@Url.Action("EliminarProducto", "Admin")";
       });
       
       // Animación de entrada para las filas de la tabla
