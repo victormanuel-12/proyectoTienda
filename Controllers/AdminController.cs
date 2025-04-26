@@ -41,9 +41,8 @@ namespace proyectoTienda.Controllers
     [HttpGet]
     public async Task<IActionResult> Categoria()
     {
-      try
-      {
-        var categorias = await _context.Categorias
+
+      var categorias = await _context.Categorias
 .Select(c => new CategoriaViewModel
 {
   Categoria = c,
@@ -51,20 +50,16 @@ namespace proyectoTienda.Controllers
 })
 .ToListAsync();
 
-        // Verificar si no hay categorías
-        if (categorias == null || categorias.Count == 0)
-        {
-          ViewBag.Message = "No hay categorías disponibles en el sistema.";
-        }
-
-        return View(categorias);
-      }
-      catch (Exception ex)
+      // Verificar si no hay categorías
+      if (categorias == null || categorias.Count == 0)
       {
-        // En caso de error, mostrar mensaje de error
-        return View("Error", new { message = ex.Message });
+        ViewBag.Message = "No hay categorías disponibles en el sistema.";
       }
+
+      return View(categorias);
     }
+
+
 
 
     // Agregar Categoria
@@ -92,6 +87,7 @@ namespace proyectoTienda.Controllers
 
         try
         {
+          nuevaCategoria.FechaCreacion = DateTime.Now; // Asignar la fecha de creación
           _context.Categorias.Add(nuevaCategoria);
           await _context.SaveChangesAsync();
           return RedirectToAction("Categoria"); // o el nombre real de tu acción/lista

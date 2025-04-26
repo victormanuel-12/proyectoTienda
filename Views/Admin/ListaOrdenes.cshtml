@@ -1,0 +1,287 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URBAN THREADS - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="~/css/AdminHome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/ListaOrdenes.css" />
+    
+</head>
+<body>
+    <!-- Botón para abrir menú en móviles -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Overlay para cuando el menú está abierto en móvil -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- Barra lateral -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">SHOP.CO</div>
+        <div class="nav-items">
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="Categoria">
+                <i class="fas fa-tags"></i>
+                <span>Categorías</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="AgregarCategoria">
+                <i class="fas fa-plus"></i>
+                <span>Agregar Categoría</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="Productos">
+                <i class="fas fa-tshirt"></i>
+                <span>Productos</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="AgregarProducto">
+                <i class="fas fa-plus-circle"></i>
+                <span>Agregar Producto</span>
+            </a>
+            <a class="nav-item active" asp-area="" asp-controller="Admin" asp-action="ListaOrdenes">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Pedidos</span>
+            </a>
+        </div>
+        <!-- Login Partial integrado en la barra lateral -->
+        <div class="login-container">
+            <partial name="_LoginPartial" />
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="orders-container">
+            <div class="table-header">
+                <h1 class="table-title">Gestión de Pedidos</h1>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar pedido..." id="searchInput">
+                </div>
+            </div>
+
+            <div class="table-tools">
+                <div class="entries-selector">
+                    <span>Mostrar</span>
+                    <select id="entriesSelector">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>registros</span>
+                </div>
+
+                <div class="export-buttons">
+                    <button class="export-btn btn-copy">
+                        <i class="fas fa-copy"></i>
+                        <span>Copiar</span>
+                    </button>
+                    <button class="export-btn btn-excel">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Excel</span>
+                    </button>
+                    <button class="export-btn btn-pdf">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>PDF</span>
+                    </button>
+                    <button class="export-btn btn-csv">
+                        <i class="fas fa-file-csv"></i>
+                        <span>CSV</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ref / Transacción</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Tipo pago</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>4</td>
+                            <td>5VP22171ZT09743R</td>
+                            <td>22/01/2021</td>
+                            <td>$160.00</td>
+                            <td>PayPal</td>
+                            <td><span class="status-badge status-completed">Completo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>1BJ86751KC39018V</td>
+                            <td>22/01/2021</td>
+                            <td>$250.00</td>
+                            <td>PayPal</td>
+                            <td><span class="status-badge status-completed">Completo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>-</td>
+                            <td>22/01/2021</td>
+                            <td>$120.00</td>
+                            <td>Cheque</td>
+                            <td><span class="status-badge status-pending">Pendiente</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>BK960754V1309321</td>
+                            <td>21/01/2021</td>
+                            <td>$120.00</td>
+                            <td>PayPal</td>
+                            <td><span class="status-badge status-completed">Completo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn btn-delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Mostrando registros del 1 al 4 de un total de 4 registros
+                </div>
+                <div class="pagination-controls">
+                    <button class="pagination-btn" disabled>Anterior</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn" disabled>Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Script para controlar el menú responsivo
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const menuOverlay = document.getElementById('menuOverlay');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                menuOverlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+            });
+            
+            // Cerrar menú al hacer clic en overlay
+            menuOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                menuOverlay.style.display = 'none';
+            });
+            
+            // Ajustar al cambiar tamaño de ventana
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 991) {
+                    sidebar.classList.remove('active');
+                    menuOverlay.style.display = 'none';
+                }
+            });
+
+            // Funcionalidad de búsqueda
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+                const tableRows = document.querySelectorAll('.orders-table tbody tr');
+                
+                tableRows.forEach(row => {
+                    let found = false;
+                    const cells = row.querySelectorAll('td');
+                    
+                    cells.forEach(cell => {
+                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                            found = true;
+                        }
+                    });
+                    
+                    row.style.display = found ? '' : 'none';
+                });
+            });
+
+            // Funcionalidad para selector de entradas
+            const entriesSelector = document.getElementById('entriesSelector');
+            entriesSelector.addEventListener('change', function() {
+                // Aquí iría la lógica para cambiar el número de registros mostrados
+                // En una implementación real, esto podría recargar los datos o filtrarlos
+                console.log(`Mostrar ${this.value} registros`);
+            });
+
+            // Funcionalidad para botones de exportación
+            const exportButtons = document.querySelectorAll('.export-btn');
+            exportButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const type = this.classList.contains('btn-copy') ? 'copiar' :
+                                this.classList.contains('btn-excel') ? 'Excel' :
+                                this.classList.contains('btn-pdf') ? 'PDF' : 'CSV';
+                    
+                    alert(`Exportando a ${type}...`);
+                    // Aquí iría la lógica real de exportación
+                });
+            });
+        });
+    </script>
+</body>
+</html>
