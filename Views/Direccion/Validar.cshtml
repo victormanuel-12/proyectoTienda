@@ -1,0 +1,153 @@
+@{
+   
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selección de Dirección de Entrega</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="~/css/mapa.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Selección de Dirección de Entrega</h1>
+      <p>Selecciona la ubicación exacta donde deseas recibir tu pedido</p>
+    </header>
+    
+    <div class="instructions">
+      <p><strong>¿Cómo funciona?</strong> Navega por el mapa, haz clic en la ubicación exacta donde deseas recibir tu pedido y luego presiona el botón "Validar Dirección".</p>
+    </div>
+    
+    <div class="map-container">
+      <div id="map"></div>
+      
+      <div class="address-panel">
+        <h2>Dirección Seleccionada</h2>
+        <div class="address-display">
+          <p id="address-text">Aún no has seleccionado una ubicación. Haz clic en el mapa para elegir tu dirección de entrega.</p>
+          <p id="coordinates" class="coordinates"></p>
+        </div>
+        
+        <form id="form-validar" method="post" asp-controller="Direccion" asp-action="ValidarDireccion">
+  <input type="hidden" id="direccionTexto" name="direccionTexto" />
+  <button type="submit" class="btn" id="validate-btn" disabled>Validar Dirección</button>
+</form>
+
+        <div id="status-message" class="status hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Variables globales
+    let map, marker;
+    let selectedLocation = null;
+    const validateBtn = document.getElementById('validate-btn');
+    const addressText = document.getElementById('address-text');
+    const coordinatesText = document.getElementById('coordinates');
+    const statusMessage = document.getElementById('status-message');
+    
+    // Inicializar el mapa
+    function initMap() {
+      // Centrar en Lima por defecto
+      map = L.map('map').setView([-12.0464, -77.0428], 13);
+      
+      // Añadir capa de mapa
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 19
+      }).addTo(map);
+      
+      // Evento de clic en el mapa
+      map.on('click', handleMapClick);
+    }
+    
+    // Manejar clic en el mapa
+    function handleMapClick(e) {
+      const lat = e.latlng.lat;
+      const lng = e.latlng.lng;
+      
+      // Actualizar o crear marcador
+      if (marker) {
+        map.removeLayer(marker);
+      }
+      
+      marker = L.marker([lat, lng]).addTo(map);
+      
+      // Actualizar coordenadas en la interfaz
+      coordinatesText.textContent = `Coordenadas: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+      
+      // Mostrar mensaje de carga
+      addressText.textContent = "Obteniendo dirección...";
+      validateBtn.disabled = true;
+      
+      // Obtener dirección mediante geocodificación inversa
+      getAddressFromCoordinates(lat, lng);
+    }
+    
+    // Obtener dirección a partir de coordenadas
+    function getAddressFromCoordinates(lat, lng) {
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`, {
+        headers: {
+          'User-Agent': 'direccion-entrega-app-v1'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al obtener la dirección');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Guardar datos de ubicación
+        selectedLocation = {
+          lat: lat,
+          lng: lng,
+          address: data.display_name,
+          data: data
+        };
+        
+        // Mostrar dirección en la interfaz
+        addressText.textContent = data.display_name;
+        
+        // Habilitar botón de validación
+        validateBtn.disabled = false;
+         document.getElementById('direccionTexto').value = data.display_name;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        addressText.textContent = "Error al obtener la dirección. Intenta de nuevo.";
+      });
+    }
+    
+    // Validar dirección
+    function validateAddress() {
+      if (!selectedLocation) {
+        showStatus('error', 'Por favor, selecciona una ubicación en el mapa primero.');
+        return;
+      }
+      
+      // Aquí puedes enviar los datos a tu backend de ASP.NET 8
+      // Por ahora, solo mostraremos un mensaje de éxito
+      showStatus('success', 'Dirección validada correctamente: ' + selectedLocation.address);
+      
+      // Aquí podrías agregar código para enviar la dirección a tu backend
+      console.log('Dirección validada:', selectedLocation);
+    }
+    
+    
+    
+    // Inicializar la aplicación
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      validateBtn.addEventListener('click', validateAddress);
+    });
+  </script>
+</body>
+</html>

@@ -122,8 +122,10 @@ namespace proyectoTienda.Controllers
 
 
 
-        return RedirectToAction("Pago", "Pago");
+        return RedirectToAction("Validar", "Direccion");
       }
+
+
 
       // Si hay errores, volvemos a cargar los departamentos
       ViewBag.Departamentos = await _context.Departamentos
@@ -133,6 +135,39 @@ namespace proyectoTienda.Controllers
 
       return View(model);
     }
+
+
+    [HttpPost]
+    public IActionResult ValidarDireccion(string direccionTexto)
+    {
+      var direccion = SessionExtension.Get<Direccion>(HttpContext.Session, "direccionPedido");
+
+      if (direccion == null)
+      {
+        return NotFound();
+      }
+
+      // Actualizar solo el campo DireccionTexto
+      direccion.DireccionTexto = direccionTexto;
+
+      // Guardar nuevamente en sesión
+      SessionExtension.Set(HttpContext.Session, "direccionPedido", direccion);
+
+      // Registrar el valor de direccionTexto
+      _logger.LogInformation("Dirección actualizada y guardada en sesión: {DireccionTexto}", direccionTexto);
+
+      // Redirigir al controlador "Pago" y método "Pago"
+      return RedirectToAction("Pago", "Pago");
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> Validar(int provinciaId)
+    {
+      return View("Validar");
+    }
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
