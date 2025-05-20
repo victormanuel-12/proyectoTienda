@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using proyectoTienda.Data;
+using Microsoft.OpenApi.Models;
 using proyectoTienda.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,20 @@ builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient(); // <- Aquí
 
+
+// API Documentation
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+  c.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "API",
+    Version = "v1",
+    Description = "Descripción de la API"
+  });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,6 +63,14 @@ app.UseSession();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSwagger();
+
+app.UseSwaggerUI(c =>
+{
+  c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+});
+
 app.UseAuthorization();
 app.MapControllers();
 app.MapControllerRoute(
