@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Publicación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="~/css/style.css">
+</head>
+<body>
+
+    <div class="publish-form-page-container">
+        <div class="container main-container-form">
+            <div class="publish-card">
+                <div class="publish-card-header">
+                    <h4 class="mb-0"><i class="fas fa-share-alt me-2"></i>Crear Nueva Publicación</h4>
+                </div>
+                <div class="publish-card-body">
+                    <form asp-action="Publicar" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="titulo" class="form-label"><i class="fas fa-heading me-1"></i>Título</label>
+                                <input type="text" class="form-control custom-input" id="titulo" name="titulo" placeholder="Ej: ¡Bienvenidos!">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="link" class="form-label"><i class="fas fa-link me-1"></i>Enlace (Opcional)</label>
+                                <input type="url" class="form-control custom-input" id="link" name="link" placeholder="https://ejemplo.com">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="comentario" class="form-label"><i class="fas fa-comment-dots me-1"></i>Comentario Adicional</label>
+                                <input type="text" class="form-control custom-input" id="comentario" name="comentario" placeholder="Contexto o llamado a la acción">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="imagenUrl" class="form-label"><i class="fas fa-image me-1"></i>URL de la Imagen</label>
+                                <input type="url" class="form-control custom-input" id="imagenUrl" name="imagenUrl" placeholder="https://ejemplo.com/imagen.jpg" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="texto" class="form-label"><i class="fas fa-align-left me-1"></i>Cuerpo del Contenido</label>
+                            <textarea class="form-control custom-input" id="texto" name="texto" rows="3" placeholder="Escribe aquí el contenido principal de tu publicación..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-publish w-100">
+                            <i class="fab fa-facebook-square me-2"></i>
+                            <i class="fab fa-instagram me-2"></i>
+                            Publicar en ambas plataformas
+                        </button>
+                    </form>
+                </div>
+                <div class="publish-card-footer">
+                    <p class="text-muted small mb-0">
+                        <i class="fas fa-info-circle me-1"></i> La URL de la imagen debe estar accesible públicamente.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

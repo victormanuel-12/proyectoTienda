@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Publicación Exitosa";
+    Layout = "_Layout"; 
+}
+
+<div class="container text-center mt-5">
+    <h3>PUBLICACIÓN EXITOSA</Nav></h3>
+    <div class="mt-4">
+        <a href="@ViewBag.FacebookUrl" class="btn btn-primary btn-lg me-3" target="_blank">
+            <i class="fab fa-facebook-f"></i> Ver en Facebook
+        </a>
+        @if(ViewBag.InstagramUrl != null)
+        {
+            <a href="@ViewBag.InstagramUrl" class="btn btn-danger btn-lg" target="_blank">
+                <i class="fab fa-instagram"></i> Ver en Instagram
+            </a>
+        }
+    </div>
+</div>
