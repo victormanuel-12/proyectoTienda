@@ -2,6 +2,7 @@
 @model proyectoTienda.Models.ViewModels.PagoResumenViewModel
 @{
     ViewData["Title"] = "Pago";
+    var montoTotalConEnvio = Model.montoActual + 12.90m; // Calcula esto correctamente
 }
 
 <!DOCTYPE html>
@@ -10,11 +11,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="~/css/Pago.css">
 </head>
 <body>
@@ -49,115 +47,132 @@
             </div>
         </div>
 
-        <!-- Contenido principal -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+        @if (TempData["InfoMessage"] != null)
+        {
+            <div class="alert alert-info" role="alert">
+                @TempData["InfoMessage"]
+            </div>
+        }
+
+
         <div class="main-content">
             <div class="row">
                 <div class="col-md-8">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h4 class="mb-4">Información de pago</h4>
-                            <form id="paymentform" asp-controller="Pago" asp-action="PagoHecho" method="post">
-    <div class="mb-3">
-        <label for="NumeroTarjeta" class="form-label">Número de tarjeta *</label>
-        <input type="text" class="form-control" id="NumeroTarjeta" name="NumeroTarjeta" asp-for="Pago.NumeroTarjeta" placeholder="4000 1234 5678 9010" required />
-        <span asp-validation-for="Pago.NumeroTarjeta" class="text-danger"></span>
-    </div>
+                            <h4 class="mb-4">Selecciona tu método de pago</h4>
+                            
+                            <!-- Opción Mercado Pago -->
+                            <div class="mb-4 p-3 border rounded">
+                                <h5>Pagar con Mercado Pago</h5>
+                                <p>Serás redirigido a Mercado Pago para completar tu compra de forma segura.</p>
+                                <form asp-controller="Pago" asp-action="PagarConMercadoPago" method="post">
+                                    @* @Html.AntiForgeryToken()  <-- TEMPORALMENTE COMENTADO PARA DEPURACIÓN *@
+                                    <button type="submit" class="btn btn-primary btn-lg" id="pay-mercadopago-button">
+                                        Pagar con Mercado Pago <img src="https://img.icons8.com/color/48/000000/mercado-pago.png" alt="Mercado Pago" style="height: 24px; vertical-align: middle;"/>
+                                    </button>
+                                </form>
+                            </div>
 
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label class="form-label">Fecha Vencimiento *</label>
-            <div class="d-flex">
-                <select class="form-select me-2" id="MesVencimiento" asp-for="Pago.MesVencimiento" required>
-                    <option value="">-Mes-</option>
-                    <option value="01">01</option>
-                    <option value="02">02</option>
-                    <option value="03">03</option>
-                    <option value="04">04</option>
-                    <option value="05">05</option>
-                    <option value="06">06</option>
-                    <option value="07">07</option>
-                    <option value="08">08</option>
-                    <option value="09">09</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                </select>
-                <span class="d-flex align-items-center px-2">/</span>
-                <select class="form-select" id="AnioVencimiento" asp-for="Pago.AnioVencimiento" required>
-                    <option value="">-Año-</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                </select>
-            </div>
-            <span asp-validation-for="Pago.MesVencimiento" class="text-danger"></span>
-        </div>
-        <div class="col-md-6">
-            <label for="CodigoSeguridad" class="form-label">Código de seguridad *</label>
-            <div class="d-flex">
-                <input type="text" class="form-control" id="CodigoSeguridad" asp-for="Pago.CodigoSeguridad" placeholder="000" required />
-                <span class="ms-2 d-flex align-items-center text-primary">CVV/CVC <i class="fas fa-info-circle ms-1"></i></span>
-            </div>
-            <span asp-validation-for="Pago.CodigoSeguridad" class="text-danger"></span>
-        </div>
-    </div>
+                            <hr>
+                            <!-- Tu formulario de tarjeta original (Puedes ocultarlo o mantenerlo si planeas usarlo) -->
+                            <h5 class="mt-4">O Pagar con Tarjeta directamente (Formulario Actual)</h5>
+                            <p><small class="text-muted">(Este formulario actualmente no procesará el pago si usas el botón de Mercado Pago)</small></p>
+                            
+                            <form id="paymentformDirect" method="post"> 
+                                <div class="mb-3">
+                                    <label for="NumeroTarjeta" class="form-label">Número de tarjeta *</label>
+                                    <input type="text" class="form-control" id="NumeroTarjeta" name="NumeroTarjeta" asp-for="Pago.NumeroTarjeta" placeholder="4000 1234 5678 9010" />
+                                    <span asp-validation-for="Pago.NumeroTarjeta" class="text-danger"></span>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Fecha Vencimiento *</label>
+                                        <div class="d-flex">
+                                            <select class="form-select me-2" id="MesVencimiento" asp-for="Pago.MesVencimiento">
+                                                <option value="">-Mes-</option>
+                                                <option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option>
+                                                <option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option>
+                                                <option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                                            </select>
+                                            <span class="d-flex align-items-center px-2">/</span>
+                                            <select class="form-select" id="AnioVencimiento" asp-for="Pago.AnioVencimiento">
+                                                <option value="">-Año-</option>
+                                                <option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option>
+                                            </select>
+                                        </div>
+                                        <span asp-validation-for="Pago.MesVencimiento" class="text-danger d-block"></span>
+                                        <span asp-validation-for="Pago.AnioVencimiento" class="text-danger d-block"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="CodigoSeguridad" class="form-label">Código de seguridad *</label>
+                                        <div class="d-flex">
+                                            <input type="text" class="form-control" id="CodigoSeguridad" asp-for="Pago.CodigoSeguridad" placeholder="000" />
+                                            <span class="ms-2 d-flex align-items-center text-primary">CVV/CVC <i class="fas fa-info-circle ms-1"></i></span>
+                                        </div>
+                                        <span asp-validation-for="Pago.CodigoSeguridad" class="text-danger"></span>
+                                    </div>
+                                </div>
 
-    <div class="mb-3">
-        <label for="NombreTarjeta" class="form-label">Nombre en la tarjeta *</label>
-        <input type="text" class="form-control" id="NombreTarjeta" asp-for="Pago.NombreTarjeta" placeholder="Nombre Completo" required />
-        <span asp-validation-for="Pago.NombreTarjeta" class="text-danger"></span>
-    </div>
+                                <div class="mb-3">
+                                    <label for="NombreTarjeta" class="form-label">Nombre en la tarjeta *</label>
+                                    <input type="text" class="form-control" id="NombreTarjeta" asp-for="Pago.NombreTarjeta" placeholder="Nombre Completo" />
+                                    <span asp-validation-for="Pago.NombreTarjeta" class="text-danger"></span>
+                                </div>
 
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <label for="TipoDocumento" class="form-label">Documento de identificación *</label>
-            <select class="form-select" id="TipoDocumento" asp-for="Pago.TipoDocumento" required>
-                <option value="DNI" selected>DNI</option>
-                <option value="CE">CE</option>
-                <option value="Pasaporte">Pasaporte</option>
-            </select>
-            <span asp-validation-for="Pago.TipoDocumento" class="text-danger"></span>
-        </div>
-        <div class="col-md-8">
-            <label for="NumeroDocumento" class="form-label">&nbsp;</label>
-            <input type="text" class="form-control" id="NumeroDocumento" asp-for="Pago.NumeroDocumento" required />
-            <span asp-validation-for="Pago.NumeroDocumento" class="text-danger"></span>
-        </div>
-    </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="TipoDocumento" class="form-label">Documento de identificación *</label>
+                                        <select class="form-select" id="TipoDocumento" asp-for="Pago.TipoDocumento">
+                                            <option value="DNI" selected>DNI</option>
+                                            <option value="CE">CE</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                        </select>
+                                        <span asp-validation-for="Pago.TipoDocumento" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="NumeroDocumento" class="form-label"> </label>
+                                        <input type="text" class="form-control" id="NumeroDocumento" asp-for="Pago.NumeroDocumento" />
+                                        <span asp-validation-for="Pago.NumeroDocumento" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="Telefono" class="form-label">Teléfono Celular *</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/20px-Flag_of_Peru.svg.png" alt="Perú" class="me-1" style="height: 12px;" />
+                                            +51
+                                        </span>
+                                        <input type="text" class="form-control" id="Telefono" asp-for="Pago.Telefono" placeholder="Ej: 976543210" />
+                                    </div>
+                                    <span asp-validation-for="Pago.Telefono" class="text-danger"></span>
+                                </div>
+                                <div class="form-check mb-4">
+                                  <input class="form-check-input" type="checkbox" id="AceptaTerminos" name="AceptaTerminos" asp-for="Pago.AceptaTerminos" value="true" />
+                                    <label class="form-check-label" for="AceptaTerminos">
+                                        Acepto los <a href="#" class="text-success">términos y condiciones</a> generales y autorizo el <a href="#" class="text-success">tratamiento de datos personales</a>.
+                                    </label>
+                                    <span asp-validation-for="Pago.AceptaTerminos" class="text-danger"></span>
+                                </div>
 
-    <div class="mb-3">
-        <label for="Telefono" class="form-label">Teléfono Celular *</label>
-        <div class="input-group">
-            <span class="input-group-text">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/20px-Flag_of_Peru.svg.png" alt="Perú" class="me-1" style="height: 12px;" />
-                +51
-            </span>
-            <input type="text" class="form-control" id="Telefono" asp-for="Pago.Telefono" placeholder="Ej: 976543210" required />
-        </div>
-        <span asp-validation-for="Pago.Telefono" class="text-danger"></span>
-    </div>
-
-    
-
-    <div class="form-check mb-4">
-      <input class="form-check-input type="checkbox" id="AceptaTerminos" name="AceptaTerminos" asp-for="Pago.AceptaTerminos" value="true" />
-        <label class="form-check-label" for="AceptaTerminos">
-            Acepto los <a href="#" class="text-success">términos y condiciones</a> generales de uso para pagadores PayU y autorizo el <a href="#" class="text-success">tratamiento de datos personales</a>
-        </label>
-        <span asp-validation-for="Pago.AceptaTerminos" class="text-danger"></span>
-    </div>
-
-    <div class="d-grid">
-        <button type="submit" class="btn btn-success btn-lg" id="pay-button">
-            Pagar <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
-</form>   
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-secondary btn-lg" id="pay-direct-button-disabled" disabled>
+                                        Pagar Directo (Deshabilitado) <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </form>   
                         </div>
                     </div>
                 </div>
-                  <!-- Resumen de compra (columna derecha) -->
+                <!-- Resumen de compra (columna derecha) -->
                 @if (Model.elementosCarrito > 0)
                 {
                     <div class="col-12 col-lg-4">
@@ -168,26 +183,21 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Productos (@Model.elementosCarrito)</span>
-                                    <span>S/ @Model.montoOriginal.ToString("0.00")</span>
+                                    <span>S/ @Model.montoOriginal.ToString("N2")</span>
                                 </div>
-
                                 <div class="d-flex justify-content-between mb-3">
                                     <span>Descuentos</span>
-                                    <span class="text-success">-S/ @((Model.montoOriginal - Model.montoActual).ToString("0.00"))</span>
+                                    <span class="text-success">-S/ @((Model.montoOriginal - Model.montoActual).ToString("N2"))</span>
                                 </div>
-
                                 <div class="d-flex justify-content-between mb-3">
                                     <span>Envío</span>
                                     <span class="fw-bold">S/ 12.90</span>
                                 </div>
-
                                 <hr>
-
                                 <div class="d-flex justify-content-between mb-4">
                                     <span class="fw-bold">Total:</span>
-                                    <span class="fw-bold">S/ @((Model.montoActual + 12.90m).ToString("0.00"))</span>
+                                    <span class="fw-bold">S/ @montoTotalConEnvio.ToString("N2")</span>
                                 </div>
-
                                 <div class="mt-4 p-3 bg-light rounded text-center">
                                     <div class="d-flex align-items-center justify-content-center">
                                         <img src="~/img/logo-yape.webp" alt="Yape" style="height: 30px;">
@@ -204,7 +214,7 @@
 
     <!-- Modal de confirmación -->
     <div class="confirmation-modal" id="confirmation-modal">
-        <div class="confirmation-content">
+         <div class="confirmation-content">
             <div class="thumbs-up">
                 <i class="fas fa-thumbs-up"></i>
             </div>
@@ -213,91 +223,29 @@
             <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Volver a la tienda</a>
         </div>
     </div>
-
-    <!-- Scripts -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-  
-  
-  const paymentForm = document.getElementById("paymentform");
-  
-  if (paymentForm) {
-    paymentForm.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      
-      try {
-        if (!paymentForm.checkValidity()) {
-          paymentForm.reportValidity();
-          return;
-        }
-        
-        // Crear objeto directamente desde los elementos del formulario
-        const pagoData = {
-          NumeroTarjeta: document.getElementById("NumeroTarjeta").value.replace(/\s/g, ""),
-          MesVencimiento: document.getElementById("MesVencimiento").value,
-          AnioVencimiento: document.getElementById("AnioVencimiento").value,
-          CodigoSeguridad: document.getElementById("CodigoSeguridad").value,
-          NombreTarjeta: document.getElementById("NombreTarjeta").value,
-          TipoDocumento: document.getElementById("TipoDocumento").value,
-          NumeroDocumento: document.getElementById("NumeroDocumento").value,
-          Telefono: document.getElementById("Telefono").value,
-          AceptaTerminos: document.getElementById("AceptaTerminos").checked
-        };
-        
-        
-        
-        const submitButton = document.getElementById("pay-button");
-        if (submitButton) {
-          submitButton.disabled = true;
-          submitButton.innerHTML = 'Procesando... <i class="fas fa-spinner fa-spin"></i>';
-        }
-        
-        const response = await fetch("/Pago/PagoHecho", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(pagoData)
+            console.log("DOM completamente cargado y parseado."); // Log 1
+
+            const payMercadoPagoButton = document.getElementById("pay-mercadopago-button");
+            console.log("Elemento 'pay-mercadopago-button':", payMercadoPagoButton); // Log 2
+
+            // --- TEMPORALMENTE COMENTADO PARA DEPURACIÓN ---
+            // if (payMercadoPagoButton) {
+            //     console.log("Botón encontrado, añadiendo event listener."); // Log 3
+            //     payMercadoPagoButton.addEventListener("click", function() {
+            //         // Opcional: deshabilitar botón para evitar doble click mientras redirige
+            //         // this.disabled = true;
+            //         // this.innerHTML = 'Procesando con Mercado Pago... <i class="fas fa-spinner fa-spin"></i>';
+            //     });
+            // } else {
+            //     console.error("ERROR: El botón con ID 'pay-mercadopago-button' NO fue encontrado en el DOM."); // Log 4
+            // }
+            // --- FIN DEL BLOQUE COMENTADO ---
+            
         });
-
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.innerHTML = 'Pagar <i class="fas fa-arrow-right"></i>';
-        }
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Error en la respuesta:", errorText);
-          throw new Error(`Error del servidor: ${response.status}`);
-        }
-
-        const result = await response.json();
-        
-        if (result.success) {
-          console.log("Pago exitoso:", result.message);
-          // Mostrar modal de confirmación
-          const confirmationModal = document.getElementById("confirmation-modal");
-          if (confirmationModal) {
-            confirmationModal.classList.add("show");
-          }
-          // Redirigir después de 3 segundos
-          setTimeout(() => {
-            window.location.href = "/Pago/confirmacion";
-          }, 3000);
-        } else {
-          alert(result.message || "Error al procesar el pago");
-          if (result.errors) {
-            console.error("Errores:", result.errors);
-          }
-        }
-      } catch (error) {
-        console.error("Error en la solicitud:", error);
-        alert("Error: " + error.message);
-      }
-    });
-  }
-});
     </script>
 </body>
 </html>

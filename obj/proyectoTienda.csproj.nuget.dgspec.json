@@ -77,6 +77,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[8.1.1, )"
+            },
+            "mercadopago-sdk": {
+              "target": "Package",
+              "version": "[2.5.0, )"
             }
           },
           "imports": [

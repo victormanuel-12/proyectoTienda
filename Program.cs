@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using proyectoTienda.Data;
 using Microsoft.OpenApi.Models;
 using proyectoTienda.Servicios;
+using MercadoPago.Config;
+using MercadoPago.Client.Preference;
+using MercadoPago.Client.CardToken;
+using MercadoPago.Client.Payment;
+using MercadoPago.Client.Customer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +17,15 @@ builder.Services.AddSession(options =>
   options.Cookie.HttpOnly = true;
   options.Cookie.IsEssential = true;
 });
+
+
+// Configurar servicios de Mercado Pago
+builder.Services.AddScoped<CardTokenClient>();
+builder.Services.AddScoped<CustomerClient>();
+builder.Services.AddScoped<PaymentClient>();
+
+
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
