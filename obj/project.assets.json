@@ -596,6 +596,23 @@
           }
         }
       },
+      "mercadopago-sdk/2.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
+          "System.Configuration.ConfigurationManager": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/MercadoPago.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MercadoPago.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Cryptography.Internal/8.0.13": {
         "type": "package",
         "compile": {
@@ -3417,6 +3434,23 @@
         "lib/netstandard1.0/zh-Hant/Humanizer.resources.dll",
         "lib/netstandard2.0/zh-Hant/Humanizer.resources.dll",
         "logo.png"
+      ]
+    },
+    "mercadopago-sdk/2.5.0": {
+      "sha512": "ZoVQfkIAKJSAFf9Fl9e+XRsx839RZKH1EgBctATSG2euoSf5f1/HLeiJNYKRh1/KO7+XtJWm+Zt27PqUmoTQFA==",
+      "type": "package",
+      "path": "mercadopago-sdk/2.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net6.0/MercadoPago.dll",
+        "lib/net6.0/MercadoPago.pdb",
+        "lib/net6.0/MercadoPago.xml",
+        "lib/netstandard2.1/MercadoPago.dll",
+        "lib/netstandard2.1/MercadoPago.pdb",
+        "lib/netstandard2.1/MercadoPago.xml",
+        "mercadopago-sdk.2.5.0.nupkg.sha512",
+        "mercadopago-sdk.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Cryptography.Internal/8.0.13": {
@@ -7492,7 +7526,8 @@
       "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.13",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.13",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 8.0.2",
-      "Swashbuckle.AspNetCore >= 8.1.1"
+      "Swashbuckle.AspNetCore >= 8.1.1",
+      "mercadopago-sdk >= 2.5.0"
     ]
   },
   "packageFolders": {
@@ -7572,6 +7607,10 @@
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[8.1.1, )"
+          },
+          "mercadopago-sdk": {
+            "target": "Package",
+            "version": "[2.5.0, )"
           }
         },
         "imports": [
