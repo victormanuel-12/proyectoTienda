@@ -87,6 +87,10 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Catalogo" asp-action="Index">Catálogo</a>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">Admin</a>
+                        @if (User.IsInRole("ADMIN"))
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Publicar" asp-action="Index">Publicar</a>
+                        }
                     </div>
 
                     <div class="search-container-desktop">

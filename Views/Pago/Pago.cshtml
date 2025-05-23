@@ -79,99 +79,9 @@
                                     </button>
                                 </form>
                             </div>
-
-                            <hr>
-                            <!-- Tu formulario de tarjeta original (Puedes ocultarlo o mantenerlo si planeas usarlo) -->
-                            <h5 class="mt-4">O Pagar con Tarjeta directamente (Formulario Actual)</h5>
-                            <p><small class="text-muted">(Este formulario actualmente no procesará el pago si usas el botón de Mercado Pago)</small></p>
-                            
-                            <form id="paymentformDirect" method="post"> 
-                                <div class="mb-3">
-                                    <label for="NumeroTarjeta" class="form-label">Número de tarjeta *</label>
-                                    <input type="text" class="form-control" id="NumeroTarjeta" name="NumeroTarjeta" asp-for="Pago.NumeroTarjeta" placeholder="4000 1234 5678 9010" />
-                                    <span asp-validation-for="Pago.NumeroTarjeta" class="text-danger"></span>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Fecha Vencimiento *</label>
-                                        <div class="d-flex">
-                                            <select class="form-select me-2" id="MesVencimiento" asp-for="Pago.MesVencimiento">
-                                                <option value="">-Mes-</option>
-                                                <option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option>
-                                                <option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option>
-                                                <option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
-                                            </select>
-                                            <span class="d-flex align-items-center px-2">/</span>
-                                            <select class="form-select" id="AnioVencimiento" asp-for="Pago.AnioVencimiento">
-                                                <option value="">-Año-</option>
-                                                <option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option>
-                                            </select>
-                                        </div>
-                                        <span asp-validation-for="Pago.MesVencimiento" class="text-danger d-block"></span>
-                                        <span asp-validation-for="Pago.AnioVencimiento" class="text-danger d-block"></span>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="CodigoSeguridad" class="form-label">Código de seguridad *</label>
-                                        <div class="d-flex">
-                                            <input type="text" class="form-control" id="CodigoSeguridad" asp-for="Pago.CodigoSeguridad" placeholder="000" />
-                                            <span class="ms-2 d-flex align-items-center text-primary">CVV/CVC <i class="fas fa-info-circle ms-1"></i></span>
-                                        </div>
-                                        <span asp-validation-for="Pago.CodigoSeguridad" class="text-danger"></span>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="NombreTarjeta" class="form-label">Nombre en la tarjeta *</label>
-                                    <input type="text" class="form-control" id="NombreTarjeta" asp-for="Pago.NombreTarjeta" placeholder="Nombre Completo" />
-                                    <span asp-validation-for="Pago.NombreTarjeta" class="text-danger"></span>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <label for="TipoDocumento" class="form-label">Documento de identificación *</label>
-                                        <select class="form-select" id="TipoDocumento" asp-for="Pago.TipoDocumento">
-                                            <option value="DNI" selected>DNI</option>
-                                            <option value="CE">CE</option>
-                                            <option value="Pasaporte">Pasaporte</option>
-                                        </select>
-                                        <span asp-validation-for="Pago.TipoDocumento" class="text-danger"></span>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <label for="NumeroDocumento" class="form-label"> </label>
-                                        <input type="text" class="form-control" id="NumeroDocumento" asp-for="Pago.NumeroDocumento" />
-                                        <span asp-validation-for="Pago.NumeroDocumento" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="Telefono" class="form-label">Teléfono Celular *</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/20px-Flag_of_Peru.svg.png" alt="Perú" class="me-1" style="height: 12px;" />
-                                            +51
-                                        </span>
-                                        <input type="text" class="form-control" id="Telefono" asp-for="Pago.Telefono" placeholder="Ej: 976543210" />
-                                    </div>
-                                    <span asp-validation-for="Pago.Telefono" class="text-danger"></span>
-                                </div>
-                                <div class="form-check mb-4">
-                                  <input class="form-check-input" type="checkbox" id="AceptaTerminos" name="AceptaTerminos" asp-for="Pago.AceptaTerminos" value="true" />
-                                    <label class="form-check-label" for="AceptaTerminos">
-                                        Acepto los <a href="#" class="text-success">términos y condiciones</a> generales y autorizo el <a href="#" class="text-success">tratamiento de datos personales</a>.
-                                    </label>
-                                    <span asp-validation-for="Pago.AceptaTerminos" class="text-danger"></span>
-                                </div>
-
-                                <div class="d-grid">
-                                    <button type="button" class="btn btn-secondary btn-lg" id="pay-direct-button-disabled" disabled>
-                                        Pagar Directo (Deshabilitado) <i class="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                            </form>   
                         </div>
                     </div>
-                </div>
+                </div> 
                 <!-- Resumen de compra (columna derecha) -->
                 @if (Model.elementosCarrito > 0)
                 {
@@ -197,12 +107,6 @@
                                 <div class="d-flex justify-content-between mb-4">
                                     <span class="fw-bold">Total:</span>
                                     <span class="fw-bold">S/ @montoTotalConEnvio.ToString("N2")</span>
-                                </div>
-                                <div class="mt-4 p-3 bg-light rounded text-center">
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <img src="~/img/logo-yape.webp" alt="Yape" style="height: 30px;">
-                                        <span class="ms-2">¡Ahora puedes pagar tus compras con Yape!</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
