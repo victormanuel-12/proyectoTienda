@@ -18,6 +18,21 @@ builder.Services.AddSession(options =>
   options.Cookie.IsEssential = true;
 });
 
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+if (env == "Development")
+{
+    // En desarrollo, usa URLs fijos con HTTPS y HTTP
+    builder.WebHost.UseUrls("https://localhost:7027", "http://localhost:5017");
+}
+else
+{
+    // En producción (Render) solo HTTP en el puerto asignado por la variable de entorno PORT
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+    builder.WebHost.UseUrls($"http://*:{port}");
+}
+
+
 
 // Configurar servicios de Mercado Pago
 builder.Services.AddScoped<CardTokenClient>();
