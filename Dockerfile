@@ -21,6 +21,9 @@ COPY . ./
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
+# Copiar el script Python manualmente al output
+COPY PythonScripts/substack_reader.py /app/out/PythonScripts/substack_reader.py
+
 WORKDIR /app/out
 
 # Render inyecta automáticamente el puerto
