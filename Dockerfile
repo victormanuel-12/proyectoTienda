@@ -1,34 +1,40 @@
-# Imagen única para compilación y ejecución
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
-WORKDIR /app
+# Instalar dependencias necesarias para compilar Python
+RUN apt-get update && apt-get install -y \
+    wget build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev curl llvm libncursesw5-dev xz-utils \
+    tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev git && \
+    rm -rf /var/lib/apt/lists/*
 
-# Instalar Python, pip y virtualenv
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip python3-venv && \
-    python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install substack-api==1.0.2 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Descargar y compilar Python 3.13.3
+RUN cd /usr/src && \
+    wget https://www.python.org/ftp/python/3.13.3/Python-3.13.3.tgz && \
+    tar xvf Python-3.13.3.tgz && \
+    cd Python-3.13.3 && \
+    ./configure --enable-optimizations && \
+    make -j $(nproc) && \
+    make altinstall
 
-# Agregar el entorno virtual al PATH
+# Crear entorno virtual con Python 3.13 y activar pip
+RUN python3.13 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copiar el proyecto
-COPY . ./
+# Instalar substack-api versión compatible
+RUN pip install --upgrade pip && pip install substack-api==1.0.2
 
-# Restaurar dependencias y publicar
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar todo el proyecto
+COPY . .
+
+# Restaurar y publicar la aplicación .NET
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
-# Copiar el script Python manualmente al output
-COPY PythonScripts/substack_reader.py /app/out/PythonScripts/substack_reader.py
-
+# Cambiar a directorio de publicación
 WORKDIR /app/out
 
-# Render inyecta automáticamente el puerto
-ENV APP_NET_CORE proyectoTienda.dll
-
-# Ejecutar la app
+# Iniciar la app
 CMD ["dotnet", "proyectoTienda.dll"]
-
