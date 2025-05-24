@@ -24,8 +24,8 @@ RUN dotnet publish -c Release -o out
 WORKDIR /app/out
 
 # Render inyecta automáticamente el puerto
-ENV APP_NET_CORE practica3.dll
+ENV APP_NET_CORE proyectoTienda.dll
 
 # Ejecutar la app
-CMD ["dotnet", "practica3.dll"]
+CMD ["dotnet", "proyectoTienda.dll"]
 
