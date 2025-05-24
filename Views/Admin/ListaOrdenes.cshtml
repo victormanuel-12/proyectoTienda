@@ -1,18 +1,19 @@
+@model IEnumerable<proyectoTienda.Models.Pedido>
 @{
     Layout = null;
 }
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>URBAN THREADS - Dashboard</title>
+    <title>URBAN THREADS - Gestión de Pedidos</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="~/css/AdminHome.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/ListaOrdenes.css" />
-    
 </head>
 <body>
     <!-- Botón para abrir menú en móviles -->
@@ -105,106 +106,68 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Ref / Transacción</th>
                             <th>Fecha</th>
-                            <th>Monto</th>
-                            <th>Tipo pago</th>
+                            <th>ID Cliente</th>
+                            <th>ID Dirección</th>
+                            <th>Tipo entrega</th>
+                            <th>Total</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>4</td>
-                            <td>5VP22171ZT09743R</td>
-                            <td>22/01/2021</td>
-                            <td>$160.00</td>
-                            <td>PayPal</td>
-                            <td><span class="status-badge status-completed">Completo</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-view" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn btn-edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn btn-delete" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>1BJ86751KC39018V</td>
-                            <td>22/01/2021</td>
-                            <td>$250.00</td>
-                            <td>PayPal</td>
-                            <td><span class="status-badge status-completed">Completo</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-view" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn btn-edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn btn-delete" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>-</td>
-                            <td>22/01/2021</td>
-                            <td>$120.00</td>
-                            <td>Cheque</td>
-                            <td><span class="status-badge status-pending">Pendiente</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-view" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn btn-edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn btn-delete" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>BK960754V1309321</td>
-                            <td>21/01/2021</td>
-                            <td>$120.00</td>
-                            <td>PayPal</td>
-                            <td><span class="status-badge status-completed">Completo</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-view" title="Ver detalles">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="action-btn btn-edit" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn btn-delete" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        @if (Model == null || !Model.Any())
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">No hay pedidos para mostrar.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var pedido in Model)
+                            {
+                                <tr>
+                                    <td>@pedido.IDPedido</td>
+                                    <td>@pedido.FechaPedido.ToString("dd/MM/yyyy")</td>
+                                    <td>@pedido.IDCliente</td>
+                                    <td>@pedido.IdDireccion</td>
+                                    <td>@pedido.TipoEntrega</td>
+                                    <td>S/@pedido.Total</td>
+                                    <td>
+                                        <span class="status-badge @GetStatusClass(pedido.Estado)">
+                                            @pedido.Estado
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="action-btn btn-view" title="Ver detalles"
+                                                    onclick="location.href='@Url.Action("DetallesPedido", "Admin", new { id = pedido.IDPedido })'">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="action-btn btn-edit" title="Editar" onclick="location.href='@Url.Action("EditarPedido", "Admin", new { id = pedido.IDPedido })'">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <form asp-action="EliminarPedido" asp-controller="Admin" method="post" style="display:inline;" onsubmit="return confirm('¿Está seguro de que desea eliminar este pedido? Esto podría afectar registros relacionados.');">
+                                                <input type="hidden" name="id" value="@pedido.IDPedido" />
+                                                <button type="submit" class="action-btn btn-delete" title="Eliminar">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
 
+            @if (Model != null && Model.Any()) // Solo mostrar paginación si hay datos
+            {
             <div class="pagination-container">
                 <div class="pagination-info">
-                    Mostrando registros del 1 al 4 de un total de 4 registros
+                    Mostrando @Model.Count() @(Model.Count() == 1 ? "registro" : "registros") de un total de @Model.Count() @(Model.Count() == 1 ? "registro" : "registros")
+                    
                 </div>
                 <div class="pagination-controls">
                     <button class="pagination-btn" disabled>Anterior</button>
@@ -212,8 +175,26 @@
                     <button class="pagination-btn" disabled>Siguiente</button>
                 </div>
             </div>
+            }
         </div>
     </div>
+
+    @functions {
+        private string GetStatusClass(string status)
+        {
+            if (string.IsNullOrEmpty(status)) return "status-default"; // Clase por defecto si el estado es nulo o vacío
+
+            return status.ToLower() switch // Convertir a minúsculas para comparación insensible a mayúsculas/minúsculas
+            {
+                "completo" => "status-completed",
+                "pendiente" => "status-pending",
+                "enviado" => "status-shipped",     // Ejemplo, puedes añadir más
+                "procesando" => "status-processing", // Ejemplo
+                "cancelado" => "status-cancelled", // Ejemplo
+                _ => "status-default" // Una clase genérica para estados no reconocidos
+                };
+        }
+    }
 
     <script>
         // Script para controlar el menú responsivo
@@ -235,7 +216,7 @@
             
             // Ajustar al cambiar tamaño de ventana
             window.addEventListener('resize', function() {
-                if (window.innerWidth > 991) {
+                if (window.innerWidth > 991) { // 991px es un punto de quiebre común de Bootstrap para md/lg
                     sidebar.classList.remove('active');
                     menuOverlay.style.display = 'none';
                 }
@@ -243,33 +224,47 @@
 
             // Funcionalidad de búsqueda
             const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('keyup', function() {
-                const searchTerm = this.value.toLowerCase();
-                const tableRows = document.querySelectorAll('.orders-table tbody tr');
-                
-                tableRows.forEach(row => {
-                    let found = false;
-                    const cells = row.querySelectorAll('td');
+            if (searchInput) { // Verificar que el elemento exista
+                searchInput.addEventListener('keyup', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const tableRows = document.querySelectorAll('.orders-table tbody tr');
                     
-                    cells.forEach(cell => {
-                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
-                            found = true;
+                    tableRows.forEach(row => {
+                        // Si la fila es la de "No hay pedidos...", no la ocultes por búsqueda
+                        if (row.classList.contains('no-data-row')) {
+                             row.style.display = ''; // O la lógica que decidas para esta fila
+                             return;
                         }
+
+                        let found = false;
+                        const cells = row.querySelectorAll('td');
+                        
+                        cells.forEach(cell => {
+                            if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                                found = true;
+                            }
+                        });
+                        
+                        row.style.display = found ? '' : 'none';
                     });
-                    
-                    row.style.display = found ? '' : 'none';
                 });
-            });
+            }
+
 
             // Funcionalidad para selector de entradas
             const entriesSelector = document.getElementById('entriesSelector');
-            entriesSelector.addEventListener('change', function() {
-                // Aquí iría la lógica para cambiar el número de registros mostrados
-                // En una implementación real, esto podría recargar los datos o filtrarlos
-                console.log(`Mostrar ${this.value} registros`);
-            });
+            if (entriesSelector) { // Verificar que el elemento exista
+                entriesSelector.addEventListener('change', function() {
+                    // Aquí iría la lógica para cambiar el número de registros mostrados
+                    // En una implementación real, esto podría recargar los datos o filtrarlos
+                    // Por ahora, solo un console.log
+                    console.log(`Mostrar ${this.value} registros`);
+                    // Para una funcionalidad real, probablemente necesites recargar la página con un query parameter
+                    // o usar AJAX para obtener los datos y redibujar la tabla.
+                });
+            }
 
-            // Funcionalidad para botones de exportación
+            // Funcionalidad para botones de exportación (placeholders)
             const exportButtons = document.querySelectorAll('.export-btn');
             exportButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -277,8 +272,9 @@
                                 this.classList.contains('btn-excel') ? 'Excel' :
                                 this.classList.contains('btn-pdf') ? 'PDF' : 'CSV';
                     
-                    alert(`Exportando a ${type}...`);
-                    // Aquí iría la lógica real de exportación
+                    alert(`Funcionalidad de exportar a ${type} no implementada.`);
+                    // Aquí iría la lógica real de exportación, que usualmente es compleja
+                    // y puede requerir librerías JS o llamadas al backend.
                 });
             });
         });

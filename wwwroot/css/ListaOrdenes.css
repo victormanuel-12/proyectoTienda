@@ -270,4 +270,56 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .status-badge {
+    padding: 0.3em 0.75em; /* Ajusta el padding según tu gusto */
+    border-radius: 0.25rem; /* Bordes redondeados */
+    font-size: 0.85em; /* Tamaño de fuente un poco más pequeño */
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    display: inline-block; /* Para que el padding y otras propiedades funcionen bien */
+  }
+
+  .status-completed {
+    color: #155724; /* Texto oscuro para fondo claro */
+    background-color: #d4edda; /* Verde claro */
+    border: 1px solid #c3e6cb; /* Borde un poco más oscuro que el fondo */
+  }
+
+  .status-pending {
+    color: #856404; /* Texto oscuro para fondo claro */
+    background-color: #fff3cd; /* Amarillo claro */
+    border: 1px solid #ffeeba; /* Borde un poco más oscuro que el fondo */
+  }
+
+  .status-shipped {
+    /* Para "Enviado" */
+    color: #004085;
+    background-color: #cce5ff; /* Azul claro */
+    border: 1px solid #b8daff;
+  }
+
+  .status-processing {
+    /* Para "Procesando" */
+    color: #721c24;
+    background-color: #f5c6cb; /* Naranja/Rojo claro */
+    border: 1px solid #f1b0b7;
+  }
+
+  .status-cancelled {
+    /* Para "Cancelado" */
+    color: #383d41;
+    background-color: #e2e3e5; /* Gris claro */
+    border: 1px solid #d6d8db;
+  }
+
+  .status-default {
+    /* Para cualquier otro estado no definido */
+    color: #383d41;
+    background-color: #e2e3e5;
+    border: 1px solid #d6d8db;
+  }
 }

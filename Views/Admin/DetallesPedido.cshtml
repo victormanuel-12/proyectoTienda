@@ -1,0 +1,237 @@
+@model proyectoTienda.ViewModel.DetallesPedidoViewModel
+
+@{
+    Layout = null; 
+    ViewData["Title"] = $"Detalles del Pedido #{(Model.Pedido?.IDPedido.ToString() ?? "N/A")}";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - URBAN THREADS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="~/css/AdminHome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/ListaOrdenes.css" />
+    <style>
+        /* ... (Estilos que te proporcioné antes, como .details-page-container, .details-card, etc.) ... */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f7f6;
+        }
+        .details-page-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+        .details-card {
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        .details-header {
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .details-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .info-section {
+            margin-bottom: 25px;
+        }
+        .info-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .info-item {
+            font-size: 14px;
+        }
+        .info-item strong {
+            color: #555;
+            min-width: 120px;
+            display: inline-block;
+        }
+        .items-table-container {
+            margin-top: 20px;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .items-table th, .items-table td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+        .items-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        .items-table td {
+            color: #333;
+        }
+        .items-table .text-right {
+            text-align: right;
+        }
+        .product-name-cell {
+            min-width: 200px;
+        }
+        .back-button-container {
+            margin-bottom: 20px;
+        }
+        .btn-outline-secondary {
+             border-color: #6c757d;
+             color: #6c757d;
+        }
+        .btn-outline-secondary:hover {
+             background-color: #6c757d;
+             color: white;
+        }
+    </style>
+</head>
+<body>
+    @if (Layout == null)
+    {
+        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+        <div class="menu-overlay" id="menuOverlay"></div>
+        <div class="sidebar" id="sidebar">
+            <div class="logo">SHOP.CO</div>
+            <div class="nav-items">
+                <a class="nav-item" asp-controller="Admin" asp-action="HomeAdmin"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+                <a class="nav-item" asp-controller="Admin" asp-action="Categoria"><i class="fas fa-tags"></i><span>Categorías</span></a>
+                <a class="nav-item" asp-controller="Admin" asp-action="AgregarCategoria"><i class="fas fa-plus"></i><span>Agregar Categoría</span></a>
+                <a class="nav-item" asp-controller="Admin" asp-action="Productos"><i class="fas fa-tshirt"></i><span>Productos</span></a>
+                <a class="nav-item" asp-controller="Admin" asp-action="AgregarProducto"><i class="fas fa-plus-circle"></i><span>Agregar Producto</span></a>
+                <a class="nav-item active" asp-controller="Admin" asp-action="ListaOrdenes"><i class="fas fa-clipboard-list"></i><span>Pedidos</span></a>
+            </div>
+            <div class="login-container"><partial name="_LoginPartial" /></div>
+        </div>
+    }
+    
+    <div class="@(Layout == null ? "main-content" : "")">
+        <div class="details-page-container">
+            <div class="back-button-container">
+                <a asp-action="ListaOrdenes" asp-controller="Admin" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver a Pedidos
+                </a>
+            </div>
+
+            @if (Model != null && Model.Pedido != null)
+            {
+                <div class="details-card">
+                    <div class="details-header">
+                        <h1>Detalles del Pedido #@Model.Pedido.IDPedido</h1> <!-- IDPedido (Guid) se mostrará como string -->
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Información General del Pedido</h3>
+                        <div class="info-grid">
+                            <div class="info-item"><strong>ID Pedido:</strong> @Model.Pedido.IDPedido</div> <!-- Muestra el Guid -->
+                            <div class="info-item"><strong>Fecha:</strong> @Model.Pedido.FechaPedido.ToString("dd/MM/yyyy HH:mm")</div>
+                            <div class="info-item"><strong>ID Cliente:</strong> @Model.Pedido.IDCliente</div>
+                            <div class="info-item"><strong>ID Dirección:</strong> @Model.Pedido.IdDireccion</div>
+                            <div class="info-item"><strong>Tipo Entrega:</strong> @Model.Pedido.TipoEntrega</div>
+                            <div class="info-item"><strong>Estado:</strong> <span class="status-badge @GetStatusClass(Model.Pedido.Estado)">@Model.Pedido.Estado</span></div>
+                            <div class="info-item"><strong>Total:</strong> @Model.Pedido.Total.ToString("C")</div>
+                        </div>
+                    </div>
+                    
+                    <div class="items-table-container info-section">
+                        <h3>Artículos del Pedido</h3>
+                        @if (Model.Detalles != null && Model.Detalles.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Producto</th>
+                                            <th>Nombre Producto</th>
+                                            <th class="text-right">Cantidad</th>
+                                            <th class="text-right">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Detalles)
+                                        {
+                                            <tr>
+                                                <td>@item.IDProducto</td> <!-- int -->
+                                                <td class="product-name-cell">@(item.Producto?.Nombre ?? "N/A")</td>
+                                                <td class="text-right">@item.Cantidad</td> <!-- int -->
+                                                <td class="text-right">@item.Subtotal.ToString("C")</td> <!-- decimal -->
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No hay artículos detallados para este pedido.</p>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning" role="alert">
+                    No se pudieron cargar los detalles del pedido o el pedido no existe.
+                </div>
+            }
+        </div>
+    </div>
+    
+    @functions {
+        private string GetStatusClass(string status)
+        {
+            if (string.IsNullOrEmpty(status)) return "status-default";
+            return status.ToLower() switch
+            {
+                "completo" => "status-completed", "pendiente" => "status-pending",
+                "enviado" => "status-shipped", "procesando" => "status-processing",
+                "cancelado" => "status-cancelled", _ => "status-default"
+            };
+        }
+    }
+
+    @if (Layout == null) {
+    <script>
+        // Script para controlar el menú responsivo (solo si Layout es null)
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const menuOverlay = document.getElementById('menuOverlay');
+            if(menuToggle && sidebar && menuOverlay) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    menuOverlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+                });
+                menuOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    menuOverlay.style.display = 'none';
+                });
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 991) { sidebar.classList.remove('active'); menuOverlay.style.display = 'none';}
+                });
+            }
+        });
+    </script>
+    }
+</body>
+</html>

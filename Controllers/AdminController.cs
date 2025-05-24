@@ -418,6 +418,48 @@ namespace proyectoTienda.Controllers
       }
     }
 
+
+    [HttpGet]
+    public async Task<IActionResult> DetallesPedido(Guid id)
+    {
+         _logger.LogInformation($"DetallesPedido action called with ID: {id}"); // Añade un log
+        if (id == Guid.Empty)
+      {
+         _logger.LogWarning("DetallesPedido: ID de pedido no válido (Guid.Empty).");
+        return BadRequest("ID de pedido no válido.");
+      }
+
+        try
+        {
+            var pedido = await _context.Pedidos
+                .FirstOrDefaultAsync(p => p.IDPedido == id);
+
+            if (pedido == null)
+            {
+                _logger.LogWarning($"DetallesPedido: No se encontró el pedido con ID {id}.");
+                return NotFound($"No se encontró el pedido con ID {id}.");
+            }
+
+            var detallesDelPedido = await _context.DetallesPedidos
+                .Include(dp => dp.Producto)
+                .Where(dp => dp.IDPedido == id) 
+                .ToListAsync();
+            
+            var viewModel = new DetallesPedidoViewModel
+            {
+                Pedido = pedido,
+                Detalles = detallesDelPedido
+            };
+            _logger.LogInformation($"Retornando vista DetallesPedido para ID: {id}");
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error al obtener los detalles del pedido {id}");
+            return View("Error", new { message = "Ocurrió un error al cargar los detalles del pedido." });
+        }
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
