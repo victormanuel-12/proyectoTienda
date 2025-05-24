@@ -24,6 +24,8 @@ builder.Services.AddScoped<CardTokenClient>();
 builder.Services.AddScoped<CustomerClient>();
 builder.Services.AddScoped<PaymentClient>();
 
+//Substack
+builder.Services.AddScoped<SubstackService>();
 
 
 // Add services to the container.

@@ -1,4 +1,4 @@
-﻿@model List<proyectoTienda.Models.Producto>
+﻿@model proyectoTienda.Models.ViewModels.ProductosYPublicacionesViewModel
 
 @{
   Layout = "_LayoutHome";
@@ -68,7 +68,7 @@
             </div>
 
             <div class="row gy-4 product-row">
-            @foreach (var producto in Model)
+            @foreach (var producto in Model.ProductosRecientes)
             {
                 <div class="col-6 col-md-4 col-lg-3">
                     <a href="@Url.Action("Detalles", "Catalogo", new { id = producto.IDProducto })" class="product-link">
@@ -85,10 +85,46 @@
                 </div>
             }
             </div>
-
-            <div class="view-all-container">
+            <div class="p-3 view-all-container">
                 <a href="/Catalogo/Index" class="view-all-btn">Ver todo</a>
             </div>
+              
+            <section class="substack-section">
+                <div class="section-header">
+                    <h2 class="section-title">PUBLICACIONES RECIENTES DE <span class="text-primary">STYLESET</span></h2>
+                </div>
+                <div class="row">
+                    @for (int i = 0; i < Model.Publicaciones.Count; i += 2)
+                    {
+                        <div class="row mb-4">
+                            @for (int j = i; j < i + 2 && j < Model.Publicaciones.Count; j++)
+                            {
+                                var post = Model.Publicaciones[j];
+                                <div class="col-md-6 px-3 mb-3 ">
+                                    <div class="row shadow p-3 bg-white rounded align-items-center border">
+                                        <!-- Texto -->
+                                        <div class="col-8">
+                                            <h5 class="fw-bold">@post.Title</h5>
+                                            <p class="text-muted" style="font-size: 0.9rem;">@post.Summary</p>
+                                            <a href="@post.Url" target="_blank" class="btn btn-outline-dark btn-sm">Leer más</a>
+                                        </div>
+
+                                        <!-- Imagen -->
+                                        <div class="col-4 text-end">
+                                            <img src="@(string.IsNullOrWhiteSpace(post.ImageUrl) ? "https://substackcdn.com/image/fetch/w_80,h_80,c_fill,f_auto,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F9d13975a-74c9-4a38-8136-c1c6e2499ee0_1024x1024.png" : post.ImageUrl)"
+                                                alt="Imagen del post"
+                                                class="img-fluid rounded"
+                                                style="max-height: 300px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </section>
+
+            
         </section>
 
         <section class="categories-section">

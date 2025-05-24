@@ -4,6 +4,9 @@ using proyectoTienda.Models;
 using proyectoTienda.Data;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using proyectoTienda.Servicios;
+using proyectoTienda.Models.ViewModels;
+
 namespace proyectoTienda.Controllers
 {
 
@@ -11,23 +14,32 @@ namespace proyectoTienda.Controllers
   {
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext _context;
+    private readonly SubstackService _substackService;
 
     public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
       _logger = logger;
       _context = context;
+      _substackService = new SubstackService();
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-      // Consulta los últimos 4 productos de categoría Jeans (2) o Polos (1)
       var productosRecientes = _context.Productos
-          .Where(p => p.IDCategoria == 1 || p.IDCategoria == 2)
-          .OrderByDescending(p => p.IDProducto)
-          .Take(4)
-          .ToList();
+            .Where(p => p.IDCategoria == 1 || p.IDCategoria == 2)
+            .OrderByDescending(p => p.IDProducto)
+            .Take(4)
+            .ToList();
 
-      return View(productosRecientes);
+        var publicaciones = await _substackService.ObtenerPublicacionesAsync();
+
+        var modelo = new ProductosYPublicacionesViewModel
+        {
+            ProductosRecientes = productosRecientes,
+            Publicaciones = publicaciones
+        };
+
+        return View(modelo);
     }
 
 
