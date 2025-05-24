@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip python3-venv && \
     python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install substack-api && \
+    /opt/venv/bin/pip install substack-api==1.0.2 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Agregar el entorno virtual al PATH
