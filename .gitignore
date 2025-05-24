@@ -4,4 +4,4 @@ obj/
 *.db-wal
 *.db-shm
 .ionide/
-appsettings.json
+
