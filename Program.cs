@@ -92,7 +92,6 @@ app.UseSession();
 
 
 app.UseRouting();
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseSwagger();
