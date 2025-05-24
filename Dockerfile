@@ -1,32 +1,31 @@
-# Etapa 1: Compilación .NET
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+# Imagen única para compilación y ejecución
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
 WORKDIR /app
 
-# Copiar y restaurar dependencias
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copiar el resto de archivos y publicar en Release
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Etapa 2: Imagen final con .NET runtime + Python
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-
-# Instalar Python 3 y pip
+# Instalar Python, pip y virtualenv
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
-    pip3 install substack-api && \
+    apt-get install -y python3 python3-pip python3-venv && \
+    python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install substack-api && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+# Agregar el entorno virtual al PATH
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Copiar archivos publicados por .NET
-COPY --from=build-env /app/out ./
+# Copiar el proyecto
+COPY . ./
 
-# Copiar script de Python
-COPY PythonScripts/substack_reader.py ./PythonScripts/substack_reader.py
+# Restaurar dependencias y publicar
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
 
-# Render inyecta automáticamente la variable $PORT
-ENV APP_NET_CORE proyectoTienda.dll
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet $APP_NET_CORE
+WORKDIR /app/out
+
+# Render inyecta automáticamente el puerto
+ENV APP_NET_CORE practica3.dll
+
+# Ejecutar la app
+CMD ["dotnet", "practica3.dll"]
+
