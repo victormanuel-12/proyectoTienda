@@ -12,7 +12,7 @@ namespace proyectoTienda.Models.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set;}
+        public int Id { get; set; }
 
         public string? Nombre { get; set; }
 
@@ -24,5 +24,9 @@ namespace proyectoTienda.Models.Model
         public string? Telefono { get; set; }
 
         public DateTime FechaEnvio { get; set; } = DateTime.UtcNow;
+        
+        public string? Etiqueta { get; set; }
+
+        public float Puntuacion { get; set; }
     }
 }

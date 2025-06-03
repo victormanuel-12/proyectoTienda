@@ -1,0 +1,259 @@
+@model List<proyectoTienda.Models.Model.Contacto>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URBAN THREADS - Gestión de comentarios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="~/css/AdminHome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/ListaOrdenes.css" />
+</head>
+<body>
+    <!-- Botón para abrir menú en móviles -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Overlay para cuando el menú está abierto en móvil -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- Barra lateral -->
+    <div class="sidebar" id="sidebar">
+        <a class="navbar-brand logo" asp-area="" asp-controller="Home" asp-action="Index">SHOP.CO</a>
+        <div class="nav-items">
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="HomeAdmin">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="Categoria">
+                <i class="fas fa-tags"></i>
+                <span>Categorías</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="AgregarCategoria">
+                <i class="fas fa-plus"></i>
+                <span>Agregar Categoría</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="Productos">
+                <i class="fas fa-tshirt"></i>
+                <span>Productos</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="AgregarProducto">
+                <i class="fas fa-plus-circle"></i>
+                <span>Agregar Producto</span>
+            </a>
+            <a class="nav-item" asp-area="" asp-controller="Admin" asp-action="ListaOrdenes">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Pedidos</span>
+            </a>
+            <a class="nav-item active" asp-area="" asp-controller="Admin" asp-action="Comentarios">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Comentarios</span>
+            </a>
+        </div>
+        <!-- Login Partial integrado en la barra lateral -->
+        <div class="login-container">
+            <partial name="_LoginPartial" />
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="orders-container">
+            <div class="table-header">
+                <h1 class="table-title">Gestión de comentarios</h1>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar comentario..." id="searchInput">
+                </div>
+            </div>
+
+            <div class="table-tools">
+                <div class="entries-selector">
+                    <span>Mostrar</span>
+                    <select id="entriesSelector">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>registros</span>
+                </div>
+
+                <div class="export-buttons">
+                    <button class="export-btn btn-copy">
+                        <i class="fas fa-copy"></i>
+                        <span>Copiar</span>
+                    </button>
+                    <button class="export-btn btn-excel">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Excel</span>
+                    </button>
+                    <button class="export-btn btn-pdf">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>PDF</span>
+                    </button>
+                    <button class="export-btn btn-csv">
+                        <i class="fas fa-file-csv"></i>
+                        <span>CSV</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Correo</th>
+                            <th>Telefono</th>
+                            <th>Fecha</th>
+                            <th>Mensaje</th>
+                            <th>Etiqueta</th>
+                            <th>Puntuacion</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || !Model.Any())
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">No hay comentarios para mostrar.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var comentario in Model)
+                            {
+                                <tr>
+                                    <td>@comentario.Correo</td>
+                                    <td>@comentario.Telefono</td>
+                                    <td>@comentario.FechaEnvio.ToString("dd/MM/yyyy")</td>
+                                    <td>@comentario.Mensaje</td>
+                                    <td>@comentario.Etiqueta</td>
+                                    <td>@comentario.Puntuacion</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <form asp-action="EliminarComentario" asp-controller="Admin" method="post" style="display:inline;" onsubmit="return confirm('¿Está seguro de que desea eliminar este comentario? Esto podría afectar registros relacionados.');">
+                                                <input type="hidden" name="id" value="@comentario.Id" />
+                                                <button type="submit" class="action-btn btn-delete" title="Eliminar">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (Model != null && Model.Any()) // Solo mostrar paginación si hay datos
+            {
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Mostrando @Model.Count() @(Model.Count() == 1 ? "registro" : "registros") de un total de @Model.Count() @(Model.Count() == 1 ? "registro" : "registros")
+                    
+                </div>
+                <div class="pagination-controls">
+                    <button class="pagination-btn" disabled>Anterior</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn" disabled>Siguiente</button>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
+
+    <script>
+        // Script para controlar el menú responsivo
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const menuOverlay = document.getElementById('menuOverlay');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                menuOverlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+            });
+            
+            // Cerrar menú al hacer clic en overlay
+            menuOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                menuOverlay.style.display = 'none';
+            });
+            
+            // Ajustar al cambiar tamaño de ventana
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 991) { // 991px es un punto de quiebre común de Bootstrap para md/lg
+                    sidebar.classList.remove('active');
+                    menuOverlay.style.display = 'none';
+                }
+            });
+
+            // Funcionalidad de búsqueda
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) { // Verificar que el elemento exista
+                searchInput.addEventListener('keyup', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const tableRows = document.querySelectorAll('.orders-table tbody tr');
+                    
+                    tableRows.forEach(row => {
+                        // Si la fila es la de "No hay pedidos...", no la ocultes por búsqueda
+                        if (row.classList.contains('no-data-row')) {
+                             row.style.display = ''; // O la lógica que decidas para esta fila
+                             return;
+                        }
+
+                        let found = false;
+                        const cells = row.querySelectorAll('td');
+                        
+                        cells.forEach(cell => {
+                            if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                                found = true;
+                            }
+                        });
+                        
+                        row.style.display = found ? '' : 'none';
+                    });
+                });
+            }
+
+
+            // Funcionalidad para selector de entradas
+            const entriesSelector = document.getElementById('entriesSelector');
+            if (entriesSelector) { // Verificar que el elemento exista
+                entriesSelector.addEventListener('change', function() {
+                    // Aquí iría la lógica para cambiar el número de registros mostrados
+                    // En una implementación real, esto podría recargar los datos o filtrarlos
+                    // Por ahora, solo un console.log
+                    console.log(`Mostrar ${this.value} registros`);
+                    // Para una funcionalidad real, probablemente necesites recargar la página con un query parameter
+                    // o usar AJAX para obtener los datos y redibujar la tabla.
+                });
+            }
+
+            // Funcionalidad para botones de exportación (placeholders)
+            const exportButtons = document.querySelectorAll('.export-btn');
+            exportButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const type = this.classList.contains('btn-copy') ? 'copiar' :
+                                this.classList.contains('btn-excel') ? 'Excel' :
+                                this.classList.contains('btn-pdf') ? 'PDF' : 'CSV';
+                    
+                    alert(`Funcionalidad de exportar a ${type} no implementada.`);
+                    // Aquí iría la lógica real de exportación, que usualmente es compleja
+                    // y puede requerir librerías JS o llamadas al backend.
+                });
+            });
+        });
+    </script>
+</body>
+</html>

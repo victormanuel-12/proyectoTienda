@@ -263,6 +263,9 @@ namespace proyectoTienda.Data.Migrations
                     b.Property<string>("Correo")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Etiqueta")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("FechaEnvio")
                         .HasColumnType("TEXT");
 
@@ -272,6 +275,9 @@ namespace proyectoTienda.Data.Migrations
 
                     b.Property<string>("Nombre")
                         .HasColumnType("TEXT");
+
+                    b.Property<float>("Puntuacion")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Telefono")
                         .HasColumnType("TEXT");

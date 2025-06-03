@@ -422,42 +422,57 @@ namespace proyectoTienda.Controllers
     [HttpGet]
     public async Task<IActionResult> DetallesPedido(Guid id)
     {
-         _logger.LogInformation($"DetallesPedido action called with ID: {id}"); // Añade un log
-        if (id == Guid.Empty)
+      _logger.LogInformation($"DetallesPedido action called with ID: {id}"); // Añade un log
+      if (id == Guid.Empty)
       {
-         _logger.LogWarning("DetallesPedido: ID de pedido no válido (Guid.Empty).");
+        _logger.LogWarning("DetallesPedido: ID de pedido no válido (Guid.Empty).");
         return BadRequest("ID de pedido no válido.");
       }
 
-        try
-        {
-            var pedido = await _context.Pedidos
-                .FirstOrDefaultAsync(p => p.IDPedido == id);
+      try
+      {
+        var pedido = await _context.Pedidos
+            .FirstOrDefaultAsync(p => p.IDPedido == id);
 
-            if (pedido == null)
-            {
-                _logger.LogWarning($"DetallesPedido: No se encontró el pedido con ID {id}.");
-                return NotFound($"No se encontró el pedido con ID {id}.");
-            }
-
-            var detallesDelPedido = await _context.DetallesPedidos
-                .Include(dp => dp.Producto)
-                .Where(dp => dp.IDPedido == id) 
-                .ToListAsync();
-            
-            var viewModel = new DetallesPedidoViewModel
-            {
-                Pedido = pedido,
-                Detalles = detallesDelPedido
-            };
-            _logger.LogInformation($"Retornando vista DetallesPedido para ID: {id}");
-            return View(viewModel);
-        }
-        catch (Exception ex)
+        if (pedido == null)
         {
-            _logger.LogError(ex, $"Error al obtener los detalles del pedido {id}");
-            return View("Error", new { message = "Ocurrió un error al cargar los detalles del pedido." });
+          _logger.LogWarning($"DetallesPedido: No se encontró el pedido con ID {id}.");
+          return NotFound($"No se encontró el pedido con ID {id}.");
         }
+
+        var detallesDelPedido = await _context.DetallesPedidos
+            .Include(dp => dp.Producto)
+            .Where(dp => dp.IDPedido == id)
+            .ToListAsync();
+
+        var viewModel = new DetallesPedidoViewModel
+        {
+          Pedido = pedido,
+          Detalles = detallesDelPedido
+        };
+        _logger.LogInformation($"Retornando vista DetallesPedido para ID: {id}");
+        return View(viewModel);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, $"Error al obtener los detalles del pedido {id}");
+        return View("Error", new { message = "Ocurrió un error al cargar los detalles del pedido." });
+      }
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> Comentarios()
+    {
+      try
+      {
+        var comentarios = await _context.Contacto.ToListAsync();
+        return View(comentarios);
+      }
+      catch (Exception ex)
+      {
+        return View("Error", new { message = ex.Message });
+      }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -465,5 +480,32 @@ namespace proyectoTienda.Controllers
     {
       return View("Error!");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> EliminarComentario(int id)
+    {
+      var comentario = await _context.Contacto.FindAsync(id);
+      if (comentario == null)
+      {
+        return NotFound();
+      }
+
+      try
+      {
+
+        _context.Contacto.Remove(comentario);
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Producto eliminado correctamente.";
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error al eliminar el comentario con ID {ProductId}", id);
+        TempData["ErrorMessage"] = "No se pudo eliminar el comentario.";
+      }
+
+      return RedirectToAction("Comentarios");
+    }
   }
+  
 }
