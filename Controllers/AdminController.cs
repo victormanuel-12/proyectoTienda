@@ -353,6 +353,38 @@ namespace proyectoTienda.Controllers
 
     }
 
+ [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EliminarProducto(int id)
+    {
+      _logger.LogInformation("Intentando eliminar producto con ID: {ProductId}", id);
+
+      var producto = await _context.Productos.FindAsync(id);
+      if (producto == null)
+      {
+        return NotFound();
+      }
+
+      try
+      {
+
+        var detallesPedidosRelacionados = _context.DetallesPedidos.Where(d => d.IDProducto == id);
+        _context.DetallesPedidos.RemoveRange(detallesPedidosRelacionados);
+
+
+        _context.Productos.Remove(producto);
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Producto eliminado correctamente.";
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error al eliminar el producto con ID {ProductId}", id);
+        TempData["ErrorMessage"] = "No se pudo eliminar el producto. Es posible que tenga referencias en otros registros.";
+      }
+
+      return RedirectToAction("Productos");
+    }
 
 
     [HttpPost]
