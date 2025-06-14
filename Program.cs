@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using proyectoTienda.Data;
 using Microsoft.OpenApi.Models;
 using proyectoTienda.Servicios;
+
 using MercadoPago.Config;
 using MercadoPago.Client.Preference;
 using MercadoPago.Client.CardToken;
@@ -22,14 +23,14 @@ var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
 if (env == "Development")
 {
-    // En desarrollo, usa URLs fijos con HTTPS y HTTP
-    builder.WebHost.UseUrls("https://localhost:7027", "http://localhost:5017");
+  // En desarrollo, usa URLs fijos con HTTPS y HTTP
+  builder.WebHost.UseUrls("https://localhost:7027", "http://localhost:5017");
 }
 else
 {
-    // En producción (Render) solo HTTP en el puerto asignado por la variable de entorno PORT
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-    builder.WebHost.UseUrls($"http://*:{port}");
+  // En producción (Render) solo HTTP en el puerto asignado por la variable de entorno PORT
+  var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+  builder.WebHost.UseUrls($"http://*:{port}");
 }
 
 
@@ -58,6 +59,7 @@ builder.Services.AddScoped<ICarritoService, CarritoService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
+builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient(); // <- Aquí
 

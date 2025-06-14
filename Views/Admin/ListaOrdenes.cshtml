@@ -72,7 +72,19 @@
                     <input type="text" placeholder="Buscar pedido..." id="searchInput">
                 </div>
             </div>
-
+<!-- Mostrar mensajes TempData si existen -->
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["Error"]
+                    </div>
+                }
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["Success"]
+                    </div>
+                }
             <div class="table-tools">
                 <div class="entries-selector">
                     <span>Mostrar</span>
@@ -86,18 +98,17 @@
                 </div>
 
                 <div class="export-buttons">
-                    <button class="export-btn btn-copy">
-                        <i class="fas fa-copy"></i>
-                        <span>Copiar</span>
-                    </button>
-                    <button class="export-btn btn-excel">
-                        <i class="fas fa-file-excel"></i>
-                        <span>Excel</span>
-                    </button>
-                    <button class="export-btn btn-pdf">
-                        <i class="fas fa-file-pdf"></i>
-                        <span>PDF</span>
-                    </button>
+                    
+                    <a href="@Url.Action("ExportarTodosPedidosExcel", "Admin")" class="export-btn btn-excel">
+        <i class="fas fa-file-excel"></i>
+        <span>Excel</span>
+    </a>
+    
+    <!-- Botón PDF con enlace -->
+    <a href="@Url.Action("ExportarTodosPedidosPdf", "Admin")" class="export-btn btn-pdf">
+        <i class="fas fa-file-pdf"></i>
+        <span>PDF</span>
+    </a>
                     <button class="export-btn btn-csv">
                         <i class="fas fa-file-csv"></i>
                         <span>CSV</span>
@@ -276,9 +287,7 @@
                                 this.classList.contains('btn-excel') ? 'Excel' :
                                 this.classList.contains('btn-pdf') ? 'PDF' : 'CSV';
                     
-                    alert(`Funcionalidad de exportar a ${type} no implementada.`);
-                    // Aquí iría la lógica real de exportación, que usualmente es compleja
-                    // y puede requerir librerías JS o llamadas al backend.
+                   
                 });
             });
         });

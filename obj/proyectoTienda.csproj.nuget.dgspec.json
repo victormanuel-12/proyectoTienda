@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\Documents\\progra\\proyectoTienda\\proyectoTienda.csproj": {}
+    "C:\\Users\\PC\\Desktop\\PROGRA\\proyectoTienda\\proyectoTienda.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\Documents\\progra\\proyectoTienda\\proyectoTienda.csproj": {
+    "C:\\Users\\PC\\Desktop\\PROGRA\\proyectoTienda\\proyectoTienda.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\Documents\\progra\\proyectoTienda\\proyectoTienda.csproj",
+        "projectUniqueName": "C:\\Users\\PC\\Desktop\\PROGRA\\proyectoTienda\\proyectoTienda.csproj",
         "projectName": "proyectoTienda",
-        "projectPath": "C:\\Users\\Lenovo\\Documents\\progra\\proyectoTienda\\proyectoTienda.csproj",
-        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\Documents\\progra\\proyectoTienda\\obj\\",
+        "projectPath": "C:\\Users\\PC\\Desktop\\PROGRA\\proyectoTienda\\proyectoTienda.csproj",
+        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PC\\Desktop\\PROGRA\\proyectoTienda\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -50,6 +51,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.105.0, )"
+            },
             "Facebook": {
               "target": "Package",
               "version": "[7.0.10-beta, )"
@@ -85,6 +90,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2025.5.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

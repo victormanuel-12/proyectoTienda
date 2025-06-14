@@ -15,22 +15,26 @@ using Microsoft.Extensions.Logging;
 using proyectoTienda.Data;
 using proyectoTienda.Models;
 using proyectoTienda.ViewModel;
+using proyectoTienda.Servicios;
 
 namespace proyectoTienda.Controllers
 {
   [Authorize(Roles = "ADMIN")]
   public class AdminController : Controller
   {
+
     private readonly ILogger<AdminController> _logger;
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IExportService _exportService;
 
     // Constructor con la inyección de dependencias para el DbContext
-    public AdminController(ILogger<AdminController> logger, ApplicationDbContext context, IConfiguration configuration)
+    public AdminController(ILogger<AdminController> logger, ApplicationDbContext context, IConfiguration configuration, IExportService exportService)
     {
       _logger = logger;
       _context = context;
       _configuration = configuration;
+      _exportService = exportService;
     }
 
     public IActionResult HomeAdmin()
@@ -360,39 +364,104 @@ namespace proyectoTienda.Controllers
     }
 
 
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EliminarProducto(int id)
+    public async Task<IActionResult> EliminarPedido(Guid id)
     {
-      _logger.LogInformation("Intentando eliminar producto con ID: {ProductId}", id);
+      _logger.LogInformation($"EliminarPedido action called with ID: {id}");
 
-      var producto = await _context.Productos.FindAsync(id);
-      if (producto == null)
+      if (id == Guid.Empty)
       {
-        return NotFound();
+        _logger.LogWarning("EliminarPedido: ID de pedido no válido (Guid.Empty).");
+        TempData["Error"] = "ID de pedido no válido.";
+        return RedirectToAction("ListaOrdenes");
       }
+
+      using var transaction = await _context.Database.BeginTransactionAsync();
 
       try
       {
+        // PASO 1: Verificar que el pedido existe
+        var pedido = await _context.Pedidos
+            .FirstOrDefaultAsync(p => p.IDPedido == id);
 
-        var detallesPedidosRelacionados = _context.DetallesPedidos.Where(d => d.IDProducto == id);
-        _context.DetallesPedidos.RemoveRange(detallesPedidosRelacionados);
+        if (pedido == null)
+        {
+          _logger.LogWarning($"EliminarPedido: No se encontró el pedido con ID {id}.");
+          TempData["Error"] = $"No se encontró el pedido con ID {id}.";
+          return RedirectToAction("ListaOrdenes");
+        }
 
+        // PASO 2: Verificar reglas de negocio (opcional)
+        if (pedido.Estado?.ToUpper() == "COMPLETADO" || pedido.Estado?.ToUpper() == "ENVIADO")
+        {
+          _logger.LogWarning($"EliminarPedido: Intento de eliminar pedido {id} con estado {pedido.Estado}.");
+          TempData["Error"] = "No se puede eliminar un pedido que ya ha sido completado o enviado.";
+          return RedirectToAction("ListaOrdenes");
+        }
 
-        _context.Productos.Remove(producto);
+        _logger.LogInformation($"Iniciando eliminación manual del pedido {id}");
+
+        // PASO 3: Eliminar DETALLES DEL PEDIDO primero
+        var detallesPedido = await _context.DetallesPedidos
+            .Where(dp => dp.IDPedido == id)
+            .ToListAsync();
+
+        if (detallesPedido.Any())
+        {
+          _logger.LogInformation($"Eliminando {detallesPedido.Count} detalles del pedido {id}");
+
+          foreach (var detalle in detallesPedido)
+          {
+            _context.DetallesPedidos.Remove(detalle);
+            _logger.LogInformation($"Eliminado detalle: IDPedido={detalle.IDPedido}, IDProducto={detalle.IDProducto}");
+          }
+
+          await _context.SaveChangesAsync();
+          _logger.LogInformation($"Detalles del pedido {id} eliminados exitosamente");
+        }
+
+        // PASO 4: Eliminar PAGOS asociados al pedido
+        var pagos = await _context.Pagos
+            .Where(p => p.IDPedido == id)
+            .ToListAsync();
+
+        if (pagos.Any())
+        {
+          _logger.LogInformation($"Eliminando {pagos.Count} pagos del pedido {id}");
+
+          foreach (var pago in pagos)
+          {
+            _context.Pagos.Remove(pago);
+            _logger.LogInformation($"Eliminado pago: ID={pago.IDPago} del pedido {id}");
+          }
+
+          await _context.SaveChangesAsync();
+          _logger.LogInformation($"Pagos del pedido {id} eliminados exitosamente");
+        }
+
+        // PASO 5: Finalmente eliminar el PEDIDO principal
+        _context.Pedidos.Remove(pedido);
         await _context.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = "Producto eliminado correctamente.";
+        // PASO 6: Confirmar la transacción
+        await transaction.CommitAsync();
+
+        _logger.LogInformation($"Pedido {id} y todas sus relaciones eliminados exitosamente de forma manual");
+        TempData["Success"] = "Pedido eliminado exitosamente junto con todos sus detalles y pagos asociados.";
+
+        return RedirectToAction("ListaOrdenes");
       }
       catch (Exception ex)
       {
-        _logger.LogError(ex, "Error al eliminar el producto con ID {ProductId}", id);
-        TempData["ErrorMessage"] = "No se pudo eliminar el producto. Es posible que tenga referencias en otros registros.";
+        // Rollback en caso de error
+        await transaction.RollbackAsync();
+        _logger.LogError(ex, $"Error al eliminar manualmente el pedido {id}. Transacción revertida.");
+        TempData["Error"] = $"Ocurrió un error al eliminar el pedido: {ex.Message}";
+        return RedirectToAction("ListaOrdenes");
       }
-
-      return RedirectToAction("Productos");
     }
-
 
 
 
@@ -506,6 +575,111 @@ namespace proyectoTienda.Controllers
 
       return RedirectToAction("Comentarios");
     }
+
+
+    // GET: Admin/EditarPedido/{id}
+    [HttpGet]
+    public async Task<IActionResult> EditarPedido(Guid id)
+    {
+      if (id == Guid.Empty)
+      {
+        TempData["Error"] = "ID de pedido no válido.";
+        return RedirectToAction("ListaOrdenes");
+      }
+
+      var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.IDPedido == id);
+      if (pedido == null)
+      {
+        TempData["Error"] = $"No se encontró el pedido con ID {id}.";
+        return RedirectToAction("ListaOrdenes");
+      }
+      return View(pedido);
+    }
+
+    // POST: Admin/ActualizarPedido
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ActualizarPedido(Pedido model)
+    {
+      if (!ModelState.IsValid)
+      {
+        return View("EditarPedido", model);
+      }
+
+      if (model.IDPedido == Guid.Empty)
+      {
+        ModelState.AddModelError("", "ID de pedido no válido.");
+        return View("EditarPedido", model);
+      }
+
+      var pedidoEnDb = await _context.Pedidos.FirstOrDefaultAsync(p => p.IDPedido == model.IDPedido);
+      if (pedidoEnDb == null)
+      {
+        ModelState.AddModelError("", $"No se encontró el pedido con ID {model.IDPedido}.");
+        return View("EditarPedido", model);
+      }
+
+      // Actualizar solo los campos permitidos:
+      pedidoEnDb.TipoEntrega = model.TipoEntrega;
+      pedidoEnDb.Estado = model.Estado;
+
+      try
+      {
+        _context.Pedidos.Update(pedidoEnDb);
+        await _context.SaveChangesAsync();
+        TempData["Success"] = "Pedido actualizado correctamente.";
+        return RedirectToAction("ListaOrdenes");
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error al actualizar pedido {PedidoId}", model.IDPedido);
+        ModelState.AddModelError("", "Ocurrió un error al guardar los cambios: " + ex.Message);
+        return View("EditarPedido", model);
+      }
+    }
+
+
+
+    [HttpGet]
+    public async Task<IActionResult> ExportarTodosPedidosPdf()
+    {
+      var pedidos = await _context.Pedidos
+          .Include(p => p.Cliente)
+          .Include(p => p.DetallesPedidos)
+              .ThenInclude(d => d.Producto)
+          .OrderByDescending(p => p.FechaPedido)
+          .ToListAsync();
+
+      if (pedidos == null || !pedidos.Any())
+      {
+        return NotFound("No hay pedidos para exportar");
+      }
+
+      var pdfBytes = _exportService.GenerateAllPedidosPdf(pedidos);
+      return File(pdfBytes, "application/pdf", $"Reporte_Pedidos_{DateTime.Now:yyyyMMdd}.pdf");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportarTodosPedidosExcel()
+    {
+      var pedidos = await _context.Pedidos
+          .Include(p => p.Cliente)
+          .Include(p => p.DetallesPedidos)
+              .ThenInclude(d => d.Producto)
+          .OrderByDescending(p => p.FechaPedido)
+          .ToListAsync();
+
+      if (pedidos == null || !pedidos.Any())
+      {
+        return NotFound("No hay pedidos para exportar");
+      }
+
+      var excelBytes = _exportService.GenerateAllPedidosExcel(pedidos);
+      return File(excelBytes,
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          $"Reporte_Pedidos_{DateTime.Now:yyyyMMdd}.xlsx");
+    }
+
   }
-  
+
 }
