@@ -233,8 +233,9 @@ namespace proyectoTienda.Controllers
     [HttpPost]
     public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewModel)
     {
-      var gitHubToken = _configuration["GitHub:Token"];
-      var repo = _configuration["GitHub:Repo"];
+      // Obtener valores desde las variables de entorno
+      var gitHubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+      var repo = Environment.GetEnvironmentVariable("GITHUB_REPO");
 
       try
       {
@@ -259,9 +260,6 @@ namespace proyectoTienda.Controllers
 
         string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(imagen.FileName);
 
-        // Leer token y repo desde appsettings.json
-
-
         if (string.IsNullOrEmpty(gitHubToken) || string.IsNullOrEmpty(repo))
         {
           _logger.LogError("Faltan configuraciones para GitHub Token o Repo");
@@ -278,9 +276,7 @@ namespace proyectoTienda.Controllers
         };
 
         using var httpClient = new HttpClient();
-        // Ajuste del User-Agent (GitHub requiere un User-Agent válido)
         httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("proyectoTienda/1.0");
-        // Usando Bearer token en lugar de "token"
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", gitHubToken);
 
         var json = JsonSerializer.Serialize(payload);
@@ -296,38 +292,31 @@ namespace proyectoTienda.Controllers
           return RedirectToAction("AgregarProducto");
         }
 
-        // Construir URL pública de la imagen
         var imagenUrl = $"https://raw.githubusercontent.com/{repo}/main/images/{nombreArchivo}";
 
-        // Buscar si ya existe un producto con ese ID
         var productoExistente = await _context.Productos
             .FirstOrDefaultAsync(p => p.IDProducto == viewModel.Producto.IDProducto);
 
-        // Buscar la categoría
         var categoriaSeleccionada = await _context.Categorias
             .FirstOrDefaultAsync(c => c.IDCategoria == viewModel.Producto.IDCategoria);
 
-        // Guardar en la BD
         if (productoExistente != null)
         {
-          // Actualizar los campos del producto existente
           productoExistente.Nombre = viewModel.Producto.Nombre;
           productoExistente.Descripcion = viewModel.Producto.Descripcion;
           productoExistente.PrecioActual = viewModel.Producto.PrecioActual;
           productoExistente.Stock = viewModel.Producto.Stock;
           productoExistente.IDCategoria = viewModel.Producto.IDCategoria;
           productoExistente.Categoria = categoriaSeleccionada;
-          productoExistente.ImagenURL = imagenUrl; // Actualizar URL de imagen
+          productoExistente.ImagenURL = imagenUrl;
 
           _context.Productos.Update(productoExistente);
         }
         else
         {
-          // Asignar categoría al nuevo producto
           viewModel.Producto.Categoria = categoriaSeleccionada;
-          viewModel.Producto.ImagenURL = imagenUrl; // Asignar la URL de la imagen al nuevo producto
+          viewModel.Producto.ImagenURL = imagenUrl;
 
-          // Agregar nuevo producto
           _context.Productos.Add(viewModel.Producto);
         }
 
