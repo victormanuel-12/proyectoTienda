@@ -26,7 +26,7 @@ namespace proyectoTienda.Servicios
                 // Encabezado del documento
                 page.Header()
                           .AlignCenter()
-                          .Text("TEXTIL SALAS - REPORTE DE PEDIDOS")
+                          .Text("REPORTE DE PEDIDOS")
                           .FontSize(18).Bold();
 
                 // Contenido principal
@@ -43,47 +43,47 @@ namespace proyectoTienda.Servicios
                                     {
                                       pedidoColumn.Item().Grid(grid =>
                                         {
-                                            grid.Columns(3);
-                                            grid.Spacing(10);
+                                          grid.Columns(3);
+                                          grid.Spacing(10);
 
-                                            grid.Item().Text($"ID Pedido: {pedido.IDPedido}").Bold();
-                                            grid.Item().Text($"Fecha: {pedido.FechaPedido.ToString("dd/MM/yyyy")}").Bold();
-                                            grid.Item().Text($"Email Cliente: {pedido.Cliente?.Email ?? "N/A"}").Bold();
+                                          grid.Item().Text($"ID Pedido: {pedido.IDPedido}").Bold();
+                                          grid.Item().Text($"Fecha: {pedido.FechaPedido.ToString("dd/MM/yyyy")}").Bold();
+                                          grid.Item().Text($"Email Cliente: {pedido.Cliente?.Email ?? "N/A"}").Bold();
 
-                                            grid.Item().Text($"Tipo Entrega: {pedido.TipoEntrega}").Bold();
-                                            grid.Item().Text($"Estado: {pedido.Estado}").Bold();
-                                            grid.Item().Text($"Total: S/{pedido.Total.ToString("0.00")}").Bold();
-                                          });
+                                          grid.Item().Text($"Tipo Entrega: {pedido.TipoEntrega}").Bold();
+                                          grid.Item().Text($"Estado: {pedido.Estado}").Bold();
+                                          grid.Item().Text($"Total: S/{pedido.Total.ToString("0.00")}").Bold();
+                                        });
 
                                       // Detalles del pedido
                                       if (pedido.DetallesPedidos != null && pedido.DetallesPedidos.Any())
                                       {
                                         pedidoColumn.Item().PaddingTop(10).Table(table =>
                                           {
-                                              table.ColumnsDefinition(columns =>
-                                                {
-                                                    columns.RelativeColumn(3); // Producto
-                                                    columns.RelativeColumn();  // Cantidad
-                                                    columns.RelativeColumn();  // Precio Unitario
-                                                    columns.RelativeColumn();  // Subtotal
-                                                  });
-
-                                              table.Header(header =>
-                                                {
-                                                    header.Cell().Text("Producto").Bold();
-                                                    header.Cell().Text("Cantidad").Bold();
-                                                    header.Cell().Text("Precio Unitario").Bold();
-                                                    header.Cell().Text("Subtotal").Bold();
-                                                  });
-
-                                              foreach (var detalle in pedido.DetallesPedidos)
+                                            table.ColumnsDefinition(columns =>
                                               {
-                                                table.Cell().Text(detalle.Producto?.Nombre ?? "Producto no disponible");
-                                                table.Cell().Text(detalle.Cantidad.ToString());
-                                                table.Cell().Text($"S/{detalle.Producto?.PrecioActual.ToString("0.00") ?? "0.00"}");
-                                                table.Cell().Text($"S/{detalle.Subtotal.ToString("0.00")}");
-                                              }
-                                            });
+                                                columns.RelativeColumn(3); // Producto
+                                                columns.RelativeColumn();  // Cantidad
+                                                columns.RelativeColumn();  // Precio Unitario
+                                                columns.RelativeColumn();  // Subtotal
+                                              });
+
+                                            table.Header(header =>
+                                              {
+                                                header.Cell().Text("Producto").Bold();
+                                                header.Cell().Text("Cantidad").Bold();
+                                                header.Cell().Text("Precio Unitario").Bold();
+                                                header.Cell().Text("Subtotal").Bold();
+                                              });
+
+                                            foreach (var detalle in pedido.DetallesPedidos)
+                                            {
+                                              table.Cell().Text(detalle.Producto?.Nombre ?? "Producto no disponible");
+                                              table.Cell().Text(detalle.Cantidad.ToString());
+                                              table.Cell().Text($"S/{detalle.Producto?.PrecioActual.ToString("0.00") ?? "0.00"}");
+                                              table.Cell().Text($"S/{detalle.Subtotal.ToString("0.00")}");
+                                            }
+                                          });
                                       }
                                     });
 
@@ -104,7 +104,7 @@ namespace proyectoTienda.Servicios
         var worksheet = workbook.Worksheets.Add("Pedidos");
 
         // Encabezado principal
-        worksheet.Cell(1, 1).Value = "TEXTIL SALAS - REPORTE DE PEDIDOS";
+        worksheet.Cell(1, 1).Value = "REPORTE DE PEDIDOS";
         worksheet.Range(1, 1, 1, 7).Merge().Style.Font.Bold = true;
         worksheet.Range(1, 1, 1, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
