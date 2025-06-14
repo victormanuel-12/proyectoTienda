@@ -233,6 +233,9 @@ namespace proyectoTienda.Controllers
     [HttpPost]
     public async Task<IActionResult> AgregaProducto(ProductoCategoriaViewModel viewModel)
     {
+      var gitHubToken = _configuration["GitHub:Token"];
+      var repo = _configuration["GitHub:Repo"];
+
       try
       {
         var imagen = Request.Form.Files.FirstOrDefault(f => f.Name == "Producto.ImagenURL");
@@ -257,8 +260,7 @@ namespace proyectoTienda.Controllers
         string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(imagen.FileName);
 
         // Leer token y repo desde appsettings.json
-        var gitHubToken = _configuration["GitHub:Token"];
-        var repo = _configuration["GitHub:Repo"];
+
 
         if (string.IsNullOrEmpty(gitHubToken) || string.IsNullOrEmpty(repo))
         {
@@ -340,7 +342,6 @@ namespace proyectoTienda.Controllers
         return RedirectToAction("AgregarProducto");
       }
     }
-
 
     [HttpGet]
     public IActionResult Edit(int id)
