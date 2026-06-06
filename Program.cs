@@ -23,48 +23,42 @@ var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
 if (env == "Development")
 {
-  // En desarrollo, usa URLs fijos con HTTPS y HTTP
   builder.WebHost.UseUrls("https://localhost:7027", "http://localhost:5017");
 }
 else
 {
-  // En producción (Render) solo HTTP en el puerto asignado por la variable de entorno PORT
   var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
   builder.WebHost.UseUrls($"http://*:{port}");
 }
 
-
-
-// Configurar servicios de Mercado Pago
+// Mercado Pago
 builder.Services.AddScoped<CardTokenClient>();
 builder.Services.AddScoped<CustomerClient>();
 builder.Services.AddScoped<PaymentClient>();
 
-//Substack
-builder.Services.AddScoped<SubstackService>();
+// Substack
+builder.Services.AddHttpClient<SubstackService>();
 
-
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// Base de datos
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-.AddRoles<IdentityRole>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<ICarritoService, CarritoService>();
-
+// Servicios
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICarritoService, CarritoService>();
 builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddControllers();
-builder.Services.AddHttpClient(); // <- Aquí
+builder.Services.AddHttpClient();
 
-
-// API Documentation
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -76,10 +70,8 @@ builder.Services.AddSwaggerGen(c =>
   });
 });
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseHttpsRedirection();
@@ -87,17 +79,14 @@ if (app.Environment.IsDevelopment())
 else
 {
   app.UseExceptionHandler("/Home/Error");
-  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
   app.UseHsts();
 }
+
 app.UseSession();
-
-
 app.UseRouting();
 app.UseStaticFiles();
 
 app.UseSwagger();
-
 app.UseSwaggerUI(c =>
 {
   c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");

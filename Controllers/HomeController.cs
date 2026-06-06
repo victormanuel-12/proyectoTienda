@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using proyectoTienda.Models;
 using proyectoTienda.Data;
@@ -9,39 +8,40 @@ using proyectoTienda.Models.ViewModels;
 
 namespace proyectoTienda.Controllers
 {
-
   public class HomeController : Controller
   {
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext _context;
     private readonly SubstackService _substackService;
 
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+    public HomeController(
+        ILogger<HomeController> logger,
+        ApplicationDbContext context,
+        SubstackService substackService)
     {
       _logger = logger;
       _context = context;
-      _substackService = new SubstackService();
+      _substackService = substackService;
     }
 
     public async Task<IActionResult> Index()
     {
       var productosRecientes = _context.Productos
-            .Where(p => p.IDCategoria == 1 || p.IDCategoria == 2)
-            .OrderByDescending(p => p.IDProducto)
-            .Take(4)
-            .ToList();
+          .Where(p => p.IDCategoria == 1 || p.IDCategoria == 2)
+          .OrderByDescending(p => p.IDProducto)
+          .Take(4)
+          .ToList();
 
-        var publicaciones = await _substackService.ObtenerPublicacionesAsync();
+      var publicaciones = await _substackService.ObtenerPublicacionesAsync();
 
-        var modelo = new ProductosYPublicacionesViewModel
-        {
-            ProductosRecientes = productosRecientes,
-            Publicaciones = publicaciones
-        };
+      var modelo = new ProductosYPublicacionesViewModel
+      {
+        ProductosRecientes = productosRecientes,
+        Publicaciones = publicaciones
+      };
 
-        return View(modelo);
+      return View(modelo);
     }
-
 
     public IActionResult Privacy()
     {
